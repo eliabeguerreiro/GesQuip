@@ -3,6 +3,67 @@
 class User
 {
 
+
+    public static function validarToken($token = null)
+    {
+        if ($token === null) {
+            $token = $_COOKIE['token'] ?? '';
+        }
+
+        // Verifica se o token existe e está no formato correto
+        if (empty($token) || count(explode('.', $token)) !== 3) {
+            return false;
+        }
+
+        $chave = 'TESTEDEUMASENHA123';
+        list($headerB64, $payloadB64, $signatureB64) = explode('.', $token);
+
+        // Decodifica o header e o payload
+        $header = json_decode(base64_decode($headerB64), true);
+        $payload = json_decode(base64_decode($payloadB64), true);
+
+        // Verifica se houve erros na decodificação do JSON
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return false;
+        }
+
+        // Verifica se o token expirou
+        if (isset($payload['exp']) && time() > $payload['exp']) {
+            return false; // Token expirado
+        }
+
+        // Calcula a assinatura esperada
+        $calculatedSignature = hash_hmac('sha256', "$headerB64.$payloadB64", $chave, true);
+        $calculatedSignatureB64 = base64_encode($calculatedSignature);
+
+        // Compara as assinaturas
+        if (!hash_equals($signatureB64, $calculatedSignatureB64)) {
+            return false; // Assinatura inválida
+        }
+
+        return true;
+    }
+
+
+    public static function logOut()
+    {
+        // Remove o token do cookie
+        if (isset($_COOKIE['token'])) {
+            setcookie('token', '', time() - 3600, '/');
+        }
+    
+        // Destrói a sessão
+        session_unset();
+        session_destroy();
+    
+        // Define uma mensagem de sucesso
+        $_SESSION['msg'] = 'Usuário deslogado com sucesso.';
+    
+        // Redireciona para a página de login
+        header('Location: ../');
+        exit;
+    }
+    
     public static function login($data)
     {
 
@@ -86,40 +147,5 @@ class User
             exit;
         }
     }
-
-
-    public static function getPerfil($id){
-        $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM perfil WHERE cd_user = $id");
-        $rs->execute();
-        $obj = $rs->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($obj) {
-            return ["dados" => $obj];
-        } else {
-             $_SESSION['msg'] =  "Não existe dados para retornar";
-        }
-    }
-
-    public static function updatePerfil($metadata, $data){
-        
-      
-        $db = DB::connect();
-        $rs = $db->prepare("UPDATE perfil SET ".$metadata." ='".$data."'");
-        $rs->execute();
-        $rows = $rs->rowCount();
-        if ($rows > 0) {
-            var_dump("produto cadastrado");
-            return true;
-        }else{
-            $_SESSION['msg'] =  "erro na alteração";
-            return false;
-
-        }
-   
-
-    }
-
-
    
 }

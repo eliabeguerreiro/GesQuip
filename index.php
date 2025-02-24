@@ -31,9 +31,7 @@ if (isset($_SERVER['HTTP_COOKIE'])) {
     </style>
 </head>
 <?php 
-    if(isset($_SESSION['msg'])){ echo $_SESSION['msg']; unset($_SESSION['msg']);} 
-           
-    //coleta e limpeza de valores inseridos no formulário
+              //coleta e limpeza de valores inseridos no formulário
     if($_POST){
         
         $dados_login = filter_input_array(INPUT_POST, FILTER_DEFAULT);
@@ -47,13 +45,17 @@ if (isset($_SERVER['HTTP_COOKIE'])) {
 ?>
 <body>
     <div id='login_place'>
+        <?php 
+            if (isset($_SESSION['msg'])) {
+                echo '<div class="msg ' . (strpos($_SESSION['msg'], 'logado') ? '' : 'error') . '">' . $_SESSION['msg'] . '</div>';
+                unset($_SESSION['msg']);
+            }
+        ?>
         <form action="" method="POST">
-            <label for="username">Login:</label>
+            <label for="username" class="center-label">Login:</label>
             <input type="text" id="username" name="login" required>
-
-            <label for="password">Senha:</label>
+            <label for="password" class="center-label">Senha:</label>
             <input type="password" id="password" name="senha" required>
-
             <button type="submit">Logar</button>
         </form>
     </div>

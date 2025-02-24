@@ -1,0 +1,85 @@
+/* Estilo global */
+body {
+    padding-top: 56px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f8f9fa; /* Fundo claro */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Estilo do container de login */
+#login_place {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Alinha os elementos ao centro */
+}
+
+/* Estilo dos elementos do formulário */
+#login_place label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* Centraliza o texto dentro do label */
+.center-label {
+    text-align: center;
+}
+
+#login_place input[type="text"],
+#login_place input[type="password"] {
+    width: calc(100% - 20px); /* Ajusta a largura para deixar espaço para as margens */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+#login_place input[type="text"]:focus,
+#login_place input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilo do botão de login */
+#login_place button {
+    width: 100%; /* O botão ocupa toda a largura */
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#login_place button:hover {
+    background-color: #0056b3;
+}
+
+/* Mensagem de feedback */
+.msg {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #28a745; /* Verde para sucesso */
+}
+
+.msg.error {
+    background-color: #dc3545; /* Vermelho para erro */
+}

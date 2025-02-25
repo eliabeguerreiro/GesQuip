@@ -23,7 +23,7 @@ class ContentPainel
     return($html);
 }
 
-    public function renderBody($fami, $itens, $itens_disponiveis, $itens_locados, $itens_quebrados){
+    public function renderBody($fami, $itens, $itens_disponiveis, $itens_locados){
       $nome = $_SESSION['data_user']['nm_usuario'];
       
       // Verifica se os parâmetros GET estão definidos
@@ -367,57 +367,9 @@ class ContentPainel
                     </table>
             </div>            
             <br><br><br><br><br>          
-
-
-
         </main>
 
 
-        <main>
-            <div class="box2">
-            <h1>Todos os Itens Quebrados</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Cod        </th>
-                              <th>Familia </th>
-                              <th>Nome      </th>
-
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-    
-    foreach ($itens_quebrados as $item):
-      
-      $id_fami = $item['id_familia'];
-
-      foreach ($fami as $familiaa) {
-        
-        if($familiaa['id_familia'] == $id_fami){
-          $nm_familia = $familiaa['ds_familia'];
-        }
-      }
-
-
-          $html .="<td>".$item['cod_patrimonio']."</td>";
-          $html .="<td>".$nm_familia."</td>";
-          $html .="<td>".$item['ds_item']."</td>";
-          $html .="</tr>";
-          
-    endforeach;     
-
-  $html.= <<<HTML
-
-                      </tbody>
-                    </table>
-            </div>            
-            <br><br><br><br><br>          
-
-
-
-        </main>
         HTML;
         if(isset($_SESSION['msg'])){
         $html.= "<script>alert('".$_SESSION['msg']."');</script>";

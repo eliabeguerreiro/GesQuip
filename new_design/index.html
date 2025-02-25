@@ -15,46 +15,46 @@
             <a class="navbar-brand" href="#"><b>GesQuip</b></a>
             <div class="navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    
-                    
-                        
-                        <!--GESTÃO DE ITENS-->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="gestao_itens" id="CadastroItemLink">Novo Item</a></li>
-                            </ul>
+                    <!--GESTÃO DE ITENS-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="gestao_itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                            <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                            <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                            <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                            <li><a class="dropdown-item" href="gestao_itens/" id="CadastroItemLink">Novo Item</a></li>
+                        </ul>
                     </li>
-                                        <!--GESTÃO MOVIMENTACAO-->
-
+                    <!--GESTÃO MOVIMENTACAO-->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
-                            <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentação Ativa</a></li>
-                            <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentação Encerrada</a></li>
+                            <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
+                            <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
                         </ul>
                     </li>
-                                        <!--GESTÃO MANUTENÇÃO-->
+                    <!--GESTÃO MANUTENÇÃO-->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenção</a>
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
-                            <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenção Ativa</a></li>
+                            <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                            <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                         </ul>
                     </li>
-                                        <!--GESTÃO DE USUARIOS-->
-
+                    <!--GESTÃO DE USUARIOS-->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
-                      </ul>
+                        </ul>
                     </li>
                 </ul>
             </div>
             <div class="d-flex ms-auto">
-                <a href="logout.php" class="btn btn-danger btn-sm">Sair</a>
+                <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
             </div>
         </div>
     </nav>
@@ -62,7 +62,7 @@
 
     <div class="main-content" id="mainContent">
         <!-- Inicialmente escondido -->
-        <div class="container mt-4" id="novoItem" style="display: none;">
+        <div class="container mt-4" id="novoItem" style="display: block;">
             <div class="row">
                 <div class="col-md-12">                    
                     <h3><b><p class="text-primary">Novo Item</p></b></h3>
@@ -93,11 +93,14 @@
                 </div>
             </div>    
         </div>
+
+
+
         <!-- Inicialmente visível -->
-            <div class="container mt-4" id="containerFerramentas">    
+            <div class="container mt-4" id="containerFerramentas" style="display: block;">    
                 <div class="row mt-4">
                     <div class="col-md-12">
-                        <h3><b><p class="text-primary">Ferramentas | Equipamentos</p></b></h3>
+                        <h3><b><p class="text-primary">Todos os Equipamentos</p></b></h3>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -125,19 +128,69 @@
                   </div>
              </div>
          </div>
+
+
+         <div class="container mt-4" id="containerFerramentas" style="display: block;">    
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h3><b><p class="text-primary">Equipamentos Disponiveis</p></b></h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Família</th>
+                                    <th>Modelo</th>
+                                    <th>Natureza</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody id="itens">
+                                <tr>
+                                    <td>1</td>
+                                    <td>ALAVANCA</td>
+                                    <td>Modelo A</td>
+                                    <td>Próprio</td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                   </div>
+              </div>
+         </div>
+     </div>
+
+ <div class="container mt-4" id="containerFerramentas" style="display: block;">    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3><b><p class="text-primary">Equipamentos em Uso</p></b></h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Família</th>
+                            <th>Modelo</th>
+                            <th>Natureza</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="itens">
+                        <tr>
+                            <td>1</td>
+                            <td>ALAVANCA</td>
+                            <td>Modelo A</td>
+                            <td>Próprio</td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+           </div>
+      </div>
+ </div>
+</div>
     
    
 
-    <script>
-         // Adiciona um evento de clique ao link "Novo Item"
-         document.getElementById("CadastroItemLink").addEventListener("click", function(event) {
-            event.preventDefault(); // Impede o comportamento padrão do link
-
-            // Exibe ambos os contêineres
-            document.getElementById("novoItem").style.display = "block";
-            document.getElementById("containerFerramentas").style.display = "block";
-         });
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>

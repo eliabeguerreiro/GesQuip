@@ -1,3 +1,19 @@
+.header-with-filter {
+    display: flex; /* Ativa o Flexbox */
+    justify-content: space-between; /* Alinha o título à esquerda e o filtro à direita */
+    align-items: center; /* Centraliza verticalmente os elementos */
+    margin-bottom: 20px; /* Espaçamento abaixo do cabeçalho */
+}
+
+.filter-container {
+    display: flex; /* Alinha o rótulo e o select horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+.filter-select {
+    width: auto; /* Ajusta a largura do select para caber apenas no conteúdo */
+    margin-left: 10px; /* Espaçamento entre o rótulo e o select */
+}
 
 #novoItem {
     max-width: 80%; /* Limita a largura */

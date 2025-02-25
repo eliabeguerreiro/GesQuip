@@ -24,29 +24,93 @@ class ContentPainel
 
     public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados){
 
-
-
-
-
-
-      
+      //var_dump($itens);
       $nome = $_SESSION['data_user']['nm_usuario'];
       
       // Verifica se os parâmetros GET estão definidos
       $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
       $v = isset($_GET['v']) ? $_GET['v'] : null;
-      $itens = Painel::getItens(null, $filtro, $v);
       
+      function buildUrl($newParams = []) {
+        $queryParams = $_GET;
+        foreach ($newParams as $key => $value) {
+            if ($value === null) {
+                unset($queryParams[$key]);
+            } else {
+                $queryParams[$key] = $value;
+            }
+        }
+        return '?' . http_build_query($queryParams);
+    }
+
       
-      
+      $html = <<<HTML
+          <body>
+        <!--INICIO BARRA DE NAVEAGAÇÃO-->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <div class="navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav">
+                            <!--GESTÃO DE ITENS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                                <ul class="dropdown-menu">
+
+      HTML;                              
+                                    
+                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'novo']) . "'>Novo Item</a></li>";
+
+      $html.= <<<HTML
+                                </ul>
+                            </li>
+                            <!--GESTÃO MOVIMENTACAO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MANUTENÇÃO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO DE USUARIOS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    </div>
+                </div>
+            </nav>
+            <!--FIM BARRA DE NAVEAGAÇÃO-->
+            <main>
+      HTML;
+              
 
 
-        
+
       if (isset($pagina)) {
         switch ($pagina) {
            case 'novo':
             
-              $html = <<<HTML
+              $html.= <<<HTML
               <div class="main-content" id="mainContent">
               <div class="container mt-4" id="novoItem" style="display: block;">
                 <div class="row">
@@ -88,82 +152,10 @@ class ContentPainel
 
             break;
             case 'itens':
-                
 
 
 
-                break;
-            case 'disponiveis':
-                $itens_disponiveis = Painel::getItensDisponiveis();
-                break;
-            case 'emuso':
-                $itens_locados = Painel::getItensLocados();
-                break;
-            default:
-                // Caso nenhum dos casos acima seja correspondido, você pode definir um comportamento padrão aqui.
-                // Por exemplo, você pode lançar um erro ou definir uma variável vazia.
-                break;
-        }
-    }
-      
-
-
-
-      $html = <<<HTML
-        <body>
-        <!--INICIO BARRA DE NAVEAGAÇÃO-->
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
-                    <div class="navbar-collapse" id="collapsibleNavbar">
-                        <ul class="navbar-nav">
-                            <!--GESTÃO DE ITENS-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/" id="CadastroItemLink">Novo Item</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO MOVIMENTACAO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO MANUTENÇÃO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO DE USUARIOS-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
-                    </div>
-                </div>
-            </nav>
-            <!--FIM BARRA DE NAVEAGAÇÃO-->
-            
-        <main>
-
+              $html.= <<<HTML
         <!-- TABELA -->
         <div class="container mt-4" id="containerFerramentas" style="display: block;">
             <div class="row mt-4">
@@ -218,12 +210,13 @@ class ContentPainel
                             <tr>
 
       HTML;
-            
+                          $equipamento = $itens;
+                            $fam2 = $familia;
                              foreach ($itens['dados'] as $item):
                                
                                $id_fami = $item['id_familia'];
-                 
-                               foreach ($fami as $familiaa) {
+                              
+                               foreach ($fam2 as $familiaa) {
                                  
                                  if($familiaa['id_familia'] == $id_fami){
                                    $nm_familia = $familiaa['ds_familia'];
@@ -249,7 +242,26 @@ class ContentPainel
                 </div>
             </div>
         </div>
+      HTML;
+              
+                break;
+            case 'disponiveis':
+                
+                break;
+            case 'emuso':
+                
+                break;
+            default:
+                // Caso nenhum dos casos acima seja correspondido, você pode definir um comportamento padrão aqui.
+                // Por exemplo, você pode lançar um erro ou definir uma variável vazia.
+                break;
+        }
+    }
+      
 
+
+
+      $html.= <<<HTML
 
        
         </main>

@@ -14,27 +14,33 @@ $itens_disponiveis = Painel::getItensDisponiveis();
 $itens_locados = Painel::getItensLocados();
 
 
-$pagina = new ContentPainel;
 if(User::validarToken()){
 
 }else{
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
     header('Location:../'); 
+    exit;
 }
+
+
 if(!isset($_SESSION['data_user'])){
   
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
     header('Location:../'); 
-
+    exit;
 }
 
 if(isset($_GET['sair'])){User::logOut();}
+
+
+
+
 if($_POST){  if($cad_item = Painel::setItem($_POST)){ header('location:');}} 
 
 
 
 //var_dump($itens);
-
+$pagina = new ContentPainel;
 echo $pagina->renderHeader();
 
 if(isset($_GET['pagina'])){

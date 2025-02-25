@@ -10,10 +10,9 @@ include_once"classes/db.class.php";
 
 $familia = Painel::getFamilia(null);
 $itens = Painel::getItens(null, null, null);
-
 $itens_disponiveis = Painel::getItensDisponiveis();
 $itens_locados = Painel::getItensLocados();
-$itens_quebrados = Painel::getItensQuebrados();
+
 
 $pagina = new ContentPainel;
 if(User::validarToken()){
@@ -37,8 +36,12 @@ if($_POST){  if($cad_item = Painel::setItem($_POST)){ header('location:');}}
 //var_dump($itens);
 
 echo $pagina->renderHeader();
-echo $pagina->renderBody($familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados'], $itens_quebrados['dados']);
 
+if(isset($_GET['pagina'])){
+    echo $pagina->renderBody($_GET['pagina'], $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados']);
+}else{
+    echo $pagina->renderBody(null, $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados']);
+}
 
 ?>
 

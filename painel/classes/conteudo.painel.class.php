@@ -42,7 +42,7 @@ class ContentPainel
                                     <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
                                     <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
                                     <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/" id="CadastroItemLink">Novo Item</a></li>
+                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MOVIMENTACAO-->

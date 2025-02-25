@@ -4,9 +4,7 @@ class ContentPainel
 {
 
   public function renderHeader(){
-   
-
-    
+ 
     $html = <<<HTML
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -24,15 +22,92 @@ class ContentPainel
     return($html);
 }
 
-    public function renderBody($fami, $itens, $itens_disponiveis, $itens_locados){
+    public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados){
+
+
+
+
+
+
+      
       $nome = $_SESSION['data_user']['nm_usuario'];
       
       // Verifica se os parâmetros GET estão definidos
       $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
       $v = isset($_GET['v']) ? $_GET['v'] : null;
-
-
       $itens = Painel::getItens(null, $filtro, $v);
+      
+      
+      
+
+
+        
+      if (isset($pagina)) {
+        switch ($pagina) {
+           case 'novo':
+            
+              $html = <<<HTML
+              <div class="main-content" id="mainContent">
+              <div class="container mt-4" id="novoItem" style="display: block;">
+                <div class="row">
+                  <div class="col-md-12">                    
+                      <h3><b><p class="text-primary">Novo Item</p></b></h3>
+                      <form id="formNovoItem">
+                        <div class="mb-3">
+                          <label for="familia" class="form-label">Família</label>
+                          <select id="familia" name="familia" class="form-select" required>
+                            <option value="">Escolha a família</option>
+          HTML;
+            $fam = $familia;
+                  foreach ($fam as $familia) {
+                    $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";  
+                  }
+          $html.= <<<HTML
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="modelo" class="form-label">Modelo</label>
+                          <input type="text" class="form-control" id="modelo" name="modelo">
+                        </div>
+                        <div class="mb-3">
+                          <label for="natureza" class="form-label">Natureza de posse</label>
+                          <select class="form-select" id="item_natureza" name="item_natureza">
+                            <option value="1">Próprio</option>
+                            <option value="2">Locado</option>
+                          </select>
+                        </div>
+                          <button type="submit" class="btn btn-primary">Cadastrar</button>
+                      </form>
+                  </div>
+                </div>
+              </div>    
+            </div>
+
+          HTML;
+
+
+            break;
+            case 'itens':
+                
+
+
+
+                break;
+            case 'disponiveis':
+                $itens_disponiveis = Painel::getItensDisponiveis();
+                break;
+            case 'emuso':
+                $itens_locados = Painel::getItensLocados();
+                break;
+            default:
+                // Caso nenhum dos casos acima seja correspondido, você pode definir um comportamento padrão aqui.
+                // Por exemplo, você pode lançar um erro ou definir uma variável vazia.
+                break;
+        }
+    }
+      
+
+
 
       $html = <<<HTML
         <body>
@@ -88,45 +163,6 @@ class ContentPainel
             <!--FIM BARRA DE NAVEAGAÇÃO-->
             
         <main>
-        <div class="main-content" id="mainContent">
-          <div class="container mt-4" id="novoItem" style="display: block;">
-            <div class="row">
-              <div class="col-md-12">                    
-                  <h3><b><p class="text-primary">Novo Item</p></b></h3>
-                  <form id="formNovoItem">
-                    <div class="mb-3">
-                      <label for="familia" class="form-label">Família</label>
-                      <select id="familia" name="familia" class="form-select" required>
-                        <option value="">Escolha a família</option>
-      HTML;
-
-              foreach ($fami as $familia) {
-                $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";  
-              }
-        
-              $filtro_familia = $fami;
-
-      $html.= <<<HTML
-                      </select>
-                    </div>
-                    <div class="mb-3">
-                      <label for="modelo" class="form-label">Modelo</label>
-                      <input type="text" class="form-control" id="modelo" name="modelo">
-                    </div>
-                    <div class="mb-3">
-                      <label for="natureza" class="form-label">Natureza de posse</label>
-                      <select class="form-select" id="item_natureza" name="item_natureza">
-                        <option value="1">Próprio</option>
-                        <option value="2">Locado</option>
-                      </select>
-                    </div>
-                      <button type="submit" class="btn btn-primary">Cadastrar</button>
-                  </form>
-              </div>
-            </div>
-          </div>    
-        </div>
-
 
         <!-- TABELA -->
         <div class="container mt-4" id="containerFerramentas" style="display: block;">
@@ -156,6 +192,7 @@ class ContentPainel
                                 <select id="filtro_familia" class="form-select form-select-sm">
                                     <option value="">Escolha uma família</option>
       HTML;
+                          $filtro_familia = $familia;
                           foreach ($filtro_familia as $familia) { 
                             $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
                           }

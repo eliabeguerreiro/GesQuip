@@ -1,3 +1,43 @@
+
+document.getElementById("NovosUsuarioslink").addEventListener("click", function(event) {
+    event.preventDefault(); // Impede o comportamento padrão do link
+
+    // Exibe ambos os contêineres
+    document.getElementById("novoUsuario").style.display = "block";
+    document.getElementById("usuarios").style.display = "block";
+ });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// abaixo é o codigo de pesquisa e devolução simples
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const finalizaSubmit = document.getElementById('finalizaSubmit');
     finalizaSubmit.addEventListener('click', () => {

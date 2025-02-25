@@ -123,8 +123,8 @@ class ContentPainel
                             <option value="">Escolha a família</option>
           HTML;
             $fam = $familia;
-                  foreach ($fam as $familia) {
-                    $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";  
+                  foreach ($fam as $familiaaa) {
+                    $html.="<option value=".$familiaaa['id_familia'].">".$familiaaa['ds_familia']."</option>";  
                   }
           $html.= <<<HTML
                           </select>
@@ -210,30 +210,17 @@ class ContentPainel
                             <tr>
 
       HTML;
-                          $equipamento = $itens;
-                            $fam2 = $familia;
-                             foreach ($itens['dados'] as $item):
-                               
-                               $id_fami = $item['id_familia'];
-                              
-                               foreach ($fam2 as $familiaa) {
-                                 
-                                 if($familiaa['id_familia'] == $id_fami){
-                                   $nm_familia = $familiaa['ds_familia'];
-                                 }
-                               }
-                 
-                 
-                                   $html .="<td>".$item['cod_patrimonio']."</td>";
-                                   $html .="<td>".$nm_familia."</td>";
-                                   $html .="<td>".$item['ds_item']."</td>";
-                 
-                                   $html .="<td>".$item['natureza']."</td>";
-                                   $html .="<td><button class='btn btn-success btn-sm' id ='".$item['id_item']."' >Editar</button>";
-                                   $html .="<a href='apagar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
-                                   $html .="</tr>";
-                                   
-                             endforeach;     
+
+      
+      foreach ($itens as $item):
+          $html .="<td>".$item['cod_patrimonio']."</td>";
+          $html .="<td>".$item['id_familia']."</td>";
+          $html .="<td>".$item['ds_item']."</td>";
+          $html .="<td>".$item['natureza']."</td>";
+          $html .="<td><button class='btn btn-success btn-sm' id ='".$item['id_item']."' >Editar</button>";
+          $html .="<a href='apagar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
+          $html .="</tr>";
+      endforeach;
                  
       $html.= <<<HTML
 

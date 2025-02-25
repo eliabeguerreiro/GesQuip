@@ -16,7 +16,7 @@ class ContentPainel
           <title>GesQuip - Equipamentos</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-          <link rel="stylesheet" href="style.css">
+          <link rel="stylesheet" href="src/style.css">
       </head>
 
     HTML;   
@@ -32,344 +32,190 @@ class ContentPainel
       $v = isset($_GET['v']) ? $_GET['v'] : null;
 
 
+      $itens = Painel::getItens(null, $filtro, $v);
+
       $html = <<<HTML
         <body>
-
-
-            <nav>
-                
-                <div class="logo">Gestão de itens</div>
-                <a href='../'><button><i class="fa fa-arrow-left"></i> Voltar</button></a>
+        <!--INICIO BARRA DE NAVEAGAÇÃO-->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <div class="navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav">
+                            <!--GESTÃO DE ITENS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="gestao_itens/" id="CadastroItemLink">Novo Item</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MOVIMENTACAO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MANUTENÇÃO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO DE USUARIOS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    </div>
+                </div>
             </nav>
-
-            <div class="sidebar">
-              <p><i class="fa fa-user"></i> $nome</p>
-              <a href="" class="active">Itens</a>
-              <a href="../moviment">Movimentações</a>
-              <a href="../manutencao">Manutenções</a>
-              <a href="../gestao_usuarios">Usuários</a>
-            </div>
-
+            <!--FIM BARRA DE NAVEAGAÇÃO-->
             
-            <main>
-      
-            <div class="box">
-                <h2>Cadastro de Item</h2>
-                <form method='POST' action = ''>                   
-                    <label for="familia">Familia:</label>
-                    <select name="familia">
-                    <option value="">Escolha uma familia</option>"
-        HTML;
+        <main>
+        <div class="main-content" id="mainContent">
+          <div class="container mt-4" id="novoItem" style="display: block;">
+            <div class="row">
+              <div class="col-md-12">                    
+                  <h3><b><p class="text-primary">Novo Item</p></b></h3>
+                  <form id="formNovoItem">
+                    <div class="mb-3">
+                      <label for="familia" class="form-label">Família</label>
+                      <select id="familia" name="familia" class="form-select" required>
+                        <option value="">Escolha a família</option>
+      HTML;
 
-      foreach ($fami as $familia) {
-        $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";  
-      }
-
-      $filtro_familia = $fami;
+              foreach ($fami as $familia) {
+                $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";  
+              }
+        
+              $filtro_familia = $fami;
 
       $html.= <<<HTML
-                    </select><br><br>
-                    <label for="nome">Modelo do item (descrição + marca):</label>
-                    <input type="text" id="nome" name="nome" required><br><br>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="modelo" class="form-label">Modelo</label>
+                      <input type="text" class="form-control" id="modelo" name="modelo">
+                    </div>
+                    <div class="mb-3">
+                      <label for="natureza" class="form-label">Natureza de posse</label>
+                      <select class="form-select" id="item_natureza" name="item_natureza">
+                        <option value="1">Próprio</option>
+                        <option value="2">Locado</option>
+                      </select>
+                    </div>
+                      <button type="submit" class="btn btn-primary">Cadastrar</button>
+                  </form>
+              </div>
+            </div>
+          </div>    
+        </div>
 
-                    <label for="natureza">Qual a natureza de posse do item:</label>
-                    <select name="natureza">
-                      <option value="proprio">próprio</option>
-                      <option value="locado">locado</option>
-                    </select>
-                    <br><br>
-                    <label for="nv_permissao">Qual o nivel de permissão do item:</label>
-                    <select name="nv_permissao">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                    </select>
-                    <br><br>
-                    <button type="submit">Cadastrar</button>
-                </form>
-            </div>  
-          </main>
-          <br><br>
+
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Todos os Equipamentos</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza" class="form-select form-select-sm">
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+        
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <select id="filtro_familia" class="form-select form-select-sm">
+                                    <option value="">Escolha uma família</option>
+      HTML;
+                          foreach ($filtro_familia as $familia) { 
+                            $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
+                          }
+      $html.= <<<HTML
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Tabela de Equipamentos -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Família</th>
+                                <th>Modelo</th>
+                                <th>Natureza</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
 
       HTML;
-        
-        if ($filtro && $v) {
-
-            $itens = Painel::getItens(null, $filtro, $v);
-
-
-
-
-            $html.= <<<HTML
-            <main>
-              <div class="box2">
-                <div class="box-title">
-                  <h1>Todos os Itens</h1>
-                  
-                  <div>
-                    <select name="tp_filtro" id="tp_filtro">
-                      <option value="0">filtro</option>
-                      <option value="id_familia">familia</option>
-                      <option value="natureza">natureza</option>
-                    </select>
-                  </div>
-
-                  <div id="id_familia" style="display: none;">
-                    <select id="filtro_familia">
-                      <option>escolha a familia</option>
-          HTML;  
-
-          foreach ($filtro_familia as $familia) { 
-            $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
-          }
-
-          $html.= <<<HTML
-                    </select>
-                  </div>
-
-                  <div id="natureza" style="display: none;">
-                    <select id="filtro_natureza">
-                      <option value="propio">propio</option>
-                      <option value="locado">locado</option>
-                    </select>
-                  </div>
-              
-                </div>
-                <div id="table1" class="hidden">
-                      <table>
-                          <thead>
-                              <tr>
-                                <th>Cod        </th>
-                                <th>Familia </th>
-                                <th>Nome      </th>
-                                <th>Natureza  </th>
-                                <th> </th>
-                              </tr>
-                          </thead>
-                          <tbody id="produtos">
-                            <tr>
-            HTML;
             
-            foreach ($itens['dados'] as $item):
-              
-              $id_fami = $item['id_familia'];
+                             foreach ($itens['dados'] as $item):
+                               
+                               $id_fami = $item['id_familia'];
+                 
+                               foreach ($fami as $familiaa) {
+                                 
+                                 if($familiaa['id_familia'] == $id_fami){
+                                   $nm_familia = $familiaa['ds_familia'];
+                                 }
+                               }
+                 
+                 
+                                   $html .="<td>".$item['cod_patrimonio']."</td>";
+                                   $html .="<td>".$nm_familia."</td>";
+                                   $html .="<td>".$item['ds_item']."</td>";
+                 
+                                   $html .="<td>".$item['natureza']."</td>";
+                                   $html .="<td><button class='btn btn-success btn-sm' id ='".$item['id_item']."' >Editar</button>";
+                                   $html .="<a href='apagar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
+                                   $html .="</tr>";
+                                   
+                             endforeach;     
+                 
+      $html.= <<<HTML
 
-              foreach ($fami as $familiaa) {
-                
-                if($familiaa['id_familia'] == $id_fami){
-                  $nm_familia = $familiaa['ds_familia'];
-                }
-              }
-
-
-                  $html .="<td>".$item['cod_patrimonio']."</td>";
-                  $html .="<td>".$nm_familia."</td>";
-                  $html .="<td>".$item['ds_item']."</td>";
-
-                  $html .="<td>".$item['natureza']."</td>";
-                  $html .="<td><button class='atualiza-button' id ='".$item['id_item']."' >Editar</button>";
-                  $html .="<a href='apagar.php?id=".$item['id_item']."'><button class='delete-button' >Apagar</button></a></td>";
-                  $html .="</tr>";
-                  
-            endforeach;     
-
-
-        }else{
-
-        
-
-
-
-
-
-          $html.= <<<HTML
-              <main>
-                <div class="box2">
-                  <div class="box-title">
-                    <h1>Todos os Itens</h1>
-                    
-                    <div>
-                      <select name="tp_filtro" id="tp_filtro">
-                        <option value="0">filtro</option>
-                        <option value="id_familia">familia</option>
-                        <option value="natureza">natureza</option>
-                      </select>
-                    </div>
-
-                    <div id="id_familia" style="display: none;">
-                      <select id="filtro_familia">
-                        <option>escolha a familia</option>
-            HTML;  
-
-            foreach ($filtro_familia as $familia) { 
-              $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
-            }
-
-            $html.= <<<HTML
-                      </select>
-                    </div>
-
-                    <div id="natureza" style="display: none;">
-                      <select id="filtro_natureza">
-                        <option value="propio">propio</option>
-                        <option value="locado">locado</option>
-                      </select>
-                    </div>
-                
-                  </div>
-                  <div id="table1" class="hidden">
-                        <table>
-                            <thead>
-                                <tr>
-                                  <th>Cod        </th>
-                                  <th>Familia </th>
-                                  <th>Nome      </th>
-                                  <th>Natureza  </th>
-                                  <th> </th>
-                                </tr>
-                            </thead>
-                            <tbody id="produtos">
-                              <tr>
-              HTML;
-              
-              foreach ($itens as $item):
-                
-                $id_fami = $item['id_familia'];
-
-                foreach ($fami as $familiaa) {
-                  
-                  if($familiaa['id_familia'] == $id_fami){
-                    $nm_familia = $familiaa['ds_familia'];
-                  }
-                }
-
-
-                    $html .="<td>".$item['cod_patrimonio']."</td>";
-                    $html .="<td>".$nm_familia."</td>";
-                    $html .="<td>".$item['ds_item']."</td>";
-
-                    $html .="<td>".$item['natureza']."</td>";
-                    $html .="<td><button class='atualiza-button' id ='".$item['id_item']."' >Editar</button>";
-                    $html .="<a href='apagar.php?id=".$item['id_item']."'><button class='delete-button' >Apagar</button></a></td>";
-                    $html .="</tr>";
-                    
-              endforeach;     
-
-
-        }
-
-        $html.= <<<HTML
-
-                            </tbody>
-                          </table>
-                  </div>
-                  </div>            
-                  <br><br><br><br><br>          
-         
-          <!-- Modal HTML -->
-           <div id="atualizaModal" class="modal" style="display:none;">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <h2>Atualizar descrição</h2>
-            <input type="text" id="novoNome" placeholder="Nova descrição" required>
-           
-            <button id="atualizaSubmit">Enviar</button>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
+        </div>
 
 
-
-
-
-                  
-          </main>
-          <main>
-            <div class="box2">
-            <h1>Todos os Itens Disponiveis</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Cod        </th>
-                              <th>Familia </th>
-                              <th>Nome      </th>     
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-    
-    foreach ($itens_disponiveis as $item):
-      
-      $id_fami = $item['id_familia'];
-
-      foreach ($fami as $familiaa) {
-        
-        if($familiaa['id_familia'] == $id_fami){
-          $nm_familia = $familiaa['ds_familia'];
-        }
-      }
-
-          
-          $html .="<td>".$item['cod_patrimonio']."</td>";
-          $html .="<td>".$nm_familia."</td>";
-          $html .="<td>".$item['ds_item']."</td>";
-          $html .="</tr>";
-          
-    endforeach;     
-
-  $html.= <<<HTML
-
-                      </tbody>
-                    </table>
-            </div>            
-            <br><br><br><br><br>          
-
-
-
+       
         </main>
-
-
-        <main>
-            <div class="box2">
-            <h1>Todos os Itens em uso</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Cod        </th>
-                              <th>Familia </th>
-                              <th>Nome      </th>
-
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-    
-    foreach ($itens_locados as $item):
-      
-      $id_fami = $item['id_familia'];
-
-      foreach ($fami as $familiaa) {
-        
-        if($familiaa['id_familia'] == $id_fami){
-          $nm_familia = $familiaa['ds_familia'];
-        }
-      }
-
-          $html .="<td>".$item['cod_patrimonio']."</td>";
-          $html .="<td>".$nm_familia."</td>";
-          $html .="<td>".$item['ds_item']."</td>";
-          $html .="</tr>";
-          
-    endforeach;     
-
-  $html.= <<<HTML
-
-                      </tbody>
-                    </table>
-            </div>            
-            <br><br><br><br><br>          
-        </main>
-
 
         HTML;
         if(isset($_SESSION['msg'])){
@@ -378,114 +224,8 @@ class ContentPainel
         }
       $html.= <<<HTML
 
-        <script>
-
-            document.addEventListener("DOMContentLoaded", function () {
-              // Captura os elementos <select> internos
-              const filtroFamilia = document.getElementById("filtro_familia");
-              const filtroNatureza = document.getElementById("filtro_natureza");
-
-              // Função para atualizar a URL com os parâmetros GET
-              function atualizarURL(filtro, valor) {
-                // Constrói a nova URL com os parâmetros GET
-                const url = new URL(window.location.href);
-                url.searchParams.set("filtro", filtro);
-                url.searchParams.set("v", valor);
-
-                // Redireciona para a nova URL
-                window.location.href = url.toString();
-              }
-
-              // Adiciona um ouvinte de evento para o <select> de familia
-              if (filtroFamilia) {
-                filtroFamilia.addEventListener("change", function () {
-                  const valorSelecionado = filtroFamilia.value;
-                  if (valorSelecionado) {
-                    atualizarURL("id_familia", valorSelecionado);
-                  }
-                });
-              }
-
-              // Adiciona um ouvinte de evento para o <select> de natureza
-              if (filtroNatureza) {
-                filtroNatureza.addEventListener("change", function () {
-                  const valorSelecionado = filtroNatureza.value;
-                  if (valorSelecionado) {
-                    atualizarURL("natureza", valorSelecionado);
-                  }
-                });
-              }
-            });
-
-
-
-
-            document.addEventListener("DOMContentLoaded", function () {
-              // Seleciona o elemento <select>
-              const selectElement = document.getElementById("tp_filtro");
-
-              // Adiciona um ouvinte de evento para detectar mudanças no <select>
-              selectElement.addEventListener("change", function () {
-                // Oculta todas as divs relacionadas aos filtros
-                document.getElementById("id_familia").style.display = "none";
-                document.getElementById("natureza").style.display = "none";
-
-                // Verifica o valor selecionado e exibe a div correspondente
-                const selectedValue = selectElement.value;
-                if (selectedValue === "id_familia") {
-                  document.getElementById("id_familia").style.display = "block";
-                } else if (selectedValue === "natureza") {
-                  document.getElementById("natureza").style.display = "block";
-                }
-              });
-            });  
-
-
-            const finalizaButtons = document.querySelectorAll('.atualiza-button');
-            const modal = document.getElementById('atualizaModal');
-            const closeModal = document.querySelector('.modal .close');
-            const finalizaSubmit = document.getElementById('atualizaSubmit');
-            let currentItemId;
-
-            finalizaButtons.forEach(button => {
-              button.addEventListener('click', () => {
-                currentItemId = button.id;
-                modal.style.display = 'block';
-              });
-            });
-
-            closeModal.addEventListener('click', () => {
-              modal.style.display = 'none';
-            });
-
-            // Fechar a modal ao clicar fora dela
-            window.onclick = function(event) {
-              if (event.target == modal) {
-                modal.style.display = 'none';
-              }
-            }
-
-            finalizaSubmit.addEventListener('click', () => {
-              const texto = document.getElementById('novoNome').value;
-              
-
-              fetch('atualizar_item.php', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto)
-                })
-              .then(response => response.text())
-              .then(data => {
-                console.log(data);
-                modal.style.display = 'none';
-                window.location.reload();
-              })
-              .catch(error => console.error('Error:', error));
-            });
-        </script>
         </body>
+        <script src="src/script.js"></script>
         </html>
       HTML;   
 

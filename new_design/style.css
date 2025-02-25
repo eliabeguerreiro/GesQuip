@@ -50,3 +50,30 @@
     .navbar-nav .nav-item {
         margin-right: 20px; /* Aumenta o espaçamento */
     }
+
+    .header-with-filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .filter-container {
+        display: flex;
+        align-items: center;
+    }
+    
+    .filter-container > div {
+        margin-left: 10px;
+    }
+
+    .filter-container select {
+        width: auto; /* Ajusta a largura automaticamente */
+        min-width: 150px; /* Define uma largura mínima */
+    }
+    
+    #filtro_natureza select,
+    #filtro_familia select {
+        width: auto; /* Ajusta a largura automaticamente */
+        min-width: 150px; /* Define uma largura mínima */
+    }

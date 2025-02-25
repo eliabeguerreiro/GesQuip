@@ -9,42 +9,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><b>GesQuip</b></a>
             <div class="navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <!--GESTÃO DE ITENS-->
+                    <!-- GESTÃO DE ITENS -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="gestao_itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                            <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                            <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
-                            <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                            <li><a class="dropdown-item" href="gestao_itens/" id="CadastroItemLink">Novo Item</a></li>
+                            <li><a class="dropdown-item" href="gestao_itens" id="CadastroItemLink">Novo Item</a></li>
                         </ul>
                     </li>
-                    <!--GESTÃO MOVIMENTACAO-->
+                    <!-- GESTÃO MOVIMENTAÇÃO -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
-                            <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
-                            <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                            <li><a class="dropdown-item" href="#" id="MovimentAtiva">Movimentações Ativas</a></li>
+                            <li><a class="dropdown-item" href="#" id="MovimentEncer">Movimentações Encerradas</a></li>
                         </ul>
                     </li>
-                    <!--GESTÃO MANUTENÇÃO-->
+                    <!-- GESTÃO MANUTENÇÃO -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenção</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
-                            <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                            <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                            <li><a class="dropdown-item" href="#" id="ManutencaoAtiva">Manutenções Ativas</a></li>
                         </ul>
                     </li>
-                    <!--GESTÃO DE USUARIOS-->
+                    <!-- GESTÃO DE USUÁRIOS -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
                         <ul class="dropdown-menu">
@@ -83,7 +77,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="natureza" class="form-label">Natureza de posse</label>
-                            <select class="form-select" id="natureza" name="natureza">
+                            <select class="form-select" id="item_natureza" name="item_natureza">
                                 <option value="1">Próprio</option>
                                 <option value="2">Locado</option>
                             </select>
@@ -97,38 +91,65 @@
 
 
         <!-- Inicialmente visível -->
-            <div class="container mt-4" id="containerFerramentas" style="display: block;">    
-                <div class="row mt-4">
-                    <div class="col-md-12">
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
                         <h3><b><p class="text-primary">Todos os Equipamentos</p></b></h3>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Família</th>
-                                        <th>Modelo</th>
-                                        <th>Natureza</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="itens">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>ALAVANCA</td>
-                                        <td>Modelo A</td>
-                                        <td>Próprio</td>
-                                        <td>
-                                            <button class="btn btn-success btn-sm">Editar</button>
-                                            <a href="apagar.php?id=1" class="btn btn-danger btn-sm">Apagar</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                       </div>
-                  </div>
-             </div>
-         </div>
-
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza" class="form-select form-select-sm">
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+        
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <select id="filtro_familia" class="form-select form-select-sm">
+                                    <option value="familia1">Família 1</option>
+                                    <option value="familia2">Família 2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Tabela de Equipamentos -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Família</th>
+                                <th>Modelo</th>
+                                <th>Natureza</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+                                <td>1</td>
+                                <td>ALAVANCA</td>
+                                <td>Modelo A</td>
+                                <td>Próprio</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm">Editar</button>
+                                    <a href="apagar.php?id=1" class="btn btn-danger btn-sm">Apagar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
          <div class="container mt-4" id="containerFerramentas" style="display: block;">    
             <div class="row mt-4">

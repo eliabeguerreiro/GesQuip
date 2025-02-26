@@ -80,7 +80,7 @@ class Item
     }
 
 
-    public static function getItensReservados($id){
+    public static function getItensReservados($id = null){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = $id");
@@ -143,7 +143,7 @@ class Item
     }
 
 
-    public static function getItens($id, $nm_filtro, $filtro){
+    public static function getItens($id = null, $nm_filtro = null, $filtro = null){
 
         if($id){
 
@@ -258,7 +258,7 @@ class Item
         }   
       
     }
-    public static function getFamilia($id)
+    public static function getFamilia($id = null)
     {
 
         if($id){

@@ -8,8 +8,8 @@ include_once"classes/db.class.php";
 
 
 
-$familia = Item::getFamilia(null);
-$itens = Item::getItens(null, null, null);
+$familia = Item::getFamilia();
+$itens = Item::getItens();
 $itens_disponiveis = Item::getItensDisponiveis();
 $itens_locados = Item::getItensLocados();
 

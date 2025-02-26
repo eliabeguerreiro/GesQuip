@@ -25,7 +25,7 @@ class Moviment
     }
  
  
-    public static function finalizaMoviment($id){
+    public static function finalizaMoviment($id = null){
        
         var_dump($id);
         
@@ -40,7 +40,7 @@ class Moviment
         }
     }
         
-    public static function manutencaoItem($id){
+    public static function manutencaoItem($id = null){
 
         
         $dt = date('Y-m-d H:i:s');
@@ -92,7 +92,7 @@ class Moviment
     }
 
 
-    public static function getItensMoviment($id){
+    public static function getItensMoviment($id = null){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM item_movimentacao WHERE id_movimentacao = $id and dt_devolucao IS NULL ");
@@ -111,7 +111,7 @@ class Moviment
     }
 
 
-    public static function getMoviment($id){
+    public static function getMoviment($id = null){
         
         if($id){
             $db = DB::connect();

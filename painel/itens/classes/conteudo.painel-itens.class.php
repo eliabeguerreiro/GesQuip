@@ -100,59 +100,76 @@ class ContentPainelItem
                 </div>
             </nav>
             <!--FIM BARRA DE NAVEAGAÇÃO-->
-
-
-
-
             <main>
       HTML;
               
-
-
 
       if (isset($pagina)) {
         switch ($pagina) {
            case 'novo':
             
-              $html.= <<<HTML
+            $html.= <<<HTML
               <div class="main-content" id="mainContent">
               <div class="container mt-4" id="novoItem" style="display: block;">
                 <div class="row">
                   <div class="col-md-12">                    
                       <h3><b><p class="text-primary">Novo Item</p></b></h3>
-                      <form id="formNovoItem">
+                      <form method='POST' action = '' id="formNovoItem">
                         <div class="mb-3">
                           <label for="familia" class="form-label">Família</label>
                           <select id="familia" name="familia" class="form-select" required>
                             <option value="">Escolha a família</option>
           HTML;
             $fam = $familia;
-                  foreach ($fam as $familiaaa) {
-                    $html.="<option value=".$familiaaa['id_familia'].">".$familiaaa['ds_familia']."</option>";  
-                  }
+            foreach ($fam as $familiaaa) {
+                $html.="<option value=".$familiaaa['id_familia'].">".$familiaaa['ds_familia']."</option>";  
+            }
           $html.= <<<HTML
                           </select>
                         </div>
                         <div class="mb-3">
-                          <label for="modelo" class="form-label">Modelo</label>
-                          <input type="text" class="form-control" id="modelo" name="modelo">
+                          <label for="nome" class="form-label">Modelo</label>
+                          <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
                         </div>
-                        <div class="mb-3">
-                          <label for="natureza" class="form-label">Natureza de posse</label>
-                          <select class="form-select" id="item_natureza" name="item_natureza">
-                            <option value="1">Próprio</option>
-                            <option value="2">Locado</option>
-                          </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Natureza de posse</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="natureza_1" name="natureza" value="propio" required>
+                                            <label class="form-check-label" for="natureza_1">Próprio</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="natureza_2" name="natureza" value="locado" required>
+                                            <label class="form-check-label" for="natureza_2">Locado</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nível de permissão</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="nv_permissao_1" name="nv_permissao" value="1" required>
+                                            <label class="form-check-label" for="nv_permissao_1">Nível 1</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="nv_permissao_2" name="nv_permissao" value="2" required>
+                                            <label class="form-check-label" for="nv_permissao_2">Nível 2</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                          <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
                       </form>
                   </div>
                 </div>
               </div>    
             </div>
-
           HTML;
-
 
             break;
             case 'itens':

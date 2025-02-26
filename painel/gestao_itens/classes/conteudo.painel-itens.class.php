@@ -233,21 +233,170 @@ class ContentPainel
               
                 break;
             case 'disponiveis':
-                
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Todos os Equipamentos Disponiveis</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza" class="form-select form-select-sm">
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+        
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <select id="filtro_familia" class="form-select form-select-sm">
+                                    <option value="">Escolha uma família</option>
+      HTML;
+                          $filtro_familia = $familia;
+                          foreach ($filtro_familia as $familia) { 
+                            $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
+                          }
+      $html.= <<<HTML
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Tabela de Equipamentos -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Família</th>
+                                <th>Modelo</th>
+                                <th>Natureza</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($itens_disponiveis as $item):
+          $html .="<td>".$item['cod_patrimonio']."</td>";
+          $html .="<td>".$item['id_familia']."</td>";
+          $html .="<td>".$item['ds_item']."</td>";
+          $html .="<td>".$item['natureza']."</td>";
+          $html .="</tr>";
+      endforeach;
+                 
+      $html.= <<<HTML
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      HTML;
+
+
                 break;
             case 'emuso':
+
+
+
+              $html.= <<<HTML
+              <!-- TABELA -->
+              <div class="container mt-4" id="containerFerramentas" style="display: block;">
+                  <div class="row mt-4">
+                      <div class="col-md-12">
+                          <!-- Header com filtro -->
+                          <div class="header-with-filter">
+                              <h3><b><p class="text-primary">Todos os Equipamentos em Uso</p></b></h3>
+                              <div class="filter-container">
+                                  <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                                  <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                      <option value="">Escolha um filtro</option>
+                                      <option value="familia">Família</option>
+                                      <option value="natureza">Natureza</option>
+                                  </select>
+              
+                                  <!-- Div para Natureza -->
+                                  <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                      <select id="filtro_natureza" class="form-select form-select-sm">
+                                          <option value="proprio">Próprio</option>
+                                          <option value="locado">Locado</option>
+                                      </select>
+                                  </div>
+              
+                                  <!-- Div para Família -->
+                                  <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                      <select id="filtro_familia" class="form-select form-select-sm">
+                                          <option value="">Escolha uma família</option>
+            HTML;
+                                $filtro_familia = $familia;
+                                foreach ($filtro_familia as $familia) { 
+                                  $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
+                                }
+            $html.= <<<HTML
+      
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+              
+                          <!-- Tabela de Equipamentos -->
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Família</th>
+                                      <th>Modelo</th>
+                                      <th>Natureza</th>
+                                      
+                                  </tr>
+                              </thead>
+                              <tbody id="itens">
+                                  <tr>
+      
+            HTML;
+      
+            
+            foreach ($itens_locados as $item):
+                $html .="<td>".$item['cod_patrimonio']."</td>";
+                $html .="<td>".$item['id_familia']."</td>";
+                $html .="<td>".$item['ds_item']."</td>";
+                $html .="<td>".$item['natureza']."</td>";
+              
+                $html .="</tr>";
+            endforeach;
+                       
+            $html.= <<<HTML
+      
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+            HTML;
+      
                 
                 break;
             default:
-                // Caso nenhum dos casos acima seja correspondido, você pode definir um comportamento padrão aqui.
-                // Por exemplo, você pode lançar um erro ou definir uma variável vazia.
+                header('Location: ?pagina=novo');
                 break;
         }
     }
       
-
-
-
       $html.= <<<HTML
 
        

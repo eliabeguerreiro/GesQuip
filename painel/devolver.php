@@ -6,7 +6,7 @@ include_once "classes/db.class.php";
 if (isset($_POST['id'])) {
     $itemId = $_POST['id'];
 
-    if ($reserva = Painel::devolverItemByPanel($itemId)) {
+    if ($reserva = Moviment::devolverItemByPanel($itemId)) {
         echo json_encode([
             'success' => true,
             'message' => 'Devolução realizada com sucesso!'

@@ -3,7 +3,7 @@ include_once"../../classes/painel.class.php";
 include_once"../../itens/classes/gest-item.class.php";
 
 
-class Painel
+class Moviment
 {
  
 
@@ -89,17 +89,6 @@ class Painel
             }
         }
             
-    }
-
-
-    public static function getItens(){
-        
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item order by id_item desc");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
-
     }
 
 

@@ -4,7 +4,6 @@ include_once"../../classes/painel.class.php";
 class User
 {
 
-
     public static function getFuncionarios($id = null)
     {
         if($id){

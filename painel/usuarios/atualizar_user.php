@@ -5,7 +5,7 @@ include_once"classes/db.class.php";
 
 //var_dump($_POST);
 
-if ($atualiza = Painel::updateUsuario($_POST['id'], $_POST['metadata'], $_POST['data'])) {
+if ($atualiza = User::updateUsuario($_POST['id'], $_POST['metadata'], $_POST['data'])) {
     echo "Atualização realizada com sucesso!";
 } else {
     echo "Falha ao atualizar a reserva.";

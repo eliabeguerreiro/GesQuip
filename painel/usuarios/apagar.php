@@ -6,10 +6,10 @@ include_once"classes/db.class.php";
 //var_dump($_SESSION);
 //var_dump($_GET);
 
-$usuarios = Painel::getUsuarios($_GET['id']);
+$usuarios = User::getUsuarios($_GET['id']);
 $id = $_GET['id'];
 
-if(Painel::validarToken()){
+if(Paineel::validarToken()){
 
 }else{
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
@@ -23,7 +23,7 @@ if(!isset($_SESSION['data_user'])){
 }
 
 if(isset($_GET['apagar'])){
-    if ($reserva = Painel::deleteUsuario($_GET['id'])) {
+    if ($reserva = User::deleteUsuario($_GET['id'])) {
         $_SESSION['msg'] = "Usuario removido com sucesso!";
         header('Location:index.php');
     } else {

@@ -6,13 +6,13 @@ include_once"classes/gest-moviment.class.php";
 include_once"classes/db.class.php";
 
 $funcionarios = User::getFuncionarios(null);
-$moviment = Painel::getMoviment(null);
-$moviment_encerrado = Painel::getMovimentEncerrado();
+$moviment = Moviment::getMoviment(null);
+$moviment_encerrado = Moviment::getMovimentEncerrado();
 
 
 
-$pagina = new ContentPainel;
-$movimentacao_incompleta = Painel::verificaMovimentIncompleto();
+$pagina = new ContentPainelMoviment;
+$movimentacao_incompleta = Moviment::verificaMovimentIncompleto();
 
 
 if(Paineel::validarToken()){
@@ -43,7 +43,7 @@ if(isset($_GET['sair'])){Paineel::logOut();}
 
 if($_POST){  
 
-    if($cad_mov = Painel::setMoviment($_POST)){ header('location:escolher_itens.php?id='.$cad_mov);}
+    if($cad_mov = Moviment::setMoviment($_POST)){ header('location:escolher_itens.php?id='.$cad_mov);}
 } 
 
 

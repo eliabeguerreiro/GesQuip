@@ -1,6 +1,6 @@
 <?php
   
-class ContentPainel
+class ContentPainelMoviment
 {
   public function renderHeader(){
    

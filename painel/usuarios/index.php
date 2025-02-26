@@ -24,12 +24,12 @@ if(!isset($_SESSION['data_user'])){
 
 }
 
-if(isset($_GET['sair'])){Painel::logOut();}
+if(isset($_GET['sair'])){Paineel::logOut();}
 
-$usuarios = Painel::getUsuarios(null);
+$usuarios = User::getUsuarios(null);
 $pagina = new ContentPainel;
 
-if($_POST){  if($cad_item = Painel::setUsuario($_POST)){ header('location:');
+if($_POST){  if($cad_item = User::setUsuario($_POST)){ header('location:');
 }} 
 
 echo $pagina->renderHeader();

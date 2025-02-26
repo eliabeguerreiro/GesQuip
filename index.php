@@ -2,12 +2,12 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
-include_once "classes/user.class.php";
+include_once "classes/painel.class.php";
 include_once "classes/db.class.php";
 
 if (!empty($_POST)) {
     $dados_login = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-    if ($login = User::login($dados_login)) {
+    if ($login = Paineel::login($dados_login)) {
         header('Location: painel/');
         exit;
     } else {

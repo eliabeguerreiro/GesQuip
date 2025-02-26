@@ -38,11 +38,11 @@ class ContentPainel
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="gestao_itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MOVIMENTACAO-->
@@ -65,9 +65,9 @@ class ContentPainel
                             </li>
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                    <li><a class="dropdown-item" href="usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
                                 </ul>
                             </li>
                         </ul>

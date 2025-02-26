@@ -8,13 +8,13 @@ include_once"classes/db.class.php";
 
 
 
-$familia = Painel::getFamilia(null);
-$itens = Painel::getItens(null, null, null);
-$itens_disponiveis = Painel::getItensDisponiveis();
-$itens_locados = Painel::getItensLocados();
+$familia = Item::getFamilia(null);
+$itens = Item::getItens(null, null, null);
+$itens_disponiveis = Item::getItensDisponiveis();
+$itens_locados = Item::getItensLocados();
 
 
-if(User::validarToken()){
+if(Paineel::validarToken()){
 
 }else{
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
@@ -30,17 +30,17 @@ if(!isset($_SESSION['data_user'])){
     exit;
 }
 
-if(isset($_GET['sair'])){User::logOut();}
+if(isset($_GET['sair'])){Paineel::logOut();}
 
 
 
 
-if($_POST){  if($cad_item = Painel::setItem($_POST)){ header('location:');}} 
+if($_POST){  if($cad_item = Item::setItem($_POST)){ header('location:');}} 
 
 
 
 //var_dump($itens);
-$pagina = new ContentPainel;
+$pagina = new ContentPainelItem;
 echo $pagina->renderHeader();
 
 if(isset($_GET['pagina'])){

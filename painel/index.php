@@ -3,10 +3,10 @@ session_start();
 ob_start();
 //var_dump($_SESSION);
 
+include_once"../classes/painel.class.php";
 include_once"classes/conteudo.painel.class.php";
-include_once"classes/painel.class.php";
 
-if (User::validarToken()) {
+if (Paineel::validarToken()) {
     // O token é válido, permita acesso ao painel
 } else {
     // O token é inválido, redirecione para a página de login
@@ -21,7 +21,7 @@ if(!isset($_SESSION['data_user'])){
 
 }
 
-if(isset($_GET['sair'])){User::logOut();}
+if(isset($_GET['sair'])){Paineel::logOut();}
 
 
 $pagina = new ContentPainel;

@@ -1,6 +1,6 @@
 <?php
   
-class ContentPainel
+class ContentPainelItem
 {
 
   public function renderHeader(){
@@ -392,7 +392,7 @@ class ContentPainel
                 
                 break;
             default:
-                header('Location: ?pagina=novo');
+                header('Location: ?pagina=itens');
                 break;
         }
     }

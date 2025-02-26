@@ -1,6 +1,6 @@
 <?php
 // if(Usuarios::verificar($conn, $headers)){  }  
-class User
+class Paineel
 {
 
 

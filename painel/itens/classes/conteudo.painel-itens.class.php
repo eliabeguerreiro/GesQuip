@@ -100,6 +100,10 @@ class ContentPainelItem
                 </div>
             </nav>
             <!--FIM BARRA DE NAVEAGAÇÃO-->
+
+
+
+
             <main>
       HTML;
               
@@ -217,7 +221,7 @@ class ContentPainelItem
           $html .="<td>".$item['id_familia']."</td>";
           $html .="<td>".$item['ds_item']."</td>";
           $html .="<td>".$item['natureza']."</td>";
-          $html .="<td><button class='btn btn-success btn-sm' id ='".$item['id_item']."' >Editar</button>";
+          $html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
           $html .="<a href='apagar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
           $html .="</tr>";
       endforeach;
@@ -229,6 +233,27 @@ class ContentPainelItem
                 </div>
             </div>
         </div>
+
+        <!-- Modal de Atualização -->
+        <div class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
       HTML;
               
                 break;

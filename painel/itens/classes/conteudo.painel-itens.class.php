@@ -194,17 +194,17 @@ class ContentPainelItem
         
                             <!-- Div para Natureza -->
                             <div id="filtro_natureza" style="display: none; margin-left: 10px;">
-                                <select id="filtro_natureza" class="form-select form-select-sm">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
                                     <option value="proprio">Próprio</option>
                                     <option value="locado">Locado</option>
                                 </select>
                             </div>
-        
+
                             <!-- Div para Família -->
-                           <!-- Div para Família -->
                             <div id="filtro_familia" style="display: none; margin-left: 10px;">
                                 <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
-                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%;  max-height: 200px; overflow-y: auto; display: none;">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
                             </div>
@@ -287,26 +287,21 @@ class ContentPainelItem
                                 <option value="natureza">Natureza</option>
                             </select>
         
-                            <!-- Div para Natureza -->
-                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
-                                <select id="filtro_natureza" class="form-select form-select-sm">
+                           <!-- Div para Natureza -->
+                           <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
                                     <option value="proprio">Próprio</option>
                                     <option value="locado">Locado</option>
                                 </select>
                             </div>
-        
+
                             <!-- Div para Família -->
                             <div id="filtro_familia" style="display: none; margin-left: 10px;">
-                                <select id="filtro_familia" class="form-select form-select-sm">
-                                    <option value="">Escolha uma família</option>
-      HTML;
-                          $filtro_familia = $familia;
-                          foreach ($filtro_familia as $familia) { 
-                            $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
-                          }
-      $html.= <<<HTML
-
-                                </select>
+                                <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -367,29 +362,24 @@ class ContentPainelItem
                                       <option value="natureza">Natureza</option>
                                   </select>
               
-                                  <!-- Div para Natureza -->
-                                  <div id="filtro_natureza" style="display: none; margin-left: 10px;">
-                                      <select id="filtro_natureza" class="form-select form-select-sm">
-                                          <option value="proprio">Próprio</option>
-                                          <option value="locado">Locado</option>
-                                      </select>
-                                  </div>
-              
-                                  <!-- Div para Família -->
-                                  <div id="filtro_familia" style="display: none; margin-left: 10px;">
-                                      <select id="filtro_familia" class="form-select form-select-sm">
-                                          <option value="">Escolha uma família</option>
-            HTML;
-                                $filtro_familia = $familia;
-                                foreach ($filtro_familia as $familia) { 
-                                  $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
-                                }
-            $html.= <<<HTML
-      
-                                      </select>
-                                  </div>
-                              </div>
-                          </div>
+                                 <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
               
                           <!-- Tabela de Equipamentos -->
                           <table class="table table-striped">
@@ -449,49 +439,79 @@ class ContentPainelItem
         </body>
         <script src="src/script.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const filtroFamiliaInput = document.getElementById('filtro_familia_input');
-                const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
-      HTML;
-                $html .= "const familias = ".json_encode($familia).";";
-      $html.= <<<HTML
-                filtroFamiliaInput.addEventListener('input', function() {
-                    const query = filtroFamiliaInput.value.toLowerCase();
-                    filtroFamiliaSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroPrincipal = document.getElementById('filtro_principal');
+            const filtroNatureza = document.getElementById('filtro_natureza');
+            const filtroNaturezaSelect = document.getElementById('filtro_natureza_select');
+            const filtroFamilia = document.getElementById('filtro_familia');
+            const filtroFamiliaInput = document.getElementById('filtro_familia_input');
+            const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
+        HTML;
+        $html .= "const familias = " . json_encode($familia) . ";";
+        $html.= <<<HTML
 
-                    if (query.length > 0) {
-                        const filteredFamilias = familias.filter(familia => familia.ds_familia.toLowerCase().includes(query));
-                        filteredFamilias.forEach(familia => {
-                            const suggestionItem = document.createElement('a');
-                            suggestionItem.href = '#';
-                            suggestionItem.className = 'list-group-item list-group-item-action';
-                            suggestionItem.textContent = familia.ds_familia;
-                            suggestionItem.dataset.id = familia.id_familia;
+            filtroPrincipal.addEventListener('change', function() {
+                const filtro = filtroPrincipal.value;
+                filtroNatureza.style.display = 'none';
+                filtroFamilia.style.display = 'none';
 
-                            suggestionItem.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                filtroFamiliaInput.value = familia.ds_familia;
-                                filtroFamiliaSuggestions.style.display = 'none';
-                                // Aqui você pode adicionar a lógica para definir o filtro de família
-                            });
+                if (filtro === 'natureza') {
+                    filtroNatureza.style.display = 'inline-block';
+                } else if (filtro === 'familia') {
+                    filtroFamilia.style.display = 'inline-block';
+                }
+            });
 
-                            filtroFamiliaSuggestions.appendChild(suggestionItem);
+            filtroNaturezaSelect.addEventListener('change', function() {
+                const filtro = filtroPrincipal.value;
+                const valor = filtroNaturezaSelect.value;
+                atualizarURL(filtro, valor);
+            });
+
+            filtroFamiliaInput.addEventListener('input', function() {
+                const query = filtroFamiliaInput.value.toLowerCase();
+                filtroFamiliaSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+
+                if (query.length > 0) {
+                    const filteredFamilias = familias.filter(familia => familia.ds_familia.toLowerCase().includes(query));
+                    filteredFamilias.forEach(familia => {
+                        const suggestionItem = document.createElement('a');
+                        suggestionItem.href = '#';
+                        suggestionItem.className = 'list-group-item list-group-item-action';
+                        suggestionItem.textContent = familia.ds_familia;
+                        suggestionItem.dataset.id = familia.id_familia;
+
+                        suggestionItem.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            filtroFamiliaInput.value = familia.ds_familia;
+                            filtroFamiliaSuggestions.style.display = 'none';
+                            atualizarURL('familia', familia.id_familia);
                         });
 
-                        filtroFamiliaSuggestions.style.display = 'block';
-                    } else {
-                        filtroFamiliaSuggestions.style.display = 'none';
-                    }
-                });
+                        filtroFamiliaSuggestions.appendChild(suggestionItem);
+                    });
 
-                // Fecha a lista de sugestões se o usuário clicar fora dela
-                document.addEventListener('click', function(e) {
-                    if (!filtroFamiliaInput.contains(e.target) && !filtroFamiliaSuggestions.contains(e.target)) {
-                        filtroFamiliaSuggestions.style.display = 'none';
-                    }
-                });
+                    filtroFamiliaSuggestions.style.display = 'block';
+                } else {
+                    filtroFamiliaSuggestions.style.display = 'none';
+                }
             });
-            </script>
+
+            // Fecha a lista de sugestões se o usuário clicar fora dela
+            document.addEventListener('click', function(e) {
+                if (!filtroFamiliaInput.contains(e.target) && !filtroFamiliaSuggestions.contains(e.target)) {
+                    filtroFamiliaSuggestions.style.display = 'none';
+                }
+            });
+
+            function atualizarURL(filtro, valor) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('filtro', filtro);
+                url.searchParams.set('valor', valor);
+                window.location.href = url.toString();
+            }
+        });
+        </script>
         </html>
       HTML;   
 

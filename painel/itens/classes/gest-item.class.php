@@ -155,7 +155,7 @@ class Item
             return ["dados" => $resultado];
 
         }elseif($nm_filtro){
-            echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect();
             $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $rs->execute();

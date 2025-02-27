@@ -29,7 +29,7 @@ class ContentPainelItem
         
         // Verifica se os parâmetros GET estão definidos
         $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
-        $v = isset($_GET['valor']) ? $_GET['valor'] : null;
+        $valor = isset($_GET['valor']) ? $_GET['valor'] : null;
       
     
         function buildUrl($newParams = []) {
@@ -108,6 +108,14 @@ class ContentPainelItem
             <!--FIM BARRA DE NAVEAGAÇÃO-->
             <main>
       HTML;
+
+      if ($filtro && $valor) {
+
+        $itens_filtrados = Item::getItens(null, $filtro, $valor);
+
+        $itens = $itens_filtrados['dados'];
+      }
+
               
 
       if (isset($pagina)) {
@@ -194,7 +202,7 @@ class ContentPainelItem
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="familia">Família</option>
+                                <option value="id_familia">Família</option>
                                 <option value="natureza">Natureza</option>
                             </select>
         
@@ -463,7 +471,7 @@ class ContentPainelItem
 
                 if (filtro === 'natureza') {
                     filtroNatureza.style.display = 'inline-block';
-                } else if (filtro === 'familia') {
+                } else if (filtro === 'id_familia') {
                     filtroFamilia.style.display = 'inline-block';
                 }
             });
@@ -491,7 +499,7 @@ class ContentPainelItem
                             e.preventDefault();
                             filtroFamiliaInput.value = familia.ds_familia;
                             filtroFamiliaSuggestions.style.display = 'none';
-                            atualizarURL('familia', familia.id_familia);
+                            atualizarURL('id_familia', familia.id_familia);
                         });
 
                         filtroFamiliaSuggestions.appendChild(suggestionItem);

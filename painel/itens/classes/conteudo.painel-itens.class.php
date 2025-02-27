@@ -223,9 +223,32 @@ class ContentPainelItem
                                 </div>
                             </div>
                         </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_familia') {
+                        $familiaNome = array_filter($familia, function($f) use ($valor) {
+                            return $f['id_familia'] == $valor;
+                        });
+                        $familiaNome = reset($familiaNome);
+                        $html .= "Família: " . $familiaNome['ds_familia'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
                     </div>
-        
-                    <!-- Tabela de Equipamentos -->
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Equipamentos -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -243,8 +266,9 @@ class ContentPainelItem
 
       
       foreach ($itens as $item):
+          $nm_familia = Item::getFamiliaNome($item['id_familia']);
           $html .="<td>".$item['cod_patrimonio']."</td>";
-          $html .="<td>".$item['id_familia']."</td>";
+          $html .="<td>".$nm_familia."</td>";
           $html .="<td>".$item['ds_item']."</td>";
           $html .="<td>".$item['natureza']."</td>";
           $html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";

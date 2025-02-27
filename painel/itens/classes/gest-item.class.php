@@ -5,6 +5,23 @@ include_once"../../classes/painel.class.php";
 class Item
 {
 
+    public static function getFamiliaNome($id_familia)
+{
+    if ($id_familia) {
+        $id_familia = (int)$id_familia;
+        $db = DB::connect();
+        $rs = $db->prepare("SELECT ds_familia FROM familia WHERE id_familia = :id_familia");
+        $rs->bindParam(':id_familia', $id_familia, PDO::PARAM_INT);
+        $rs->execute();
+        $resultado = $rs->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado) {
+            return $resultado['ds_familia']; // Retorna o nome da família
+        }
+    }
+
+    return null; 
+}
 
     public static function reservaItem($id, $mov){    
         $db = DB::connect();
@@ -90,7 +107,7 @@ class Item
 
     }
 
-    public static function getItensDevolvidos($id){
+    public static function getItensDevolvidos($id ){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM item_movimentacao WHERE id_movimentacao = $id and dt_devolucao IS NOT NULL ");

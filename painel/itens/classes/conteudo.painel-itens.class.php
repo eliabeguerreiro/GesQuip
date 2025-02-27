@@ -128,22 +128,22 @@ class ContentPainelItem
                 <div class="row">
                   <div class="col-md-12">                    
                       <h3><b><p class="text-primary">Novo Item</p></b></h3>
-                      <form method='POST' action = '' id="formNovoItem">
+                      <form method='POST' action='' id="formNovoItem">
                         <div class="mb-3">
-                          <label for="familia" class="form-label">Família</label>
-                          <select id="familia" name="familia" class="form-select" required>
-                            <option value="">Escolha a família</option>
-          HTML;
-            $fam = $familia;
-            foreach ($fam as $familiaaa) {
-                $html.="<option value=".$familiaaa['id_familia'].">".$familiaaa['ds_familia']."</option>";  
-            }
-          $html.= <<<HTML
-                          </select>
+                            <label for="familia" class="form-label">Família</label>
+                            <select id="familia" name="familia" class="form-select" required>
+                                <option value="">Escolha a família</option>
+            HTML;
+                                $fam = $familia;
+                                foreach ($fam as $familiaaa) {
+                                    $html.= "<option value='" . $familiaaa['id_familia'] . "'>" . $familiaaa['ds_familia'] . "</option>";
+                                }
+            $html.= <<<HTML
+                            </select>
                         </div>
                         <div class="mb-3">
-                          <label for="nome" class="form-label">Modelo</label>
-                          <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
+                            <label for="nome" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -178,7 +178,7 @@ class ContentPainelItem
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Cadastrar</button>
-                      </form>
+                    </form>
                   </div>
                 </div>
               </div>    

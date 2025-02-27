@@ -166,15 +166,15 @@ class Item
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id");
+            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }elseif($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro' order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -184,7 +184,7 @@ class Item
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item ");
+            $rs = $db->prepare("SELECT * FROM item order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -230,25 +230,47 @@ class Item
 
     }
 
-    public static function setItem($data){
-
-
-        $db = DB::connect();
-
-        $cod_patrimonio = bin2hex(random_bytes(3));
-
-        $rs = $db->prepare("INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, cod_patrimonio)
-         VALUES(".$data['familia'].",'".$data['nome']."','".$data['natureza']."',".$data['nv_permissao'].",'$cod_patrimonio')");
-        $rs->execute();
-        $rows = $rs->rowCount();
-        if ($rows > 0){
-            $_SESSION['mag'] = 'Item cadastrado com Sucesso!';
-            return true;
-        }
-    
-
-       
+    public static function setItem($data)
+{
+    // Validação básica dos dados recebidos
+    if (
+        !isset($data['familia']) || empty($data['familia']) ||
+        !isset($data['nome']) || empty($data['nome']) ||
+        !isset($data['natureza']) || empty($data['natureza']) ||
+        !isset($data['nv_permissao']) || empty($data['nv_permissao'])
+    ) {
+        $_SESSION['error'] = 'Todos os campos são obrigatórios!';
+        return false;
     }
+
+    // Conexão com o banco de dados
+    $db = DB::connect();
+
+    // Geração do código de patrimônio (aleatório e único)
+    $cod_patrimonio = bin2hex(random_bytes(3));
+
+    // Preparação da query SQL
+    $sql = "INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, cod_patrimonio) 
+            VALUES (:familia, :nome, :natureza, :nv_permissao, :cod_patrimonio)";
+
+    $stmt = $db->prepare($sql);
+
+    // Associação dos parâmetros para evitar injeção SQL
+    $stmt->bindParam(':familia', $data['familia'], PDO::PARAM_INT);
+    $stmt->bindParam(':nome', $data['nome'], PDO::PARAM_STR);
+    $stmt->bindParam(':natureza', $data['natureza'], PDO::PARAM_STR);
+    $stmt->bindParam(':nv_permissao', $data['nv_permissao'], PDO::PARAM_INT);
+    $stmt->bindParam(':cod_patrimonio', $cod_patrimonio, PDO::PARAM_STR);
+
+    // Execução da query
+    if ($stmt->execute()) {
+        $_SESSION['msg'] = 'Item cadastrado com sucesso!';
+        return true;
+    } else {
+        $_SESSION['error'] = 'Erro ao cadastrar o item!';
+        return false;
+    }
+}
 
     public static function deleteItem($id){
 

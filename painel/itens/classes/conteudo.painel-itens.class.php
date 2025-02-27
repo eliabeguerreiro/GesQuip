@@ -24,26 +24,32 @@ class ContentPainelItem
 
     public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados){
 
-      //var_dump($itens);
-      $nome = $_SESSION['data_user']['nm_usuario'];
+        //var_dump($itens);
+        $nome = $_SESSION['data_user']['nm_usuario'];
+        
+        // Verifica se os parâmetros GET estão definidos
+        $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
+        $v = isset($_GET['valor']) ? $_GET['valor'] : null;
       
-      // Verifica se os parâmetros GET estão definidos
-      $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
-      $v = isset($_GET['v']) ? $_GET['v'] : null;
-      
-      function buildUrl($newParams = []) {
-        $queryParams = $_GET;
-        foreach ($newParams as $key => $value) {
-            if ($value === null) {
-                unset($queryParams[$key]);
-            } else {
-                $queryParams[$key] = $value;
+    
+        function buildUrl($newParams = []) {
+            $queryParams = $_GET;
+            foreach ($newParams as $key => $value) {
+                if ($value === null) {
+                    unset($queryParams[$key]);
+                } else {
+                    $queryParams[$key] = $value;
+                }
             }
+            // Remove os parâmetros 'filtro' e 'v' se a página for alterada
+            if (isset($newParams['pagina'])) {
+                unset($queryParams['filtro']);
+                unset($queryParams['valor']);
+            }
+            return '?' . http_build_query($queryParams);
         }
-        return '?' . http_build_query($queryParams);
-    }
 
-      
+
       $html = <<<HTML
           <body>
         <!--INICIO BARRA DE NAVEAGAÇÃO-->

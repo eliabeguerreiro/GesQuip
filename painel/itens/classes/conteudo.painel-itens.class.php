@@ -201,17 +201,12 @@ class ContentPainelItem
                             </div>
         
                             <!-- Div para Família -->
+                           <!-- Div para Família -->
                             <div id="filtro_familia" style="display: none; margin-left: 10px;">
-                                <select id="filtro_familia" class="form-select form-select-sm">
-                                    <option value="">Escolha uma família</option>
-      HTML;
-                          $filtro_familia = $familia;
-                          foreach ($filtro_familia as $familia) { 
-                            $html.="<option value=".$familia['id_familia'].">".$familia['ds_familia']."</option>";
-                          }
-      $html.= <<<HTML
-
-                                </select>
+                                <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%;  max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -453,6 +448,50 @@ class ContentPainelItem
 
         </body>
         <script src="src/script.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const filtroFamiliaInput = document.getElementById('filtro_familia_input');
+                const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
+      HTML;
+                $html .= "const familias = ".json_encode($familia).";";
+      $html.= <<<HTML
+                filtroFamiliaInput.addEventListener('input', function() {
+                    const query = filtroFamiliaInput.value.toLowerCase();
+                    filtroFamiliaSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+
+                    if (query.length > 0) {
+                        const filteredFamilias = familias.filter(familia => familia.ds_familia.toLowerCase().includes(query));
+                        filteredFamilias.forEach(familia => {
+                            const suggestionItem = document.createElement('a');
+                            suggestionItem.href = '#';
+                            suggestionItem.className = 'list-group-item list-group-item-action';
+                            suggestionItem.textContent = familia.ds_familia;
+                            suggestionItem.dataset.id = familia.id_familia;
+
+                            suggestionItem.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                filtroFamiliaInput.value = familia.ds_familia;
+                                filtroFamiliaSuggestions.style.display = 'none';
+                                // Aqui você pode adicionar a lógica para definir o filtro de família
+                            });
+
+                            filtroFamiliaSuggestions.appendChild(suggestionItem);
+                        });
+
+                        filtroFamiliaSuggestions.style.display = 'block';
+                    } else {
+                        filtroFamiliaSuggestions.style.display = 'none';
+                    }
+                });
+
+                // Fecha a lista de sugestões se o usuário clicar fora dela
+                document.addEventListener('click', function(e) {
+                    if (!filtroFamiliaInput.contains(e.target) && !filtroFamiliaSuggestions.contains(e.target)) {
+                        filtroFamiliaSuggestions.style.display = 'none';
+                    }
+                });
+            });
+            </script>
         </html>
       HTML;   
 

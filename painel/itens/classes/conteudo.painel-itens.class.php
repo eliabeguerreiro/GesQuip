@@ -342,8 +342,31 @@ HTML;
                                 </div>
                             </div>
                         </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_familia') {
+                        $familiaNome = array_filter($familia, function($f) use ($valor) {
+                            return $f['id_familia'] == $valor;
+                        });
+                        $familiaNome = reset($familiaNome);
+                        $html .= "Família: " . $familiaNome['ds_familia'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
                     </div>
-        
+HTML;
+                }
+
+                $html .= <<<HTML
                     <!-- Tabela de Equipamentos -->
                     <table class="table table-striped">
                         <thead>
@@ -417,8 +440,31 @@ HTML;
                                 </div>
                             </div>
                         </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_familia') {
+                        $familiaNome = array_filter($familia, function($f) use ($valor) {
+                            return $f['id_familia'] == $valor;
+                        });
+                        $familiaNome = reset($familiaNome);
+                        $html .= "Família: " . $familiaNome['ds_familia'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
                     </div>
-              
+HTML;
+                }
+
+                $html .= <<<HTML
                           <!-- Tabela de Equipamentos -->
                           <table class="table table-striped">
                               <thead>

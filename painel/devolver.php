@@ -1,12 +1,13 @@
 <?php
 session_start();
 include_once "classes/painel.class.php";
+include_once "itens/classes/item.class.php";
 include_once "classes/db.class.php";
 
 if (isset($_POST['id'])) {
     $itemId = $_POST['id'];
 
-    if ($reserva = Moviment::devolverItemByPanel($itemId)) {
+    if ($reserva = Item::devolverItemByPanel($itemId)) {
         echo json_encode([
             'success' => true,
             'message' => 'Devolução realizada com sucesso!'

@@ -81,34 +81,31 @@ class ContentPainel
 
 
 
-            <!--INICIO DO CONTEUDO CENTRAL-->
+            <!-- INÍCIO DO CONTEÚDO CENTRAL -->
             <div class="main-content" id="mainContent">
-
                 <div class="container mt-4" id="novoItem" style="display: block;">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="header-with-filter">
                                 <h3><b><p class="text-primary">Buscar Item</p></b></h3>
                                 <div class="filter-container">
-                                    <label for="filtro" class="form-label visually-hidden">Filtro</label>
-                                    <select id="filtro" name="filtro" class="form-select form-select-sm filter-select" required>
-                                        <option value="">Escolha uma chave de identificação</option>
+                                    <label for="chaveSelect" class="form-label visually-hidden">Filtro</label>
+                                    <select id="chaveSelect" name="filtro" class="form-select form-select-sm filter-select" required>
                                         <option value="ds_item">NOME</option>
                                         <option value="cod_patrimonio">PATRIMONIO</option>
                                     </select>
                                 </div>
                             </div>
-                            <form id="formNovoItem">
+                            <form id="searchForm">
                                 <div class="mb-3">
-                                    <label for="valor" class="form-label">Digite o Valor</label>
-                                    <input type="text" id="valor" name="valor" class="form-control" required>
+                                    <label for="busca" class="form-label">Digite o Valor</label>
+                                    <input type="text" id="busca" name="valor" class="form-control" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Buscar</button>
+                                <button type="button" id="finalizaSubmit" class="btn btn-primary">Buscar</button>
                             </form>
                         </div>
                     </div>
                 </div>
-
                 <div class="container mt-4" id="containerFerramentas" style="display: block;">
                     <div class="row mt-4">
                         <div class="col-md-12">
@@ -118,23 +115,14 @@ class ContentPainel
                                     <tr>
                                         <th>Cod</th>
                                         <th>Nome</th>
-                                        <th>Familia</th>
+                                        <th>Família</th>
                                         <th>Movimentação</th>
                                         <th>Usuário</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="itens">
-                                    <tr>
-                                        <td>bs67a0</td>
-                                        <td>Sextavada Viluz 1200</td>
-                                        <td>ALAVANCA</td>
-                                        <td>226</td>
-                                        <td>Fulano</td>
-                                        <td>
-                                            <a href="devolver.php?id=1" class="btn btn-success btn-sm">Devolver</a>
-                                        </td>
-                                    </tr>
+                                <tbody id="produtos">
+                                    <!-- Os resultados serão inseridos dinamicamente pelo JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -142,15 +130,7 @@ class ContentPainel
                 </div>
             </div>
 
-            <script>
-                // Adiciona um evento de clique ao link "Novo Item"
-                document.getElementById("CadastroItemLink").addEventListener("click", function(event) {
-                    event.preventDefault(); // Impede o comportamento padrão do link
-                    // Exibe ambos os contêineres
-                    document.getElementById("novoItem").style.display = "block";
-                    document.getElementById("containerFerramentas").style.display = "block";
-                });
-            </script>
+            <script src="src/script.js"></script>
             </body>
             </html>
         HTML;

@@ -1,43 +1,3 @@
-
-document.getElementById("NovosUsuarioslink").addEventListener("click", function(event) {
-    event.preventDefault(); // Impede o comportamento padrão do link
-
-    // Exibe ambos os contêineres
-    document.getElementById("novoUsuario").style.display = "block";
-    document.getElementById("usuarios").style.display = "block";
- });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// abaixo é o codigo de pesquisa e devolução simples
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     const finalizaSubmit = document.getElementById('finalizaSubmit');
     finalizaSubmit.addEventListener('click', () => {
@@ -63,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${item.familia}</td>
                         <td>${item.movimentacao}</td>
                         <td>${item.usuario}</td>
-                        <td><button class="devolver-btn" data-id="${item.id_item}">Devolver Item</button></td>  
+                        <td><button class="btn btn-success btn-sm atualiza-button" data-id="${item.id_item}">Devolver Item</button></td>  
                     `;
                 } else {
                     row.innerHTML = `
@@ -79,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Adicionar evento aos botões "Devolver Item"
-            document.querySelectorAll('.devolver-btn').forEach(button => {
+            document.querySelectorAll('.btn btn-success btn-sm atualiza-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const itemId = button.getAttribute('data-id'); // Pegar o ID do item
                     fetch('devolver.php', {
@@ -112,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            document.getElementById('table1').classList.remove('hidden');
-            document.querySelector('.box2').style.display = 'block';
+           
+            
         })
         .catch(error => console.error('Error:', error));
     });

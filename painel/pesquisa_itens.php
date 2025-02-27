@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("SELECT * FROM item WHERE $chave = '$busca'");
 
 
-
     }
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -62,16 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     }
-
-    
-
-
-    //var_dump($resultados);
-
-
-
-    
-
 
     echo json_encode($resultados);
 

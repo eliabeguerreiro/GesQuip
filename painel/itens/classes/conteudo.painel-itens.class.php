@@ -93,9 +93,10 @@ class ContentPainelItem
                             </li>
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="gestao_usuarios" id="usuario">Usuários</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="gestao_usuarios" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                    <li><a class="dropdown-item" href="usuarios/cadastro" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                    <li><a class="dropdown-item" href="usuarios/usuarios" id="NovosUsuarios">Todos os Usuários</a></li>
                                 </ul>
                             </li>
                         </ul>

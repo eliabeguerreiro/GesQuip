@@ -47,8 +47,9 @@ class ContentPainelUser
                 unset($queryParams['filtro']);
                 unset($queryPdarams['valor']);
             }
-            return '?' . http_build_query($queryParams);
             */
+            return '?' . http_build_query($queryParams);
+    
         }
       
 

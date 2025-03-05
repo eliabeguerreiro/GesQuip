@@ -1,201 +1,316 @@
-
 <?php
   
-class ContentPainel
+class ContentPainelUser
 {
+
   public function renderHeader(){
-   
+ 
     $html = <<<HTML
       <!DOCTYPE html>
-      <html>
-        <head>
-            <title>Gestão de usuários</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-              integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer"/>
-            
-            <link rel="stylesheet" href="src/style.css">
-        </head>
+      <html lang="pt-br">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>GesQuip - Usuários</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+          <link rel="stylesheet" href="src/style.css">
+      </head>
 
     HTML;   
 
     return($html);
 }
 
- 
-    public function renderBody($usuarios){
-      $nome = $_SESSION['data_user']['nm_usuario'];
-     
+    public function renderBody($pagina, $usuarios){
+
+        //var_dump($itens);
+        $nome = $_SESSION['data_user']['nm_usuario'];
+        
+        // Verifica se os parâmetros GET estão definidos
+        $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
+        $valor = isset($_GET['valor']) ? $_GET['valor'] : null;
+
+
+
+        function buildUrlUsers($newParams = []) {
+            $queryParams = $_GET;
+            foreach ($newParams as $key => $value) {
+                if ($value === null) {
+                    unset($queryParams[$key]);
+                } else {
+                    $queryParams[$key] = $value;
+                }
+            }
+            /* Remove os parâmetros 'filtro' e 'v' se a página for alterada
+            if (isset($newParams['pagina'])) {
+                unset($queryParams['filtro']);
+                unset($queryPdarams['valor']);
+            }
+            return '?' . http_build_query($queryParams);
+            */
+        }
+      
+
       $html = <<<HTML
-        <body>
-            <nav>
-               
-                <div class="logo">Gestão de Usuariós</div>
-                <a href='../'><button><i class="fa fa-arrow-left"></i> Voltar</button></a>
-            </nav>
-            <main>
+          <body>
+        <!--INICIO BARRA DE NAVEAGAÇÃO-->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <div class="navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav">
+                            <!--GESTÃO DE ITENS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MOVIMENTACAO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MANUTENÇÃO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO DE USUARIOS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="usuario">Usuários</a>
+                                <ul class="dropdown-menu">
 
-
-            <div class="sidebar">
-              <p><i class="fa fa-user"></i> $nome</p>
-              <a href="../gestao_itens">Itens</a>
-              <a href="../moviment">Movimentações</a>
-              <a href="../manutencao">Manutenções</a>
-              <a href=""  class="active">Usuários</a>
-            </div>
-
-
-            <div class="box">
-                <h2>Cadastro de Usuário</h2>
-                <form method='POST' action = ''>
-                    <label for="nm_usuario">Nome:</label>
-                    <input type="text" id="nm_usuario" name="nm_usuario" required><br><br>
-
-                    <label for="login">login:</label>
-                    <input type="text" id="login" name="login" required><br><br>
-
-                    <label for="contato">Contato:</label>
-                    <input type="fone" id="contato" name="contato" required><br><br>
-
-                   
-                    <label for="nv_permissao">Qual o nivel de permissão do usuário:</label>
-                    <select name="nv_permissao">
-                      <option value="0">0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                    </select>
-                    <br><br>
-                    <label for="senha">Senha:</label>
-                    <input type="password" id="senha" name="senha" required><br><br>
-
-                    <button type="submit">Cadastrar</button>
-                </form>
-            </div>  
-
-             <main>
-            <div class="box2">
-            <h1>Todos os Itens</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Login        </th>
-                              <th>Nome </th>
-                              <th>Contato      </th>
-                              <th>Nivel  </th>
-                              <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-      HTML;
-          
-          foreach ($usuarios as $user):
-            
-                $html .="<td>".$user['login']."</td>";
-                $html .="<td>".$user['nm_usuario']."</td>";
-                $html .="<td>".$user['nr_contato']."</td>";
-                $html .="<td>".$user['nv_permissao']."</td>";
-
-                $html .="<td><button class='atualiza-button' id ='".$user['id_usuario']."' >Editar</button>";
-                $html .="<a href='apagar.php?id=".$user['id_usuario']."'><button class='delete-button' >Apagar</button></a></td>";
-                $html .="</tr>";
-                
-          endforeach;     
+        HTML;                              
+                                    
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlUsers(['pagina' => 'cadastro']) . "'>Cadastro de Funcionários</a></li>";
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlUsers(['pagina' => 'usuarios']) . "'>Funcionários Cadastrados</a></li>";
 
         $html.= <<<HTML
 
-                            </tbody>
-                          </table>
-                  </div>            
-                  <br><br><br><br><br>          
-         
-          <!-- Modal HTML -->
-           <div id="atualizaModal" class="modal" style="display:none;">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <h2>Atualizar dados do Usuário</h2>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    </div>
+                </div>
+            </nav>
+            <!--FIM BARRA DE NAVEAGAÇÃO-->
+            <main>
+      HTML;
+    /*
+      if ($filtro && $valor) {
 
-              <select id="statusSelect" required> 
-                <option value="nm_usuario">nome</option>
-                <option value="nr_contato">numero de contato</option>
-                <option value="tp_usuario">tipo do usuário</option>
-                <option value="nv_permissao">nivel de permissão</option>
-              </select>
+        $itens_filtrados = Users::getFuncionarios(null);
 
-            <input type="text" id="novoNome" placeholder="digite o novo dado" required>
-            <small>para atualizar o nivel de permissão use apenas números</small>
-            <button id="atualizaSubmit">Enviar</button>
+        $itens = $itens_filtrados['dados'];
+      }
+    */
+              
+
+
+
+      if (isset($pagina)) {
+        switch ($pagina) {
+           case 'cadastro':
+            
+            $html.= <<<HTML
+              <div class="main-content" id="mainContent">
+              <div class="container mt-4" id="novoItem" style="display: block;">
+                <div class="row">
+                  <div class="col-md-12">                    
+                      <h3><b><p class="text-primary">Novo Funcionário</p></b></h3>
+                      <form method='POST' action='' id="formNovoItem">
+                        <div class="mb-3">
+                            <label for="nm_usuario" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nm_usuario" placeholder="Nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nr_contato" class="form-label">Contato</label>
+                            <input type="text" class="form-control" id="nr_contato" name="nr_contato" placeholder="DDD+9+0000-0000" required>
+                        </div>
+                       
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nível de permissão de acesso</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="nv_permissao_1" name="nv_permissao" value="1" required>
+                                            <label class="form-check-label" for="nv_permissao_1">Nível 1</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="nv_permissao_2" name="nv_permissao" value="2" required>
+                                            <label class="form-check-label" for="nv_permissao_2">Nível 2</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="nv_permissao_2" name="nv_permissao" value="2" required>
+                                            <label class="form-check-label" for="nv_permissao_2">Nível 2</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </form>
+                  </div>
+                </div>
+              </div>    
             </div>
-          </div>
+          HTML;
+
+            break;
+            case 'usuarios':
 
 
-          </main>
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Todos os Usuários</p></b></h3>
+                        <!--div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                        </div-->
+                    </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    
+                    $html .= ucfirst($filtro) . ": " . $valor;
+                    
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Equipamentos -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Contato</th>
+                                <th>Nível</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($usuarios as $funcionario):
+
+          
+          $html .="<td>".$funcionario['id_usuario']."</td>";
+          $html .="<td>".$funcionario['nm_usuario']."</td>";
+          $html .="<td>".$funcionario['nr_contato']."</td>";
+          $html .="<td>".$funcionario['nv_permissao']."</td>";
+          $html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$funcionario['id_usuario']."'>Editar</button>   ";
+          $html .="<a href='apagar.php?id=".$funcionario['id_usuario']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
+          $html .="</tr>";
+      endforeach;
+                 
+      $html.= <<<HTML
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Atualização -->
+        <div class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
+      HTML;
+                
+                break;
+            default:
+                header('Location: ?pagina=cadatro');
+                break;
+        }
+    }
+      
+      $html.= <<<HTML
+
+       
+        </main>
 
         HTML;
         if(isset($_SESSION['msg'])){
-         $html.= "<script>alert('".$_SESSION['msg']."');</script>";
-         unset($_SESSION['msg']);
+        $html.= "<script>alert('".$_SESSION['msg']."');</script>";
+        unset($_SESSION['msg']);
         }
-       $html.= <<<HTML
-          <script>
+      $html.= <<<HTML
 
-            const finalizaButtons = document.querySelectorAll('.atualiza-button');
-            const modal = document.getElementById('atualizaModal');
-            const closeModal = document.querySelector('.modal .close');
-            const finalizaSubmit = document.getElementById('atualizaSubmit');
-            let currentItemId;
-
-            finalizaButtons.forEach(button => {
-              button.addEventListener('click', () => {
-                currentItemId = button.id;
-                modal.style.display = 'block';
-              });
-            });
-
-            closeModal.addEventListener('click', () => {
-              modal.style.display = 'none';
-            });
-
-            // Fechar a modal ao clicar fora dela
-            window.onclick = function(event) {
-              if (event.target == modal) {
-                modal.style.display = 'none';
-              }
-            }
-
-            
-
-            finalizaSubmit.addEventListener('click', () => {
-              const texto = document.getElementById('novoNome').value;
-              const status = document.getElementById('statusSelect').value;
-
-              fetch('atualizar_user.php', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'id=' + encodeURIComponent(currentItemId) + '&data=' + encodeURIComponent(texto) + '&metadata=' + encodeURIComponent(status)
-                })
-              .then(response => response.text())
-              .then(data => {
-                console.log(data);
-                modal.style.display = 'none';
-                window.location.reload();
-              })
-              .catch(error => console.error('Error:', error));
-            });
-        </script>
         </body>
+        <script src="src/script.js"></script>
+        <script>
+        
+        </script>
         </html>
       HTML;   
 
-        return($html);
-   }
-
-
+        return $html;
+  }
 
 }
-?>

@@ -27,14 +27,16 @@ if(!isset($_SESSION['data_user'])){
 if(isset($_GET['sair'])){Paineel::logOut();}
 
 $usuarios = User::getUsuarios(null);
-$pagina = new ContentPainel;
+$pagina = new ContentPainelUser;
 
 if($_POST){  if($cad_item = User::setUsuario($_POST)){ header('location:');
 }} 
 
 echo $pagina->renderHeader();
-echo $pagina->renderBody($usuarios['dados']);
 
 
-?>
-
+if(isset($_GET['pagina'])){
+    echo $pagina->renderBody($_GET['pagina'],$usuarios['dados']);
+}else{
+    echo $pagina->renderBody(null,$usuarios['dados']);
+}

@@ -32,7 +32,7 @@ class ContentPainelItem
         $valor = isset($_GET['valor']) ? $_GET['valor'] : null;
       
     
-        function buildUrl($newParams = []) {
+        function buildUrlItens($newParams = []) {
             $queryParams = $_GET;
             foreach ($newParams as $key => $value) {
                 if ($value === null) {
@@ -65,10 +65,10 @@ class ContentPainelItem
 
       HTML;                              
                                     
-                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrl(['pagina' => 'novo']) . "'>Novo Item</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'novo']) . "'>Novo Item</a></li>";
 
       $html.= <<<HTML
                                 </ul>

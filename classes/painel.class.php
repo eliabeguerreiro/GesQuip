@@ -1,4 +1,7 @@
 <?php
+
+
+
 // if(Usuarios::verificar($conn, $headers)){  }  
 class Paineel
 {

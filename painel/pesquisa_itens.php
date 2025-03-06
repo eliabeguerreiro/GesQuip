@@ -26,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $db->prepare("SELECT * FROM familia WHERE id_familia = '$value[id_familia]'");
         $stmt->execute();
-        $resultados[$key]['familia'] = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['ds_familia'];
+        $familiaResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultados[$key]['familia'] = $familiaResult[0]['ds_familia'] ?? null;
     
     
         //var_dump($value);
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query = $db->prepare("SELECT * FROM item_movimentacao WHERE id_item = $value[id_item] ORDER BY id_item_movimentacao DESC LIMIT 1");
             $query->execute();
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
-            $moviment = $result['0']['id_movimentacao'];
+            $moviment = $result['0']['id_movimentacao'] ?? null;
             
             $resultados[$key]['movimentacao'] = $moviment;
 
@@ -44,13 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query->execute();
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
             
-            $id_user = $result['0']['id_responsavel'];
+            if (is_array($result) && count($result) > 0) {
+                $id_user = $result['0']['id_responsavel'];
 
-            $query = $db->prepare("SELECT nm_usuario FROM usuarios WHERE id_usuario = $id_user");
-            $query->execute();
-            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                $query = $db->prepare("SELECT nm_usuario FROM usuarios WHERE id_usuario = $id_user");
+                $query->execute();
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            $user = $result['0']['nm_usuario'];
+                if (is_array($result) && count($result) > 0) {
+                    $user = $result['0']['nm_usuario'];
+                } else {
+                    $user = null;
+                }
+            } else {
+                $user = null;
+            }
 
             $resultados[$key]['usuario'] = $user;
 
@@ -65,4 +74,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode($resultados);
 
 }
-

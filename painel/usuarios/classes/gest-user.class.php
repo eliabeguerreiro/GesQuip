@@ -99,7 +99,7 @@ class User
         
         $db = DB::connect();
         $rs = $db->prepare("INSERT INTO usuarios (login , senha, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao)
-         VALUES('".$data['login']."','".$password."','".$data['nm_usuario']."','".$data['contato']."', 1, 'user', ".$data['nv_permissao'].")");
+         VALUES('".$data['login']."','".$password."','".$data['nm_usuario']."','".$data['nr_contato']."', 1, 'user', ".$data['nv_permissao'].")");
         $rs->execute();
         $rows = $rs->rowCount();
         if ($rows > 0){

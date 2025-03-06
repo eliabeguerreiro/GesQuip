@@ -143,7 +143,7 @@ class ContentPainelUser
                         </div>
                         <div class="mb-3">
                             <label for="nr_contato" class="form-label">Contato</label>
-                            <input type="text" class="form-control" id="nr_contato" name="nr_contato" placeholder="DDD+9+0000-0000" required>
+                            <input type="number" class="form-control" id="nr_contato" name="nr_contato" placeholder="DDD+9+0000-0000" required>
                         </div>
                        
                         <div class="row">
@@ -160,8 +160,8 @@ class ContentPainelUser
                                             <label class="form-check-label" for="nv_permissao_2">Nível 2</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="nv_permissao_2" name="nv_permissao" value="2" required>
-                                            <label class="form-check-label" for="nv_permissao_2">Nível 2</label>
+                                            <input class="form-check-input" type="radio" id="nv_permissao_3" name="nv_permissao" value="3" required>
+                                            <label class="form-check-label" for="nv_permissao_3">Nível 3</label>
                                         </div>
                                     </div>
                                 </div>

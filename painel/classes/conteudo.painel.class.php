@@ -49,9 +49,9 @@ class ContentPainel
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="moviment/?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href="moviment/?pagina=encerradas" id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href="moviment/?pagina=ativas" id="MovimentEncer">Movimentações Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MANUTENÇÃO-->

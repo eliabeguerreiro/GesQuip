@@ -1,3 +1,12 @@
+#filtro_familia_suggestions {
+    position: absolute;
+    z-index: 1000; /* Certifique-se de que a lista de sugestões esteja acima de outros elementos */
+    width: 100%; /* Ajusta a largura da lista de sugestões para coincidir com o campo de input */
+    background-color: white; /* Define a cor de fundo para a lista de sugestões */
+    border: 1px solid #ccc; /* Adiciona uma borda à lista de sugestões */
+    border-radius: 4px; /* Adiciona bordas arredondadas à lista de sugestões */
+}
+
 
 #novoItem {
         max-width: 80%; /* Limita a largura */
@@ -76,4 +85,8 @@
     #filtro_familia select {
         width: auto; /* Ajusta a largura automaticamente */
         min-width: 150px; /* Define uma largura mínima */
+    }
+    
+    #filtro_alert {
+        margin-top: 10px;
     }

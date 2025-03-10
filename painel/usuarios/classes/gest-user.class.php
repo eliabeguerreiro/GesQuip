@@ -4,6 +4,23 @@ include_once"../../classes/painel.class.php";
 class User
 {
 
+    public static function getFuncionarioNome($id_func)
+{
+    if ($id_func) {
+        $id_func = (int)$id_func;
+        $db = DB::connect();
+        $rs = $db->prepare("SELECT nm_usuario FROM usuarios WHERE id_usuario = :id_usuario");
+        $rs->bindParam(':id_usuario', $id_func, PDO::PARAM_INT);
+        $rs->execute();
+        $resultado = $rs->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado) {
+            return $resultado['nm_usuario']; // Retorna o nome da família
+        }
+    }
+
+    return null; 
+}
     public static function getFuncionarios($id = null)
     {
         if($id){

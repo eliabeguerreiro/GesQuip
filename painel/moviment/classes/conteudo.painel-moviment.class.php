@@ -6,284 +6,503 @@ class ContentPainelMoviment
    
     $html = <<<HTML
       <!DOCTYPE html>
-      <html>
-        <head>
-            <title>Gestão de Movimentações</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-              integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer"/>
-            
-            <link rel="stylesheet" href="src/style.css">
-            
-        </head>
+      <html lang="pt-br">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>GesQuip - Equipamentos</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+          <link rel="stylesheet" href="src/style.css">
+      </head>
 
     HTML;   
-
     return($html);
     
   } 
 
   
  
-    public function renderBody($funciona, $moviment, $moviment_encerrado){
+    public function renderBody($pagina, $funciona, $moviment, $moviment_encerrado){
       $nome = $_SESSION['data_user']['nm_usuario'];
-
       $func = $funciona;
       
-      $html = <<<HTML
-        <body>
-            <nav>
-                
-                <div class="logo">Gestão de locações</div>
-                <a href='../'><button><i class="fa fa-arrow-left"></i>Voltar</button></a>
-            </nav>
-
-            <div class="sidebar">
-              <p><i class="fa fa-user"></i> $nome</p>
-              <a href="../gestao_itens">Itens</a>
-              <a href="" class="active">Movimentações</a>
-              <a href="../manutencao">Manutenções</a>
-              <a href="../gestao_usuarios">Usuários</a>
-            </div>
 
 
-
-            <main>
-       
-            <div class="box">
-                <h2>Iniciar nova movimentação de equipamentos</h2>
-                <form method='POST' action = ''>                   
-                    <label for="id_responsavel">Funcionário</label><br>
-                    <select name="id_responsavel">
-                      <option value="">escolha o funcionário</option>"
-        HTML;
-
-      foreach ($funciona as $funcionario) {
-              $html.="<option value=".$funcionario['id_usuario'].">".$funcionario['nm_usuario']."</option>";  
+      // Verifica se os parâmetros GET estão definidos
+      $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
+      $valor = isset($_GET['valor']) ? $_GET['valor'] : null;
+    
+  
+      function buildUrlItens($newParams = []) {
+          $queryParams = $_GET;
+          foreach ($newParams as $key => $value) {
+              if ($value === null) {
+                  unset($queryParams[$key]);
+              } else {
+                  $queryParams[$key] = $value;
+              }
+          }
+          // Remove os parâmetros 'filtro' e 'v' se a página for alterada
+          if (isset($newParams['pagina'])) {
+              unset($queryParams['filtro']);
+              unset($queryParams['valor']);
+          }
+          return '?' . http_build_query($queryParams);
       }
 
+      $html = <<<HTML
+          <body>
+        <!--INICIO BARRA DE NAVEAGAÇÃO-->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <div class="navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav">
+                            <!--GESTÃO DE ITENS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MOVIMENTACAO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <ul class="dropdown-menu">
+      HTML;                              
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'ativas']) . "'>Movimentações Ativas</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Movimentações Encerradas</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'nova']) . "'>Novo Movimentação</a></li>";
       $html.= <<<HTML
-             "</select><br><br>
-                    <label for="ds_movimentacao">Detalhes da Retirada</label><br>
-                    <textarea name="ds_movimentacao" id="meuParagrafo" rows="4" cols="35"></textarea>
-                    <button type="submit">proximo</button>
-                </form>
-
-                <div id="myModal" class="modal">
-                    <span class="close">&times;</span>
-                    <input type="text" id="pesquisa" placeholder="Pesquise um item">
-                    <ul id="resultados"></ul>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MANUTENÇÃO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO DE USUARIOS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../usuarios?pagina=cadastro" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios?pagina=usuarios" id="NovosUsuarios">Todos os Usuários</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    </div>
                 </div>
-            </div>
-
-            </main>
-          <br><br>
-          <main>
-            <div class="box2">
-            <h1>Movimentações ativas</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>ID        </th>
-                              <th>Funcionário</th>
-                              <th>Administrador</th>
-                              <th>Retirada</th>
-                              <th>Ver itens</th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-    
-    foreach ($moviment as $movimento):
-      //tratar disponibilidade e categoria
-
-            foreach ($funciona as $user) {
-              if ($user["id_usuario"] == $movimento['id_responsavel']) {
-                  $responsavel = $user;
-                  break;
-              }             
-            }
-            foreach ($funciona as $user) {
-              if ($user["id_usuario"] == $movimento['id_autor']) {
-                $autor = $user;
-                break;
-              }           
-            }
+            </nav>
+            <!--FIM BARRA DE NAVEAGAÇÃO-->
+            <main>
+      HTML;
 
 
-          $html .="<td>".$movimento['id_movimentacao']."</td>";
-          $html .="<td>".$responsavel['nm_usuario']."</td>";
-          $html .="<td>".$autor['nm_usuario']."</td>";
-          $html .="<td>".$movimento['dt_movimentacao']."</td>";
-          $html .="<td><a href='moviment.php?id=".$movimento['id_movimentacao']."'>Acessar</a></td>";
-          $html .="</tr>";
-          
-    endforeach;     
-
-  $html.= <<<HTML
-
-                      </tbody>
-                    </table>
-            </div>            
-            <br><br><br><br><br>          
-
-        </main>
 
 
-        <main>
-            <div class="box2">
-
+      if (isset($pagina)) {
+        
+        switch ($pagina) {
+           case 'nova':
             
-            <div class="box-title">
-            <h1>Movimentações Encerradas</h1>
-                  
-                  <div>
-                    <select name="tp_filtro" id="tp_filtro">
-                      <option value="0">filtro</option>
-                      <option value="id_responsavel">Funcionário</option>
-                      <option value="dt_movimentacao">Data de movimentação</option>
-                      
-                    </select>
-                  </div>
-
-                  <div id="id_responsavel" style="display: none;">
-                    <select id="filtro_familia">
-                      <option>escolha o funcionário</option>
-  HTML;  
-
-          foreach ($func as $funci) { 
-            $html.="<option value=".$funci['id_usuario'].">".$funci['nm_usuario']."</option>";
-          }
-
-          $html.= <<<HTML
-                    </select>
-                  </div>
-                  <div id="dt_movimentacao" style="display: none;">
-                     <input type="date" id="filtro_dt_movimentacao" name="data"required>
+            $html.= <<<HTML
+              <div class="main-content" id="mainContent">
+              <div class="container mt-4" id="novaMov" style="display: block;">
+                <div class="row">
+                  <div class="col-md-12">                    
+                      <h3><b><p class="text-primary">Nova Movimentação</p></b></h3>
+                      <form method='POST' action='' id="formNovaMov">
+                          <div class="mb-3">
+                              <label for="id_usuario" class="form-label">Funcionário</label>
+                              <select id="id_usuario" name="id_usuario" class="form-select" required>
+                                  <option value="">Escolha um funcionário</option>
+              HTML;
+                                  
+                                  foreach ($funciona as $funcionario) {
+                                      $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
+                                  }
+              $html.= <<<HTML
+                              </select>
+                          </div>
+                          <div class="mb-3">
+                              <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
+                              <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
+                          </div>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </form>
                   </div>
                 </div>
-            <div id="table1" class="hidden">
+              </div>    
+            </div>
+          HTML;
+
+
+            break;
+            case 'ativas':
+
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
             
-                    <table>
+                    $itens = $itens_filtrados['dados'];
+                }
+
+
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Movimentações Ativas</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_usuario">Funcionário</option>
+                                <option value="data">Data</option>
+                            </select>
+        
+                            <!-- Div para Data -->
+                            <div id="filtro_data" style="display: none; margin-left: 10px;">
+                                <select id="filtro_data_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Funcionário -->
+                            <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_usuario') {
+                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
+                            return $f['id_usuario'] == $valor;
+                        });
+                        $funcionaNome = reset($funcionaNome);
+                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Movimentações -->
+                    <table class="table table-striped">
                         <thead>
                             <tr>
-                              <th>ID        </th>
-                              <th>Funcionário</th>
-                              <th>Administrador</th>
-                              <th>Retirada</th>
-                              <th>Devolução</th>
+                                <th>ID</th>
+                                <th>Funcionário</th>
+                                <th>ADM</th>
+                                <th>Retirada</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-    
-    foreach ($moviment_encerrado as $movimento):
-      //tratar disponibilidade e categoria
+                        <tbody id="itens">
+                            <tr>
 
-            foreach ($funciona as $user) {
-              if ($user["id_usuario"] == $movimento['id_responsavel']) {
-                  $responsavel = $user;
-                  break;
-              }             
-            }
-            foreach ($funciona as $user) {
-              if ($user["id_usuario"] == $movimento['id_autor']) {
-                $autor = $user;
-                break;
-              }           
-            }
+      HTML;
 
-
-          $html .="<td>".$movimento['id_movimentacao']."</td>";
-          $html .="<td>".$responsavel['nm_usuario']."</td>";
-          $html .="<td>".$autor['nm_usuario']."</td>";
-          $html .="<td>".$movimento['dt_movimentacao']."</td>";
-          $html .="<td>".$movimento['dt_finalizacao']."</td>";
+      
+      foreach ($moviment as $mov):
+        $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
+        $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+          $html .="<td>".$mov['id_movimentacao']."</td>";
+          $html .="<td>".$nm_responsa."</td>";
+          $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$mov['dt_movimentacao']."</td>";
+          //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
+          $html .="<td><a href='moviment.php.php?id=".$mov['id_movimentacao']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
           $html .="</tr>";
-          
-    endforeach;     
+      endforeach;
+                 
+      $html.= <<<HTML
 
-  $html.= <<<HTML
-
-                      </tbody>
+                        </tbody>
                     </table>
+                </div>
             </div>
-            </div>            
-            <br><br><br><br><br>          
+        </div>
 
+        <!-- Modal de Atualização >
+        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+
+
+      HTML;
+              
+                break;
+            case 'encerradas':
+              
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
+            
+                    $itens = $itens_filtrados['dados'];
+                }
+
+
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Movimentações Encerradas</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_usuario">Funcionário</option>
+                                <option value="data">Data</option>
+                            </select>
+        
+                            <!-- Div para Data -->
+                            <div id="filtro_data" style="display: none; margin-left: 10px;">
+                                <select id="filtro_data_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Funcionário -->
+                            <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_usuario') {
+                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
+                            return $f['id_usuario'] == $valor;
+                        });
+                        $funcionaNome = reset($funcionaNome);
+                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Movimentações -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Funcionário</th>
+                                <th>ADM</th>
+                                <th>Retirada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($moviment_encerrado as $mov):
+        $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
+        $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+          $html .="<td>".$mov['id_movimentacao']."</td>";
+          $html .="<td>".$nm_responsa."</td>";
+          $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$mov['dt_movimentacao']."</td>";
+          $html .="</tr>";
+      endforeach;
+                 
+      $html.= <<<HTML
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Atualização >
+        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+
+
+      HTML;
+                
+                break;
+            default:
+                header('Location: ?pagina=nova');
+                break;
+        }
+    }
+      
+      $html.= <<<HTML
+
+       
         </main>
-    HTML;
-  if(isset($_SESSION['msg'])){
-    $html.= "<script>alert('".$_SESSION['msg']."');</script>";
-    unset($_SESSION['msg']);
-  }
-  $html.= <<<HTML
 
+        HTML;
+        if(isset($_SESSION['msg'])){
+        $html.= "<script>alert('".$_SESSION['msg']."');</script>";
+        unset($_SESSION['msg']);
+        }
+      $html.= <<<HTML
+
+        </body>
+        <script src="src/script.js"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              // Captura os elementos <select> internos
-              const filtroFamilia = document.getElementById("filtro_familia");
-              const filtroDt_movimentacao = document.getElementById("filtro_dt_movimentacao");
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroPrincipal = document.getElementById('filtro_principal');
+            const filtroNatureza = document.getElementById('filtro_natureza');
+            const filtroNaturezaSelect = document.getElementById('filtro_natureza_select');
+            const filtroFamilia = document.getElementById('filtro_familia');
+            const filtroFamiliaInput = document.getElementById('filtro_familia_input');
+            const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
+        HTML;
+        $html .= "const funcionarios = " . json_encode($funciona) . ";";
+        $html.= <<<HTML
 
-              // Função para atualizar a URL com os parâmetros GET
-              function atualizarURL(filtro, valor) {
-                // Constrói a nova URL com os parâmetros GET
-                const url = new URL(window.location.href);
-                url.searchParams.set("filtro", filtro);
-                url.searchParams.set("v", valor);
+            filtroPrincipal.addEventListener('change', function() {
+                const filtro = filtroPrincipal.value;
+                filtroNatureza.style.display = 'none';
+                filtroFamilia.style.display = 'none';
 
-                // Redireciona para a nova URL
-                window.location.href = url.toString();
-              }
-
-              // Adiciona um ouvinte de evento para o <select> de familia
-              if (filtroFamilia) {
-                filtroFamilia.addEventListener("change", function () {
-                  const valorSelecionado = filtroFamilia.value;
-                  if (valorSelecionado) {
-                    atualizarURL("id_responsavel", valorSelecionado);
-                  }
-                });
-              }
-
-              // Adiciona um ouvinte de evento para o <select> de dt_movimentacao
-              if (filtroDt_movimentacao) {
-                filtroDt_movimentacao.addEventListener("change", function () {
-                  const valorSelecionado = filtroDt_movimentacao.value;
-                  if (valorSelecionado) {
-                    atualizarURL("dt_movimentacao", valorSelecionado);
-                  }
-                });
-              }
+                if (filtro === 'natureza') {
+                    filtroNatureza.style.display = 'inline-block';
+                } else if (filtro === 'id_usuario') {
+                    filtroFamilia.style.display = 'inline-block';
+                }
             });
 
+            filtroNaturezaSelect.addEventListener('change', function() {
+                const filtro = filtroPrincipal.value;
+                const valor = filtroNaturezaSelect.value;
+                atualizarURL(filtro, valor);
+            });
 
-            document.addEventListener("DOMContentLoaded", function () {
-              // Seleciona o elemento <select>
-              const selectElement = document.getElementById("tp_filtro");
+            filtroFamiliaInput.addEventListener('input', function() {
+                const query = filtroFamiliaInput.value.toLowerCase();
+                filtroFamiliaSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
 
-              // Adiciona um ouvinte de evento para detectar mudanças no <select>
-              selectElement.addEventListener("change", function () {
-                // Oculta todas as divs relacionadas aos filtros
-                document.getElementById("id_responsavel").style.display = "none";
-                document.getElementById("dt_movimentacao").style.display = "none";
+                if (query.length > 0) {
+                    const filteredFamilias = familias.filter(familia => familia.ds_familia.toLowerCase().includes(query));
+                    filteredFamilias.forEach(familia => {
+                        const suggestionItem = document.createElement('a');
+                        suggestionItem.href = '#';
+                        suggestionItem.className = 'list-group-item list-group-item-action';
+                        suggestionItem.textContent = familia.ds_familia;
+                        suggestionItem.dataset.id = familia.id_usuario;
 
-                // Verifica o valor selecionado e exibe a div correspondente
-                const selectedValue = selectElement.value;
-                if (selectedValue === "id_responsavel") {
-                  document.getElementById("id_responsavel").style.display = "block";
-                } else if (selectedValue === "dt_movimentacao") {
-                  document.getElementById("dt_movimentacao").style.display = "block";
+                        suggestionItem.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            filtroFamiliaInput.value = familia.ds_familia;
+                            filtroFamiliaSuggestions.style.display = 'none';
+                            atualizarURL('id_usuario', familia.id_usuario);
+                        });
+
+                        filtroFamiliaSuggestions.appendChild(suggestionItem);
+                    });
+
+                    filtroFamiliaSuggestions.style.display = 'block';
+                } else {
+                    filtroFamiliaSuggestions.style.display = 'none';
                 }
-              });
-            });  
+            });
 
+            // Fecha a lista de sugestões se o usuário clicar fora dela
+            document.addEventListener('click', function(e) {
+                if (!filtroFamiliaInput.contains(e.target) && !filtroFamiliaSuggestions.contains(e.target)) {
+                    filtroFamiliaSuggestions.style.display = 'none';
+                }
+            });
+
+            function atualizarURL(filtro, valor) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('filtro', filtro);
+                url.searchParams.set('valor', valor);
+                window.location.href = url.toString();
+            }
+        });
         </script>
-        </body>
         </html>
-      HTML;   
+      HTML;
+
+
 
         return($html);
   }

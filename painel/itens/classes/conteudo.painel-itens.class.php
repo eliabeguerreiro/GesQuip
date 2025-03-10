@@ -109,17 +109,10 @@ class ContentPainelItem
             <!--FIM BARRA DE NAVEAGAÇÃO-->
             <main>
       HTML;
-
-      if ($filtro && $valor) {
-
-        $itens_filtrados = Item::getItens(null, $filtro, $valor);
-
-        $itens = $itens_filtrados['dados'];
-      }
-
-              
+           
 
       if (isset($pagina)) {
+        
         switch ($pagina) {
            case 'novo':
             
@@ -188,6 +181,12 @@ class ContentPainelItem
 
             break;
             case 'itens':
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
+            
+                    $itens = $itens_filtrados['dados'];
+                }
 
 
 
@@ -310,6 +309,13 @@ HTML;
                 break;
             case 'disponiveis':
 
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItensDisponiveis( $filtro, $valor);
+            
+                    $itens_disponiveis = $itens_filtrados['dados'];
+                }
+
               $html.= <<<HTML
         <!-- TABELA -->
         <div class="container mt-4" id="containerFerramentas" style="display: block;">
@@ -322,12 +328,12 @@ HTML;
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="familia">Família</option>
+                                <option value="id_familia">Família</option>
                                 <option value="natureza">Natureza</option>
                             </select>
         
-                           <!-- Div para Natureza -->
-                           <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
                                 <select id="filtro_natureza_select" class="form-select form-select-sm">
                                     <option value="">Escolha</option>
                                     <option value="proprio">Próprio</option>
@@ -405,6 +411,15 @@ HTML;
 
                 break;
             case 'emuso':
+                
+
+
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItensLocados( $filtro, $valor);
+            
+                    $itens_locados = $itens_filtrados['dados'];
+                }
 
 
 
@@ -417,14 +432,14 @@ HTML;
                           <div class="header-with-filter">
                               <h3><b><p class="text-primary">Todos os Equipamentos em Uso</p></b></h3>
                               <div class="filter-container">
-                                  <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
-                                  <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
-                                      <option value="">Escolha um filtro</option>
-                                      <option value="familia">Família</option>
-                                      <option value="natureza">Natureza</option>
-                                  </select>
-              
-                                 <!-- Div para Natureza -->
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
                             <div id="filtro_natureza" style="display: none; margin-left: 10px;">
                                 <select id="filtro_natureza_select" class="form-select form-select-sm">
                                     <option value="">Escolha</option>

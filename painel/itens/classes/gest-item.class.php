@@ -191,16 +191,17 @@ class Item
         }
     }
 
-    public static function getItensDisponiveis($id = null){
+    public static function getItensDisponiveis($nm_filtro = null, $filtro = null){
         
-        if($id){
-
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = $id order by id_item desc");
+        if($nm_filtro){
+            //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and $nm_filtro = '$filtro' order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
-        }else{            
+
+        }  else{            
             $db = DB::connect();
             $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 order by id_item desc");
             $rs->execute();
@@ -209,24 +210,47 @@ class Item
         }
 
     }
-    public static function getItensQuebrados(){
-        
-        $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM item  WHERE nr_disponibilidade = 999999999 order by id_item desc");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        return ["dados" => $resultado];
+    public static function getItensQuebrados($nm_filtro = null, $filtro = null){
+
+
+        if($nm_filtro){
+            //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and $nm_filtro = '$filtro' order by id_item desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+
+        }  else{            
+            $db = DB::connect();
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 order by id_item desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+        }
+      
 
     }
 
 
-    public static function getItensLocados(){
+    public static function getItensLocados($nm_filtro = null, $filtro = null){
         
-        $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM item  WHERE nr_disponibilidade = 0 order by id_item desc");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        return ["dados" => $resultado];
+        if($nm_filtro){
+            //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and $nm_filtro = '$filtro' order by id_item desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+
+        }  else{            
+            $db = DB::connect();
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 order by id_item desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+        }
+      
 
     }
 

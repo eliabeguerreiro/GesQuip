@@ -537,7 +537,7 @@ HTML;
       $html.= <<<HTML
 
         </body>
-        
+        <script src="src/script.js"></script>
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filtroPrincipal = document.getElementById('filtro_principal');

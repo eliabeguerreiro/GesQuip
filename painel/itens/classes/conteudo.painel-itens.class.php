@@ -537,13 +537,14 @@ HTML;
       $html.= <<<HTML
 
         </body>
-        <script src="src/script.js"></script>
+        
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filtroPrincipal = document.getElementById('filtro_principal');
             const filtroNatureza = document.getElementById('filtro_natureza');
-            const filtroNaturezaSelect = document.getElementById('filtro_natureza_select');
             const filtroFamilia = document.getElementById('filtro_familia');
+            
+            const filtroNaturezaSelect = document.getElementById('filtro_natureza_select');
             const filtroFamiliaInput = document.getElementById('filtro_familia_input');
             const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
         HTML;

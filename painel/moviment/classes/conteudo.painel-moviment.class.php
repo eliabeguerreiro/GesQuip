@@ -173,7 +173,7 @@ class ContentPainelMoviment
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="id_usuario">Funcionário</option>
+                                <option value="funcionario">Funcionário</option>
                                 <option value="data">Data</option>
                             </select>
         
@@ -188,7 +188,7 @@ class ContentPainelMoviment
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -295,14 +295,14 @@ HTML;
         <div class="container mt-4" id="containerFerramentas" style="display: block;">
             <div class="row mt-4">
                 <div class="col-md-12">
-                    <!-- Header com filtro -->
-                    <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Movimentações Encerradas</p></b></h3>
+                      <!-- Header com filtro -->
+                      <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Movimentações Ativas</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="id_usuario">Funcionário</option>
+                                <option value="funcionario">Funcionário</option>
                                 <option value="data">Data</option>
                             </select>
         
@@ -317,7 +317,7 @@ HTML;
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -424,70 +424,71 @@ HTML;
       $html.= <<<HTML
 
         </body>
-        <script src="src/script.js"></script>
+       
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filtroPrincipal = document.getElementById('filtro_principal');
-            const filtroNatureza = document.getElementById('filtro_natureza');
-            const filtroNaturezaSelect = document.getElementById('filtro_natureza_select');
-            const filtroFamilia = document.getElementById('filtro_familia');
-            const filtroFamiliaInput = document.getElementById('filtro_familia_input');
-            const filtroFamiliaSuggestions = document.getElementById('filtro_familia_suggestions');
+            const filtroData = document.getElementById('filtro_data');
+            const filtroFuncionario = document.getElementById('filtro_funcionario');
+
+            const filtroDataSelect = document.getElementById('filtro_data_select');
+            const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
+            const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
         HTML;
         $html .= "const funcionarios = " . json_encode($funciona) . ";";
         $html.= <<<HTML
 
             filtroPrincipal.addEventListener('change', function() {
                 const filtro = filtroPrincipal.value;
-                filtroNatureza.style.display = 'none';
-                filtroFamilia.style.display = 'none';
+                filtroData.style.display = 'none';
+                filtroFuncionario.style.display = 'none';
 
-                if (filtro === 'natureza') {
-                    filtroNatureza.style.display = 'inline-block';
-                } else if (filtro === 'id_usuario') {
-                    filtroFamilia.style.display = 'inline-block';
+                if (filtro === 'data') {
+                    filtroData.style.display = 'inline-block';
+                } else if (filtro === 'funcionario') {
+                    filtroFuncionario.style.display = 'inline-block';
                 }
             });
 
-            filtroNaturezaSelect.addEventListener('change', function() {
+            filtroDataSelect.addEventListener('change', function() {
                 const filtro = filtroPrincipal.value;
-                const valor = filtroNaturezaSelect.value;
+                const valor = filtroDataSelect.value;
                 atualizarURL(filtro, valor);
             });
 
-            filtroFamiliaInput.addEventListener('input', function() {
-                const query = filtroFamiliaInput.value.toLowerCase();
-                filtroFamiliaSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+            filtroFuncionarioInput.addEventListener('input', function() {
+                const query = filtroFuncionarioInput.value.toLowerCase();
+                filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
 
                 if (query.length > 0) {
-                    const filteredFamilias = familias.filter(familia => familia.ds_familia.toLowerCase().includes(query));
-                    filteredFamilias.forEach(familia => {
+                    const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
+                    filteredFuncionarios.forEach(funcionario => {
                         const suggestionItem = document.createElement('a');
                         suggestionItem.href = '#';
                         suggestionItem.className = 'list-group-item list-group-item-action';
-                        suggestionItem.textContent = familia.ds_familia;
-                        suggestionItem.dataset.id = familia.id_usuario;
+                        suggestionItem.textContent = funcionario.nm_usuario;
+                        suggestionItem.dataset.id = funcionario.id_usuario;
 
                         suggestionItem.addEventListener('click', function(e) {
                             e.preventDefault();
-                            filtroFamiliaInput.value = familia.ds_familia;
-                            filtroFamiliaSuggestions.style.display = 'none';
-                            atualizarURL('id_usuario', familia.id_usuario);
+                            filtroFuncionarioInput.value = funcionario.nm_usuario;
+                            filtroFuncionarioSuggestions.style.display = 'none';
+                            atualizarURL('id_responsavel', funcionario.id_usuario);
                         });
 
-                        filtroFamiliaSuggestions.appendChild(suggestionItem);
+                        filtroFuncionarioSuggestions.appendChild(suggestionItem);
                     });
 
-                    filtroFamiliaSuggestions.style.display = 'block';
+                    filtroFuncionarioSuggestions.style.display = 'block';
                 } else {
-                    filtroFamiliaSuggestions.style.display = 'none';
+                    filtroFuncionarioSuggestions.style.display = 'none';
                 }
             });
 
             // Fecha a lista de sugestões se o usuário clicar fora dela
             document.addEventListener('click', function(e) {
-                if (!filtroFamiliaInput.contains(e.target) && !filtroFamiliaSuggestions.contains(e.target)) {
-                    filtroFamiliaSuggestions.style.display = 'none';
+                if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
+                    filtroFuncionarioSuggestions.style.display = 'none';
                 }
             });
 

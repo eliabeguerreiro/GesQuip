@@ -116,37 +116,37 @@ class ContentPainelMoviment
         
         switch ($pagina) {
            case 'nova':
-            
+
+
             $html.= <<<HTML
-              <div class="main-content" id="mainContent">
-              <div class="container mt-4" id="novaMov" style="display: block;">
-                <div class="row">
-                  <div class="col-md-12">                    
-                      <h3><b><p class="text-primary">Nova Movimentação</p></b></h3>
-                      <form method='POST' action='' id="formNovaMov">
-                          <div class="mb-3">
-                              <label for="id_usuario" class="form-label">Funcionário</label>
-                              <select id="id_usuario" name="id_usuario" class="form-select" required>
-                                  <option value="">Escolha um funcionário</option>
-              HTML;
-                                  
-                                  foreach ($funciona as $funcionario) {
-                                      $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
-                                  }
-              $html.= <<<HTML
-                              </select>
-                          </div>
-                          <div class="mb-3">
-                              <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
-                              <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
-                          </div>
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
-                    </form>
-                  </div>
-                </div>
-              </div>    
+            <div class="main-content" id="mainContent">
+                <div class="container mt-4" id="novoItem" style="display: block;">
+                    <div class="row">
+                        <div class="col-md-12">                    
+                            <h3><b><p class="text-primary">Nova Movimentação</p></b></h3>
+                            <form method='POST' action='' id="formNovaMov">
+                                <div class="mb-3">
+                                    <label for="id_usuario" class="form-label">Funcionário</label>
+                                    <select id="id_usuario" name="id_usuario" class="form-select" required>
+                                        <option value="">Escolha um funcionário</option>
+            HTML;
+            foreach ($funciona as $funcionario) {
+                $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
+            }
+            $html.= <<<HTML
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
+                                    <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>    
             </div>
-          HTML;
+            HTML;
 
 
             break;

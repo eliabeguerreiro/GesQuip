@@ -180,11 +180,39 @@ class ContentPainelMoviment
         
                             <!-- Div para Data -->
                             <div id="filtro_data" style="display: none; margin-left: 10px;">
-                                <select id="filtro_data_select" class="form-select form-select-sm">
-                                    <option value="">Escolha</option>
-                                    <option value="proprio">Próprio</option>
-                                    <option value="locado">Locado</option>
+                                <select id="filtro_data_tipo" class="form-select form-select-sm">
+                                    <option value="">Escolha o tipo</option>
+                                    <option value="mes">Mês Único</option>
+                                    <option value="intervalo">Intervalo</option>
                                 </select>
+                            </div>
+
+                            <!-- Div para Seleção de Mês -->
+                            <div id="filtro_data_mes" style="display: none; margin-left: 10px;">
+                                <select id="filtro_mes_select" class="form-select form-select-sm">
+                                    <option value="">Escolha o mês</option>
+                                    <option value="01">Janeiro</option>
+                                    <option value="02">Fevereiro</option>
+                                    <option value="03">Março</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Maio</option>
+                                    <option value="06">Junho</option>
+                                    <option value="07">Julho</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Seleção de Intervalo -->
+                            <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
+                                    <span class="input-group-addon">até</span>
+                                    <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
+                                </div>
                             </div>
 
                             <!-- Div para Funcionário -->
@@ -304,16 +332,44 @@ HTML;
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
                                 <option value="funcionario">Funcionário</option>
-                                <option value="data">Data</option>
+                                 <option value="data">Data</option>
                             </select>
         
-                            <!-- Div para Data -->
-                            <div id="filtro_data" style="display: none; margin-left: 10px;">
-                                <select id="filtro_data_select" class="form-select form-select-sm">
-                                    <option value="">Escolha</option>
-                                    <option value="proprio">Próprio</option>
-                                    <option value="locado">Locado</option>
+                             <!-- Div para Data -->
+                             <div id="filtro_data" style="display: none; margin-left: 10px;">
+                                <select id="filtro_data_tipo" class="form-select form-select-sm">
+                                    <option value="">Escolha o tipo</option>
+                                    <option value="mes">Mês Único</option>
+                                    <option value="intervalo">Intervalo</option>
                                 </select>
+                            </div>
+
+                            <!-- Div para Seleção de Mês -->
+                            <div id="filtro_data_mes" style="display: none; margin-left: 10px;">
+                                <select id="filtro_mes_select" class="form-select form-select-sm">
+                                    <option value="">Escolha o mês</option>
+                                    <option value="01">Janeiro</option>
+                                    <option value="02">Fevereiro</option>
+                                    <option value="03">Março</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Maio</option>
+                                    <option value="06">Junho</option>
+                                    <option value="07">Julho</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Seleção de Intervalo -->
+                            <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
+                                    <span class="input-group-addon">até</span>
+                                    <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
+                                </div>
                             </div>
 
                             <!-- Div para Funcionário -->
@@ -425,14 +481,20 @@ HTML;
       $html.= <<<HTML
 
         </body>
-       
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filtroPrincipal = document.getElementById('filtro_principal');
             const filtroData = document.getElementById('filtro_data');
+            const filtroDataTipo = document.getElementById('filtro_data_tipo');
+            const filtroDataMes = document.getElementById('filtro_data_mes');
+            const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
             const filtroFuncionario = document.getElementById('filtro_funcionario');
 
-            const filtroDataSelect = document.getElementById('filtro_data_select');
+            const filtroMesSelect = document.getElementById('filtro_mes_select');
             const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
             const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
         HTML;
@@ -442,6 +504,9 @@ HTML;
             filtroPrincipal.addEventListener('change', function() {
                 const filtro = filtroPrincipal.value;
                 filtroData.style.display = 'none';
+                filtroDataTipo.value = ''; // Resetar o tipo de data
+                filtroDataMes.style.display = 'none';
+                filtroDataIntervalo.style.display = 'none';
                 filtroFuncionario.style.display = 'none';
 
                 if (filtro === 'data') {
@@ -451,10 +516,45 @@ HTML;
                 }
             });
 
-            filtroDataSelect.addEventListener('change', function() {
-                const filtro = filtroPrincipal.value;
-                const valor = filtroDataSelect.value;
-                atualizarURL(filtro, valor);
+            filtroDataTipo.addEventListener('change', function() {
+                const tipo = filtroDataTipo.value;
+                filtroDataMes.style.display = 'none';
+                filtroDataIntervalo.style.display = 'none';
+
+                if (tipo === 'mes') {
+                    filtroDataMes.style.display = 'inline-block';
+                } else if (tipo === 'intervalo') {
+                    filtroDataIntervalo.style.display = 'inline-block';
+                }
+            });
+
+            filtroMesSelect.addEventListener('change', function() {
+                const mes = filtroMesSelect.value;
+                atualizarURL('dt_movimentacao', mes);
+            });
+
+            $(function(){
+                $('.datepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'pt-BR',
+                    startDate: '2024-01-01',
+                    endDate: '2026-12-31',
+                    todayHighlight: true,
+                    autoclose: true
+                });
+
+                $('#data_inicio').on('changeDate', function() {
+                    const dataInicio = $(this).datepicker('getFormattedDate');
+                    $('#data_fim').datepicker('setStartDate', dataInicio);
+                });
+
+                $('#data_fim').on('changeDate', function() {
+                    const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
+                    const dataFim = $(this).datepicker('getFormattedDate');
+                    if (dataInicio && dataFim) {
+                        atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
+                    }
+                });
             });
 
             filtroFuncionarioInput.addEventListener('input', function() {

@@ -127,7 +127,7 @@ class ContentPainelMoviment
                             <form method='POST' action='' id="formNovaMov">
                                 <div class="mb-3">
                                     <label for="id_usuario" class="form-label">Funcionário</label>
-                                    <select id="id_usuario" name="id_usuario" class="form-select" required>
+                                    <select id="id_usuario" name="id_responsavel" class="form-select" required>
                                         <option value="">Escolha um funcionário</option>
             HTML;
             foreach ($funciona as $funcionario) {

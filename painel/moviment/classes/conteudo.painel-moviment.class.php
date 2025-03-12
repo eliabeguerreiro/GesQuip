@@ -367,7 +367,7 @@ HTML;
                             <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
                                 <div class="input-daterange input-group" id="datepicker">
                                     <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
-                                    <span class="input-group-addon">até</span>
+                                    <span class="input-group-text">até</span>
                                     <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
                                 </div>
                             </div>
@@ -486,120 +486,120 @@ HTML;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filtroPrincipal = document.getElementById('filtro_principal');
-            const filtroData = document.getElementById('filtro_data');
-            const filtroDataTipo = document.getElementById('filtro_data_tipo');
-            const filtroDataMes = document.getElementById('filtro_data_mes');
-            const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
-            const filtroFuncionario = document.getElementById('filtro_funcionario');
+            document.addEventListener('DOMContentLoaded', function() {
+                const filtroPrincipal = document.getElementById('filtro_principal');
+                const filtroData = document.getElementById('filtro_data');
+                const filtroDataTipo = document.getElementById('filtro_data_tipo');
+                const filtroDataMes = document.getElementById('filtro_data_mes');
+                const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
+                const filtroFuncionario = document.getElementById('filtro_funcionario');
 
-            const filtroMesSelect = document.getElementById('filtro_mes_select');
-            const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
-            const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
+                const filtroMesSelect = document.getElementById('filtro_mes_select');
+                const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
+                const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
         HTML;
         $html .= "const funcionarios = " . json_encode($funciona) . ";";
         $html.= <<<HTML
 
-            filtroPrincipal.addEventListener('change', function() {
-                const filtro = filtroPrincipal.value;
-                filtroData.style.display = 'none';
-                filtroDataTipo.value = ''; // Resetar o tipo de data
-                filtroDataMes.style.display = 'none';
-                filtroDataIntervalo.style.display = 'none';
-                filtroFuncionario.style.display = 'none';
+                filtroPrincipal.addEventListener('change', function() {
+                    const filtro = filtroPrincipal.value;
+                    filtroData.style.display = 'none';
+                    filtroDataTipo.value = ''; // Resetar o tipo de data
+                    filtroDataMes.style.display = 'none';
+                    filtroDataIntervalo.style.display = 'none';
+                    filtroFuncionario.style.display = 'none';
 
-                if (filtro === 'data') {
-                    filtroData.style.display = 'inline-block';
-                } else if (filtro === 'funcionario') {
-                    filtroFuncionario.style.display = 'inline-block';
-                }
-            });
-
-            filtroDataTipo.addEventListener('change', function() {
-                const tipo = filtroDataTipo.value;
-                filtroDataMes.style.display = 'none';
-                filtroDataIntervalo.style.display = 'none';
-
-                if (tipo === 'mes') {
-                    filtroDataMes.style.display = 'inline-block';
-                } else if (tipo === 'intervalo') {
-                    filtroDataIntervalo.style.display = 'inline-block';
-                }
-            });
-
-            filtroMesSelect.addEventListener('change', function() {
-                const mes = filtroMesSelect.value;
-                atualizarURL('dt_movimentacao', mes);
-            });
-
-            $(function(){
-                $('.datepicker').datepicker({
-                    format: 'yyyy-mm-dd',
-                    language: 'pt-BR',
-                    startDate: '2024-01-01',
-                    endDate: '2026-12-31',
-                    todayHighlight: true,
-                    autoclose: true
-                });
-
-                $('#data_inicio').on('changeDate', function() {
-                    const dataInicio = $(this).datepicker('getFormattedDate');
-                    $('#data_fim').datepicker('setStartDate', dataInicio);
-                });
-
-                $('#data_fim').on('changeDate', function() {
-                    const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
-                    const dataFim = $(this).datepicker('getFormattedDate');
-                    if (dataInicio && dataFim) {
-                        atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
+                    if (filtro === 'data') {
+                        filtroData.style.display = 'inline-block';
+                    } else if (filtro === 'funcionario') {
+                        filtroFuncionario.style.display = 'inline-block';
                     }
                 });
-            });
 
-            filtroFuncionarioInput.addEventListener('input', function() {
-                const query = filtroFuncionarioInput.value.toLowerCase();
-                filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+                filtroDataTipo.addEventListener('change', function() {
+                    const tipo = filtroDataTipo.value;
+                    filtroDataMes.style.display = 'none';
+                    filtroDataIntervalo.style.display = 'none';
 
-                if (query.length > 0) {
-                    const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
-                    filteredFuncionarios.forEach(funcionario => {
-                        const suggestionItem = document.createElement('a');
-                        suggestionItem.href = '#';
-                        suggestionItem.className = 'list-group-item list-group-item-action';
-                        suggestionItem.textContent = funcionario.nm_usuario;
-                        suggestionItem.dataset.id = funcionario.id_usuario;
+                    if (tipo === 'mes') {
+                        filtroDataMes.style.display = 'inline-block';
+                    } else if (tipo === 'intervalo') {
+                        filtroDataIntervalo.style.display = 'inline-block';
+                    }
+                });
 
-                        suggestionItem.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            filtroFuncionarioInput.value = funcionario.nm_usuario;
-                            filtroFuncionarioSuggestions.style.display = 'none';
-                            atualizarURL('id_responsavel', funcionario.id_usuario);
-                        });
+                filtroMesSelect.addEventListener('change', function() {
+                    const mes = filtroMesSelect.value;
+                    atualizarURL('dt_movimentacao', mes);
+                });
 
-                        filtroFuncionarioSuggestions.appendChild(suggestionItem);
+                $(function(){
+                    $('.datepicker').datepicker({
+                        format: 'yyyy-mm-dd',
+                        language: 'pt-BR',
+                        startDate: '2024-01-01',
+                        endDate: '2026-12-31',
+                        todayHighlight: true,
+                        autoclose: true
                     });
 
-                    filtroFuncionarioSuggestions.style.display = 'block';
-                } else {
-                    filtroFuncionarioSuggestions.style.display = 'none';
+                    $('#data_inicio').on('changeDate', function() {
+                        const dataInicio = $(this).datepicker('getFormattedDate');
+                        $('#data_fim').datepicker('setStartDate', dataInicio);
+                    });
+
+                    $('#data_fim').on('changeDate', function() {
+                        const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
+                        const dataFim = $(this).datepicker('getFormattedDate');
+                        if (dataInicio && dataFim) {
+                            atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
+                        }
+                    });
+                });
+
+                filtroFuncionarioInput.addEventListener('input', function() {
+                    const query = filtroFuncionarioInput.value.toLowerCase();
+                    filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+
+                    if (query.length > 0) {
+                        const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
+                        filteredFuncionarios.forEach(funcionario => {
+                            const suggestionItem = document.createElement('a');
+                            suggestionItem.href = '#';
+                            suggestionItem.className = 'list-group-item list-group-item-action';
+                            suggestionItem.textContent = funcionario.nm_usuario;
+                            suggestionItem.dataset.id = funcionario.id_usuario;
+
+                            suggestionItem.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                filtroFuncionarioInput.value = funcionario.nm_usuario;
+                                filtroFuncionarioSuggestions.style.display = 'none';
+                                atualizarURL('id_responsavel', funcionario.id_usuario);
+                            });
+
+                            filtroFuncionarioSuggestions.appendChild(suggestionItem);
+                        });
+
+                        filtroFuncionarioSuggestions.style.display = 'block';
+                    } else {
+                        filtroFuncionarioSuggestions.style.display = 'none';
+                    }
+                });
+
+                // Fecha a lista de sugestões se o usuário clicar fora dela
+                document.addEventListener('click', function(e) {
+                    if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
+                        filtroFuncionarioSuggestions.style.display = 'none';
+                    }
+                });
+
+                function atualizarURL(filtro, valor) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('filtro', filtro);
+                    url.searchParams.set('valor', valor);
+                    window.location.href = url.toString();
                 }
             });
-
-            // Fecha a lista de sugestões se o usuário clicar fora dela
-            document.addEventListener('click', function(e) {
-                if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
-                    filtroFuncionarioSuggestions.style.display = 'none';
-                }
-            });
-
-            function atualizarURL(filtro, valor) {
-                const url = new URL(window.location.href);
-                url.searchParams.set('filtro', filtro);
-                url.searchParams.set('valor', valor);
-                window.location.href = url.toString();
-            }
-        });
         </script>
         </html>
       HTML;

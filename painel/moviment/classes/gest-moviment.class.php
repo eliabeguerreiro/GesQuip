@@ -111,11 +111,18 @@ class Moviment
     }
 
 
-    public static function getMoviment($id = null){
+    public static function getMoviment($id = null, $nm_filtro = null, $filtro = null){
         
         if($id){
             $db = DB::connect();
             $rs = $db->prepare("SELECT * FROM movimentacao WHERE id_movimentacao = $id and dt_finalizacao IS NULL ");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+        }elseif($nm_filtro){
+            //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' order by id_movimentacao desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -130,14 +137,22 @@ class Moviment
     }
 
 
-    public static function getMovimentEncerrado()
+    public static function getMovimentEncerrado($nm_filtro = null, $filtro = null)
     {
-        $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NOT NULL order by id_movimentacao desc");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        return ["dados" => $resultado];
-
+        if($nm_filtro){
+            
+            $db = DB::connect(); 
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' order by id_movimentacao desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+        }else{
+            $db = DB::connect();
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NOT NULL order by id_movimentacao desc");
+            $rs->execute();
+            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+            return ["dados" => $resultado];
+        }
     }    
 
     public static function setMoviment($data){

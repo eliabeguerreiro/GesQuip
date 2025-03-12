@@ -154,10 +154,11 @@ class ContentPainelMoviment
 
                 if ($filtro && $valor) {
 
-                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
+                    $moviments_filtrados = Moviment::getMoviment(null, $filtro, $valor);
             
-                    $itens = $itens_filtrados['dados'];
+                    $moviment = $moviments_filtrados['dados'];
                 }
+
 
 
 
@@ -203,7 +204,7 @@ HTML;
                     <div id="filtro_alert" class="alert alert-info">
                         <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_usuario') {
+                    if ($filtro === 'id_responsavel') {
                         $funcionaNome = array_filter($funciona, function($f) use ($valor) {
                             return $f['id_usuario'] == $valor;
                         });
@@ -283,9 +284,9 @@ HTML;
               
                 if ($filtro && $valor) {
 
-                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
+                    $moviments_filtrados = Moviment::getMovimentEncerrado( $filtro, $valor);
             
-                    $itens = $itens_filtrados['dados'];
+                    $moviment_encerrado = $moviments_filtrados['dados'];
                 }
 
 
@@ -297,7 +298,7 @@ HTML;
                 <div class="col-md-12">
                       <!-- Header com filtro -->
                       <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Movimentações Ativas</p></b></h3>
+                        <h3><b><p class="text-primary">Movimentações Encerradas</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -332,7 +333,7 @@ HTML;
                     <div id="filtro_alert" class="alert alert-info">
                         <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_usuario') {
+                    if ($filtro === 'id_responsavel') {
                         $funcionaNome = array_filter($funciona, function($f) use ($valor) {
                             return $f['id_usuario'] == $valor;
                         });

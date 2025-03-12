@@ -124,8 +124,6 @@ class Moviment
                 if (strpos($filtro, '...') !== false) {
                     list($start, $end) = explode('...', $filtro);
                     $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
-                } else {
-                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE DATE_FORMAT(dt_movimentacao, '%Y-%m') = '$filtro' AND dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
                 }
             } else {
                 $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' AND dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
@@ -142,6 +140,7 @@ class Moviment
     }
 
 
+
     public static function getMovimentEncerrado($nm_filtro = null, $filtro = null) {
         $db = DB::connect();
         if ($nm_filtro) {
@@ -149,8 +148,6 @@ class Moviment
                 if (strpos($filtro, '...') !== false) {
                     list($start, $end) = explode('...', $filtro);
                     $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
-                } else {
-                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE DATE_FORMAT(dt_movimentacao, '%Y-%m') = '$filtro' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
                 }
             } else {
                 $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
@@ -164,7 +161,7 @@ class Moviment
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
         }
-    } 
+    }
 
     public static function setMoviment($data){
         $user = $_SESSION['data_user'];

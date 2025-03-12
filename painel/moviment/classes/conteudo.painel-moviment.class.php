@@ -210,7 +210,7 @@ class ContentPainelMoviment
                             <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
                                 <div class="input-daterange input-group" id="datepicker">
                                     <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
-                                    <span class="input-group-addon">até</span>
+                                    <span class="input-group-text">até</span>
                                     <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
                                 </div>
                             </div>

@@ -34,7 +34,7 @@ if ($_SESSION['id_moviment']) {
 
     if ($item_mov['dados'] == null) {
         if (Moviment::finalizaMoviment($id)) {
-            header('location:./');
+            header('location:index.php?pagina=ativas');
         }
     }
 
@@ -138,8 +138,9 @@ HTML;
         $html .= "<tr><td colspan='4'>Nenhum item devolvido</td></tr>";
     } else {
         foreach ($item_devolv['dados'] as $item) {
-            $nm_item::getItemNome($id_item);
-            $nm_familia = Item::getFamiliaNome($id_fami);
+            $nm_item = Item::getItemNome($item['id_item']);
+            $item_data = Item::getItens($item['id_item'], null, null);
+            $nm_familia = Item::getFamiliaNome($item_data['dados'][0]['id_familia']);
             $html .= "<tr>";
             $html .= "<td>" . $cod . "</td>";
             $html .= "<td>" . $nm_familia . "</td>";

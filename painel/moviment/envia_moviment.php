@@ -7,7 +7,7 @@ include_once "classes/db.class.php";
 
 $reservados = Item::getItensReservados($_POST['id']);
 
-var_dump($reservados);
+//var_dump($reservados);
 $db = DB::connect();
 $response = ['status' => 'error', 'message' => 'Erro ao finalizar a movimentação'];
 

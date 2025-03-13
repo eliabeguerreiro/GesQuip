@@ -33,7 +33,6 @@ $moviment_encerrado = Moviment::getMovimentEncerrado();
 if(isset($_GET['sair'])){Paineel::logOut();}
 
 if($_POST){  
-
     if($cad_mov = Moviment::setMoviment($_POST)){ header('location:escolher_itens.php?id='.$cad_mov);}
 } 
 

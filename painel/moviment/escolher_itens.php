@@ -9,9 +9,15 @@ $itens = Item::getItensDisponiveis(null);
 $pagina = new ContentPainelMoviment;
 $fami = Item::getFamilia();
 
+
+
 if (isset($_GET['id'])) {
-    $_SESSION['id_moviment'] = $_GET['id'];
-    header('location:escolher_itens.php');
+    $_SESSION['id_moviment'] = $_GET['id']; 
+        
+    
+}else{
+    $_SESSION['msg'] = 'Movimentação não encontrada';
+    header('location:?pagina=ativas');
 }
 
 if (Paineel::validarToken()) {
@@ -71,8 +77,7 @@ if ($_SESSION['id_moviment']) {
                                 <div class="box2 p-4 rounded shadow-sm" style="background-color: #fff;">
                                     <h2 class="text-primary">Movimentação N:$id</h2>
                                     <small class="text-muted">Funcionário responsável: $responsavel</small>
-                                    <form method="POST" action="envia_moviment.php">
-
+                                    <div id="itensReservados">
     HTML;
     if ($reservado = Item::getItensReservados($id)) {
         $html .= <<<HTML
@@ -88,10 +93,12 @@ if ($_SESSION['id_moviment']) {
                                 <tbody>
         HTML;
 
-        foreach ($reservado['dados'] as $res) {
-            $nm_familia = Item::getFamiliaNome($item['id_familia']);
+        foreach ($reservado as $res) {
+            $nm_familia = Item::getFamiliaNome($res['id_familia']);
+            $item_dados = Item::getItens($res['id_item'],null,null);
+            $item_dados = $item_dados['dados'][0];
             $html .= "<tr>";
-            $html .= "<td>" . $res['id_item'] . "</td>";
+            $html .= "<td>" . $item_dados['cod_patrimonio'] . "</td>";
             $html .= "<td>" . $nm_familia . "</td>";
             $html .= "<td>" . $res['ds_item'] . "</td>";
             $html .= "</tr>";
@@ -100,8 +107,7 @@ if ($_SESSION['id_moviment']) {
         $html .= <<<HTML
                                 </tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary">Finalizar Movimentação</button>
-                        </form>
+                            <button id="finalizarMovimentacao" class="btn btn-primary">Finalizar Movimentação</button>
                     </div>
         HTML;
         }     
@@ -145,6 +151,7 @@ HTML;
     <script>
         const reservarButtons = document.querySelectorAll('.reservar-button');
         const cancelarMovimentacaoButton = document.getElementById('cancelarMovimentacao');
+        const finalizarMovimentacaoButton = document.getElementById('finalizarMovimentacao');
         const searchInput = document.getElementById('searchInput');
         const produtos = document.getElementById('produtos');
 
@@ -157,7 +164,7 @@ HTML;
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: 'id=' + encodeURIComponent(itemId)
+                    body: 'id=' + encodeURIComponent(itemId) + '&moviment=' + encodeURIComponent($id)
                 })
                 .then(response => response.text())
                 .then(data => {
@@ -180,7 +187,31 @@ HTML;
             .then(data => {
                 console.log(data);
                 if (data.status === 'success') {
-                    window.location.href = 'index.php?pagina=ativas'; // Redireciona para a página de movimentações após cancelar
+
+    HTML;
+    $_SESSION['id_moviment'] = null;               
+    $html.= <<<HTML
+                window.location.href = 'index.php?pagina=nova';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        finalizarMovimentacaoButton.addEventListener('click', () => {
+            fetch('envia_moviment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + encodeURIComponent($id)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.status === 'success') {
+                    window.location.href = 'index.php?pagina=ativas';
                 } else {
                     alert(data.message);
                 }
@@ -210,7 +241,4 @@ HTML;
 HTML;
 
     echo $html;
-} else {
-    $_SESSION['msg'] = 'Movimentação não encontrada';
-    header('location:?pagina=ativas');
 }

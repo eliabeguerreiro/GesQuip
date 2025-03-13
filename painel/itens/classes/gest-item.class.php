@@ -113,14 +113,13 @@ class Item
 
     }
 
-    public static function getItensReservados($id = null){
-        
-        $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = $id");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        return ["dados" => $resultado];
 
+    public static function getItensReservados($id_moviment) {
+        $db = DB::connect();
+        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = :id_moviment ORDER BY id_item DESC");
+        $rs->bindParam(':id_moviment', $id_moviment, PDO::PARAM_INT);
+        $rs->execute();
+        return $rs->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getItensDevolvidos($id ){

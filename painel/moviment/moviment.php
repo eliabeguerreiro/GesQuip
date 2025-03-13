@@ -72,7 +72,7 @@ if ($_SESSION['id_moviment']) {
                 </ul>
             </div>
             <div class="d-flex ms-auto">
-                <button id="cancelarMovimentacao" class="btn btn-danger btn-sm">Cancelar</button>
+                <button id="cancelarMovimentacao" class="btn btn-danger btn-sm">Voltar</button>
             </div>
         </div>
     </nav>
@@ -105,7 +105,7 @@ HTML;
         $nm_item = Item::getItemNome($dados_item[0]['id_item']);
         $nm_familia = Item::getFamiliaNome($dados_item[0]['id_familia']);
         $cod = $dados_item[0]['cod_patrimonio'];
-        
+
         $html .= "<tr>";
         $html .= "<td>" . $cod . "</td>";
         $html .= "<td>" . $nm_familia . "</td>";
@@ -201,6 +201,16 @@ HTML;
                 });
             });
         });
+
+
+        const cancelarMovimentacaoButton = document.getElementById('cancelarMovimentacao');
+
+        cancelarMovimentacaoButton.addEventListener('click', () => {
+           
+            window.location.href = 'index.php?pagina=ativas'; // Redireciona para a página de movimentações
+   
+        });
+
     </script>
 </body>
 </html>

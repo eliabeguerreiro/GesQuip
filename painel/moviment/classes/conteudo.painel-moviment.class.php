@@ -56,7 +56,7 @@ class ContentPainelMoviment
         <!--INICIO BARRA DE NAVEAGAÇÃO-->
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <a class="navbar-brand" href="../"><b>GesQuip</b></a>
                     <div class="navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav">
                             <!--GESTÃO DE ITENS-->

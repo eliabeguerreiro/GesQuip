@@ -58,7 +58,7 @@ class ContentPainelUser
         <!--INICIO BARRA DE NAVEAGAÇÃO-->
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                    <a class="navbar-brand" href="../"><b>GesQuip</b></a>
                     <div class="navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav">
                             <!--GESTÃO DE ITENS-->
@@ -76,9 +76,9 @@ class ContentPainelUser
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="moviment" id="NovaMoviment">Nova Movimentação</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href=" " id="MovimentEncer">Movimentações Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href="../moviment?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MANUTENÇÃO-->

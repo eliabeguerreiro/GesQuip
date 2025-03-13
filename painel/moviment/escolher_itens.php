@@ -1,37 +1,32 @@
 <?php
 session_start();
 ob_start();
-include_once"classes/conteudo.painel-moviment.class.php";
-include_once"classes/gest-moviment.class.php";
-include_once"classes/db.class.php";
-
+include_once "classes/conteudo.painel-moviment.class.php";
+include_once "classes/gest-moviment.class.php";
+include_once "classes/db.class.php";
 
 $itens = Item::getItensDisponiveis(null);
 $pagina = new ContentPainelMoviment;
 $fami = Item::getFamilia();
 
-
-
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $_SESSION['id_moviment'] = $_GET['id'];
     header('location:escolher_itens.php');
 }
 
-
-if(Paineel::validarToken()){
-
-}else{
+if (Paineel::validarToken()) {
+    // Token válido
+} else {
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
-    header('Location:../'); 
-}
-if(!isset($_SESSION['data_user'])){
-  
-    $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
-    header('Location:../'); 
-
+    header('Location:../');
 }
 
-if($_SESSION['id_moviment']){
+if (!isset($_SESSION['data_user'])) {
+    $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
+    header('Location:../');
+}
+
+if ($_SESSION['id_moviment']) {
     $id = $_SESSION['id_moviment'];
     $moviment = Moviment::getMoviment($id);
     $id_resp = $moviment['dados'][0]['id_responsavel'];
@@ -118,6 +113,9 @@ if($_SESSION['id_moviment']){
         $html .= <<<HTML
                     <div class="box2 mt-4 p-4 rounded shadow-sm" style="background-color: #fff;">
                         <h1 class="text-primary">Itens Disponíveis</h1>
+                        <div class="mb-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Buscar itens...">
+                        </div>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -157,6 +155,8 @@ HTML;
     <script>
         const reservarButtons = document.querySelectorAll('.reservar-button');
         const cancelarMovimentacaoButton = document.getElementById('cancelarMovimentacao');
+        const searchInput = document.getElementById('searchInput');
+        const produtos = document.getElementById('produtos');
 
         reservarButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -186,12 +186,33 @@ HTML;
                 },
                 body: 'id=' + encodeURIComponent($id)
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
                 console.log(data);
-                window.location.href = 'index.php?pagina=ativas'; // Redireciona para a página de movimentações após cancelar
+                if (data.status === 'success') {
+                    window.location.href = 'index.php?pagina=ativas'; // Redireciona para a página de movimentações após cancelar
+                } else {
+                    alert(data.message);
+                }
             })
             .catch(error => console.error('Error:', error));
+        });
+
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.toLowerCase();
+            const rows = produtos.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const codigo = row.cells[0].textContent.toLowerCase();
+                const familia = row.cells[1].textContent.toLowerCase();
+                const nome = row.cells[2].textContent.toLowerCase();
+
+                if (codigo.includes(query) || familia.includes(query) || nome.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>

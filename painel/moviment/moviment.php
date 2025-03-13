@@ -5,12 +5,12 @@ include_once"classes/conteudo.painel-moviment.class.php";
 include_once"classes/gest-moviment.class.php";
 include_once"classes/db.class.php";
 $pagina = new ContentPainel;
-$itens = Painel::getItens();
-$fami = Painel::getFamilia();
+$itens = Item::getItens();
+$fami = Item::getFamilia();
 //var_dump($itens['dados']);
 
 
-if(Painel::validarToken()){
+if(Paineel::validarToken()){
 
 }else{
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
@@ -36,9 +36,9 @@ if(isset($_GET['id'])){
 
 if($_SESSION['id_moviment']){
     $id = $_SESSION['id_moviment'];
-    $moviment = Painel::getMoviment($id);
-    $item_mov = Painel::getItensMoviment($id);
-    $item_devolv = Painel::getItensDevolvidos($id);
+    $moviment = Moviment::getMoviment($id);
+    $item_mov = Item::getItensMoviment($id);
+    $item_devolv = Item::getItensDevolvidos($id);
 
     if($item_mov['dados'] == null){ 
         //verfica se a movimentação não possui itens locados e finaliza a movimentação

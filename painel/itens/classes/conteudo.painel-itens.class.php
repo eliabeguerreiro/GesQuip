@@ -392,8 +392,9 @@ HTML;
 
       
       foreach ($itens_disponiveis as $item):
+          $nm_familia = Item::getFamiliaNome($item['id_familia']);
           $html .="<td>".$item['cod_patrimonio']."</td>";
-          $html .="<td>".$item['id_familia']."</td>";
+          $html .="<td>".$nm_familia."</td>";
           $html .="<td>".$item['ds_item']."</td>";
           $html .="<td>".$item['natureza']."</td>";
           $html .="</tr>";
@@ -499,8 +500,9 @@ HTML;
       
             
             foreach ($itens_locados as $item):
+                $nm_familia = Item::getFamiliaNome($item['id_familia']);
                 $html .="<td>".$item['cod_patrimonio']."</td>";
-                $html .="<td>".$item['id_familia']."</td>";
+                $html .="<td>".$nm_familia."</td>";
                 $html .="<td>".$item['ds_item']."</td>";
                 $html .="<td>".$item['natureza']."</td>";
               

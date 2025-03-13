@@ -6,9 +6,9 @@ include_once"classes/gest-moviment.class.php";
 include_once"classes/db.class.php";
 
 
-$itens = Painel::getItensDisponiveis(null);
-$pagina = new ContentPainel;
-$fami = Painel::getFamilia();
+$itens = Item::getItensDisponiveis(null);
+$pagina = new ContentPainelMoviment;
+$fami = Item::getFamilia();
 
 
 //como remover itens da disponibilidade caso hajam mais de um adm para gerir 
@@ -21,7 +21,7 @@ if(isset($_GET['id'])){
 }
 
 
-if(Painel::validarToken()){
+if(Paineel::validarToken()){
 
 }else{
     $_SESSION['msg'] = '<p>Você precisa logar para acessar o painel</p>';
@@ -36,36 +36,51 @@ if(!isset($_SESSION['data_user'])){
 
 if($_SESSION['id_moviment']){
     $id = $_SESSION['id_moviment'];
-    $moviment = Painel::getMoviment($id);
+    $moviment = Moviment::getMoviment($id);
     $id_resp = $moviment['dados'][0]['id_responsavel'];
-    $funcionario = Painel::getFuncionarios($id_resp);
+    $funcionario = User::getFuncionarios($id_resp);
     $responsavel = $funcionario['dados'][0]['nm_usuario'];
     $nome = $_SESSION['data_user']['nm_usuario'];
 
     $html = <<<HTML
             <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Movimentação N:$id</title>
-                        <link rel="stylesheet" href="src/style.css">
-                        
-                    </head>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Movimentação N:$id</title>
+                <link rel="stylesheet" href="src/style.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            </head>
             <body>
-                <nav>
-                    <i class="fa fa-user"></i><p>$nome</p>
-                    <div class="logo">Escolha de itens</div>
-                    <a href='../'><button><i class="fa fa-arrow-left"></i>Voltar</button></a>
+                <!-- INÍCIO BARRA DE NAVEGAÇÃO -->
+                <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+                        <div class="navbar-collapse justify-content-center" id="collapsibleNavbar">
+                            <ul class="navbar-nav text-center">
+                                <li class="nav-item">
+                                    <h2 class="navbar-brand mb-0">Movimentação N:  $id</h2>
+                                </li>
+                                <li class="nav-item">
+                                    <small class="navbar-brand">Funcionário responsável: $responsavel</small>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="d-flex ms-auto">
+                            <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                        </div>
+                    </div>
                 </nav>
-                <main>
-        
+                <!-- FIM BARRA DE NAVEGAÇÃO -->
+
             
                 <div class="box2">
-                    <h2>Movimentação N:$id</h2>
-                    <small>Funcionário responsável: $responsavel</small>
                     <form method='POST' action ='envia_moviment.php'>  
     HTML;
     
-    if($reservado = Painel::getItensDisponiveis($id)){
+    if($reservado = Item::getItensDisponiveis($id)){
         $html .= <<<HTML
                 <h3>Itens reservados</h3>
                     <table>

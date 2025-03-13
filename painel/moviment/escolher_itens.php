@@ -89,12 +89,7 @@ if ($_SESSION['id_moviment']) {
         HTML;
 
         foreach ($reservado['dados'] as $res) {
-            $id_fami = $res['id_familia'];
-            foreach ($fami['dados'] as $familiaa) {
-                if ($familiaa['id_familia'] == $id_fami) {
-                    $nm_familia = $familiaa['ds_familia'];
-                }
-            }
+            $nm_familia = Item::getFamiliaNome($item['id_familia']);
             $html .= "<tr>";
             $html .= "<td>" . $res['id_item'] . "</td>";
             $html .= "<td>" . $nm_familia . "</td>";
@@ -129,12 +124,7 @@ if ($_SESSION['id_moviment']) {
 HTML;
 
         foreach ($itens['dados'] as $item) {
-            $id_fami = $item['id_familia'];
-            foreach ($fami['dados'] as $familiaa) {
-                if ($familiaa['id_familia'] == $id_fami) {
-                    $nm_familia = $familiaa['ds_familia'];
-                }
-            }
+            $nm_familia = Item::getFamiliaNome($item['id_familia']);
             $html .= "<tr>";
             $html .= "<td>" . $item['cod_patrimonio'] . "</td>";
             $html .= "<td>" . $nm_familia . "</td>";

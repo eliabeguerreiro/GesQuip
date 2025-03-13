@@ -245,7 +245,7 @@ HTML;
           $html .="<td>".$nm_autor."</td>";
           $html .="<td>".$mov['dt_movimentacao']."</td>";
           //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
-          $html .="<td><a href='moviment.php.php?id=".$mov['id_movimentacao']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
+          $html .="<td><a href='moviment.php?id=".$mov['id_movimentacao']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
           $html .="</tr>";
       endforeach;
                  

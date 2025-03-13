@@ -5,6 +5,23 @@ include_once"../../classes/painel.class.php";
 class Item
 {
 
+    public static function getItemNome($id_item)
+{
+    if ($id_item) {
+        $id_item = (int)$id_item;
+        $db = DB::connect();
+        $rs = $db->prepare("SELECT ds_item FROM item WHERE id_item = :id_item");
+        $rs->bindParam(':id_item', $id_item, PDO::PARAM_INT);
+        $rs->execute();
+        $resultado = $rs->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado) {
+            return $resultado['ds_item']; // Retorna o nome da família
+        }
+    }
+
+    return null; 
+}
     public static function getFamiliaNome($id_familia)
 {
     if ($id_familia) {

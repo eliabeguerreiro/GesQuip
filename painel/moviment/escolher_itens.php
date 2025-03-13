@@ -11,9 +11,6 @@ $pagina = new ContentPainelMoviment;
 $fami = Item::getFamilia();
 
 
-//como remover itens da disponibilidade caso hajam mais de um adm para gerir 
-
-//salvo o ID da movimentação em um cookie para ser usado na escolha de itens
 
 if(isset($_GET['id'])){
     $_SESSION['id_moviment'] = $_GET['id'];
@@ -66,7 +63,7 @@ if($_SESSION['id_moviment']){
                             </ul>
                         </div>
                         <div class="d-flex ms-auto">
-                            <a href="?sair=1" class="btn btn-danger btn-sm">Cancelar</a>
+                            <button id="cancelarMovimentacao" class="btn btn-danger btn-sm">Cancelar</button>
                         </div>
                     </div>
                 </nav>
@@ -159,6 +156,7 @@ HTML;
 
     <script>
         const reservarButtons = document.querySelectorAll('.reservar-button');
+        const cancelarMovimentacaoButton = document.getElementById('cancelarMovimentacao');
 
         reservarButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -179,6 +177,22 @@ HTML;
                 .catch(error => console.error('Error:', error));
             });
         });
+
+        cancelarMovimentacaoButton.addEventListener('click', () => {
+            fetch('cancela_moviment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + encodeURIComponent($id)
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                window.location.href = 'index.php?pagina=ativas'; // Redireciona para a página de movimentações após cancelar
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 </html>
@@ -187,5 +201,5 @@ HTML;
     echo $html;
 } else {
     $_SESSION['msg'] = 'Movimentação não encontrada';
-    header('location:escolher_itens.php');
+    header('location:?pagina=ativas');
 }

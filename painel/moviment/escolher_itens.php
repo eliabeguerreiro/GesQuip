@@ -61,151 +61,131 @@ if($_SESSION['id_moviment']){
                         <div class="navbar-collapse justify-content-center" id="collapsibleNavbar">
                             <ul class="navbar-nav text-center">
                                 <li class="nav-item">
-                                    <h2 class="navbar-brand mb-0">Movimentação N:  $id</h2>
-                                </li>
-                                <li class="nav-item">
-                                    <small class="navbar-brand">Funcionário responsável: $responsavel</small>
+                                    <h2 class="navbar-brand mb-0">Escolha de Equipamentos</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="d-flex ms-auto">
-                            <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                            <a href="?sair=1" class="btn btn-danger btn-sm">Cancelar</a>
                         </div>
                     </div>
                 </nav>
                 <!-- FIM BARRA DE NAVEGAÇÃO -->
 
-            
-                <div class="box2">
-                    <form method='POST' action ='envia_moviment.php'>  
+                <main class="mt-5 pt-4">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="box2 p-4 rounded shadow-sm" style="background-color: #fff;">
+                                    <h2 class="text-primary">Movimentação N:$id</h2>
+                                    <small class="text-muted">Funcionário responsável: $responsavel</small>
+                                    <form method="POST" action="envia_moviment.php">
+
     HTML;
-    
-    if($reservado = Item::getItensDisponiveis($id)){
+    if ($reservado = Item::getItensReservados($id)) {
         $html .= <<<HTML
-                <h3>Itens reservados</h3>
-                    <table>
-                    <thead>
-                        
-                        <tr>
-                            <th>ID        </th>
-                            <th>Familia        </th>
-                            <th>Nome      </th>
-                            
-                        </tr>
-                    </thead>
+                            <h3 class="mt-4">Itens Reservados</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Família</th>
+                                        <th>Nome</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+        HTML;
 
-        HTML;    
-
-        foreach ($reservado['dados'] as $res):
-
-
+        foreach ($reservado['dados'] as $res) {
             $id_fami = $res['id_familia'];
-
             foreach ($fami['dados'] as $familiaa) {
-              
-              if($familiaa['id_familia'] == $id_fami){
-                $nm_familia = $familiaa['ds_familia'];
-              }
+                if ($familiaa['id_familia'] == $id_fami) {
+                    $nm_familia = $familiaa['ds_familia'];
+                }
             }
-            //tratar disponibilidade e categoria
-                $html .="<tr>";
-                $html .="<td>".$res['id_item']."</td>";
-                $html .="<td>".$nm_familia."</td>";
-                $html .="<td>".$res['ds_item']."</td>";
-                $html .="</tr>";
-                
-        endforeach;     
+            $html .= "<tr>";
+            $html .= "<td>" . $res['id_item'] . "</td>";
+            $html .= "<td>" . $nm_familia . "</td>";
+            $html .= "<td>" . $res['ds_item'] . "</td>";
+            $html .= "</tr>";
+        }
 
-        
-    }
         $html .= <<<HTML
-                    </table>
-                    <br>
-                    <button type="submit">Finalizar movimentação</button>
-                    </form>
-                </div>
-
-                <div class="box2">
-                    <h1>Itens Disponíveis</h1>
-                        <table>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-primary">Finalizar Movimentação</button>
+                        </form>
+                    </div>
+        HTML;
+        }     
+        $html .= <<<HTML
+                    <div class="box2 mt-4 p-4 rounded shadow-sm" style="background-color: #fff;">
+                        <h1 class="text-primary">Itens Disponíveis</h1>
+                        <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th>Cod       </th>
-                                <th>Familia        </th>
-                                <th>Nome      </th>
-                                <th></th>
-                            </tr>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Família</th>
+                                    <th>Nome</th>
+                                    <th>Ação</th>
+                                </tr>
                             </thead>
                             <tbody id="produtos">
-                            <tr>
-        HTML;
-        
-        foreach ($itens['dados'] as $item):
+HTML;
 
-            
+        foreach ($itens['dados'] as $item) {
             $id_fami = $item['id_familia'];
-
             foreach ($fami['dados'] as $familiaa) {
-              
-              if($familiaa['id_familia'] == $id_fami){
-                $nm_familia = $familiaa['ds_familia'];
-              }
+                if ($familiaa['id_familia'] == $id_fami) {
+                    $nm_familia = $familiaa['ds_familia'];
+                }
             }
-        //tratar disponibilidade e categoria
-
-            $html .="<td>".$item['cod_patrimonio']."</td>";
-            $html .="<td>".$nm_familia."</td>";
-            $html .="<td>".$item['ds_item']."</td>";
-            $html .="<td><button class='reservar-button' id = '".$item['id_item']."' >reservar</button></td>";
-            $html .="</tr>";
-            
-        endforeach;     
-
-    $html.= <<<HTML
-
-                        </tbody>
-                        </table>
-                </div>            
-                </main>
-
-        HTML;
-        if(isset($_SESSION['msg'])){
-          $html.= "<script>alert('".$_SESSION['msg']."');</script>";
-          unset($_SESSION['msg']);
+            $html .= "<tr>";
+            $html .= "<td>" . $item['cod_patrimonio'] . "</td>";
+            $html .= "<td>" . $nm_familia . "</td>";
+            $html .= "<td>" . $item['ds_item'] . "</td>";
+            $html .= "<td><button class='btn btn-success reservar-button' id='" . $item['id_item'] . "'>Reservar</button></td>";
+            $html .= "</tr>";
         }
-        $html.= <<<HTML
-                
-                <script>
-                const reservarButtons = document.querySelectorAll('.reservar-button');
 
-                reservarButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const itemId = button.id;
+        $html .= <<<HTML
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-                    fetch('reservar.php', {
+    <script>
+        const reservarButtons = document.querySelectorAll('.reservar-button');
+
+        reservarButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const itemId = button.id;
+
+                fetch('reservar.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: 'id=' + encodeURIComponent(itemId)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
+                })
+                .then(response => response.text())
+                .then(data => {
                     console.log(data);
-                        window.location.reload();
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
-                });
-                </script>
-                </body>
-                </html>
-
-    HTML;
+                    window.location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
+HTML;
 
     echo $html;
-}else{
+} else {
     $_SESSION['msg'] = 'Movimentação não encontrada';
     header('location:escolher_itens.php');
-
 }

@@ -96,7 +96,6 @@ class Item
 
     }
 
-
     public static function getItensReservados($id = null){
         
         $db = DB::connect();

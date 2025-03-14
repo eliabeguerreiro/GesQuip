@@ -1,285 +1,532 @@
 <?php
   
-class ContentPainel
+class ContentPainelManutencao
 {
   public function renderHeader(){
    
     $html = <<<HTML
       <!DOCTYPE html>
-      <html>
-        <head>
-            <title>Gestão de Manutenções</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-              integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer"/>
-            
-            <link rel="stylesheet" href="src/style.css">
-        </head>
+      <html lang="pt-br">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>GesQuip - Manutenção</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+          <link rel="stylesheet" href="src/style.css">
+      </head>
 
     HTML;   
-
     return($html);
-}
 
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-    public function renderBody($manutenc, $item){
+    public function renderBody($pagina, $manutenc, $mantencs_encerradas){
       $nome = $_SESSION['data_user']['nm_usuario'];
+      $funciona = User::getFuncionarios();
 
-      if($manutenc){
-        $html = <<<HTML
-        <body>
-            <nav>
-                
-                <div class="logo">Gestão de Manutenções</div>
-                <a href='../'><button><i class="fa fa-arrow-left"></i>voltar</button></a>
-            </nav>
-            <main>
-
-
-            <div class="sidebar">
-              <p><i class="fa fa-user"></i> $nome</p>
-              <a href="../gestao_itens">Itens</a>
-              <a href="../moviment">Movimentações</a>
-              <a href=""class="active">Manutenções</a>
-              <a href="../gestao_usuarios">Usuários</a>
-            </div>
-
-
-            <div class="box">
-                <h2>Nova manutenção de equipamento</h2>
-                <form method='POST' action = ''>                   
-                    <label for="id_responsavel">Itens</label><br>
-                    <select name="id_item">
-                      <option value="">escolha o item</option>"
-      HTML;
-
-            foreach ($item as $itens) {
-                    $html.="<option value=".$itens['id_item'].">".$itens['ds_item']."</option>";  
-            }
-
-            $html.= <<<HTML
-             "</select><br><br>
-                    <label for="obs_in">Detalhes da manutenção</label><br>
-                    <textarea name="obs_in" id="meuParagrafo" rows="4" cols="35"></textarea>
-                    <button type="submit">cadastrar</button>
-                </form>
-            </div>
-            <div class="box2">
-            <h1>Todos os Itens em manutenção</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>ID da manutencao</th>
-                              <th>Cod</th>
-                              <th>Detalhes</th>
-                              <th>Responsável</th>
-                              <th>Data manutenção</th>
-                              <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos">
-                          <tr>
-    HTML;
-
+      // Verifica se os parâmetros GET estão definidos
+      $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
+      $valor = isset($_GET['valor']) ? $_GET['valor'] : null;
     
-    foreach ($manutenc as $manutencao):
-
-      foreach ($item as $itens) {
-          if($itens['id_item'] == $manutencao['id_item']){
-            $cod = $itens['cod_patrimonio'];
-          }  
-      }
-            
-          $funcionario = Painel::getFuncionarios($manutencao['id_autor']);
-          $responsavel = $funcionario['dados'][0]['nm_usuario'];
-
-
-      //tratar disponibilidade e categoria
-          $html .="<td>".$manutencao['id_manutencao']."</td>";   
-          $html .="<td>".$cod."</td>";
-          $html .="<td>".$manutencao['obs_in']."</td>";
-          $html .="<td>".$responsavel."</td>";
-          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td><button class='finaliza-button' id ='".$manutencao['id_manutencao']."' >Retornar item</button></td>";
-          $html .="</tr>";
-          
-    endforeach;     
-
-  $html.= <<<HTML
-
-                      </tbody>
-                    </table>
-            </div>            
-            <br><br><br><br><br>          
-
-          <!-- Modal HTML -->
-          <div id="finalizaModal" class="modal" style="display:none;">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <h2>Finalizar Manutenção</h2>
-            <input type="text" id="finalizaTexto" placeholder="Resumo da manutenção" required>
-            <select id="statusSelect" required> 
-              <option value="1">Disponível</option>
-              <option value="999999999">Quebrado</option>
-              
-            </select>
-            <button id="finalizaSubmit">Enviar</button>
-            </div>
-          </div>
-        </main>
-
-      HTML;
-      if(isset($_SESSION['msg'])){
-       $html.= "<script>alert('".$_SESSION['msg']."');</script>";
-       unset($_SESSION['msg']);
-      }
-     $html.= <<<HTML
-
-        <script>
-          document.addEventListener('DOMContentLoaded', () => {
-            const finalizaButtons = document.querySelectorAll('.finaliza-button');
-            const modal = document.getElementById('finalizaModal');
-            const closeModal = document.querySelector('.modal .close');
-            const finalizaSubmit = document.getElementById('finalizaSubmit');
-            let currentItemId;
-
-            finalizaButtons.forEach(button => {
-              button.addEventListener('click', () => {
-                currentItemId = button.id;
-                modal.style.display = 'block';
-              });
-            });
-
-            closeModal.addEventListener('click', () => {
-              modal.style.display = 'none';
-            });
-
-            // Fechar a modal ao clicar fora dela
-            window.onclick = function(event) {
-              if (event.target == modal) {
-                modal.style.display = 'none';
+  
+      function buildUrlItens($newParams = []) {
+          $queryParams = $_GET;
+          foreach ($newParams as $key => $value) {
+              if ($value === null) {
+                  unset($queryParams[$key]);
+              } else {
+                  $queryParams[$key] = $value;
               }
-            }
+          }
+          // Remove os parâmetros 'filtro' e 'v' se a página for alterada
+          if (isset($newParams['pagina'])) {
+              unset($queryParams['filtro']);
+              unset($queryParams['valor']);
+          }
+          return '?' . http_build_query($queryParams);
+      }
 
-            finalizaSubmit.addEventListener('click', () => {
-              const texto = document.getElementById('finalizaTexto').value;
-              const status = document.getElementById('statusSelect').value;
-
-              fetch('finaliza_manutencao.php', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto) + '&status=' + encodeURIComponent(status)
-                })
-              .then(response => response.text())
-              .then(data => {
-                console.log(data);
-                modal.style.display = 'none';
-                window.location.reload();
-              })
-              .catch(error => console.error('Error:', error));
-            });
-          });
-        </script>
-        </body>
-        </html>
-      HTML;   
-
-
-      }else{
-        
-        //pagina sem manutenções cadastrada em banco
-
-
-        $html = <<<HTML
-        <body>
-
-          <nav>    
-                <div class="logo">Gestão de Manutenções</div>
-                <a href='../'><button><i class="fa fa-arrow-left"></i>voltar</button></a>
+      $html = <<<HTML
+          <body>
+        <!--INICIO BARRA DE NAVEAGAÇÃO-->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="../"><b>GesQuip</b></a>
+                    <div class="navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav">
+                            <!--GESTÃO DE ITENS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MOVIMENTACAO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
+                                    <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
+                                    <li><a class="dropdown-item" href="../moviment?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
+                                </ul>
+                            </li>
+                            <!--GESTÃO MANUTENÇÃO-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
+                                <ul class="dropdown-menu">
+        HTML;
+                                    $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'nova']) . "'>Nova Manutenção</a></li>";      
+                                    $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'ativas']) . "'>Manutenções Ativas</a></li>";
+                                    $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Manutenções Encerradas</a></li>";
+        $html.= <<<HTML
+                                </ul>
+                            </li>
+                            <!--GESTÃO DE USUARIOS-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../usuarios?pagina=cadastro" id="NovosUsuarios">Cadastro Usuário</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios?pagina=usuarios" id="NovosUsuarios">Todos os Usuários</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    </div>
+                </div>
             </nav>
+            <!--FIM BARRA DE NAVEAGAÇÃO-->
             <main>
-
-
-            <div class="sidebar">
-              <p><i class="fa fa-user"></i> $nome</p>
-              <a href="../gestao_itens">Itens</a>
-              <a href="../moviment">Movimentações</a>
-              <a href=""class="active">Manutenções</a>
-              <a href="../gestao_usuarios">Usuários</a>
-            </div>
-
-
-            
-            <main>
-
-            <div class="box">
-                <h2>Nova manutenção de equipamento</h2>
-                <form method='POST' action = ''>                   
-                    <label for="id_responsavel">Itens</label><br>
-                    <select name="id_item">
-                      <option value="">escolha o item</option>"
       HTML;
 
-            foreach ($item as $itens) {
-                    $html.="<option value=".$itens['id_item'].">".$itens['ds_item']."</option>";  
-            }
+
+
+
+      if (isset($pagina)) {
+        
+        switch ($pagina) {
+           case 'nova':
+
 
             $html.= <<<HTML
-             "</select><br><br>
-                    <label for="obs_in">Detalhes da manutenção</label><br>
-                    <textarea name="obs_in" id="meuParagrafo" rows="4" cols="35"></textarea>
-                    <button type="submit">cadastrar</button>
-                </form>
+            <div class="main-content" id="mainContent">
+                <div class="container mt-4" id="novoItem" style="display: block;">
+                    <div class="row">
+                        <div class="col-md-12">                    
+                            <h3><b><p class="text-primary">Nova Manutenção</p></b></h3>
+                            <form method='POST' action='' id="formNovaMov">
+                                <div class="mb-3">
+                                    <label for="id_usuario" class="form-label">Funcionário</label>
+                                    <select id="id_usuario" name="id_responsavel" class="form-select" required>
+                                        <option value="">Escolha um funcionário</option>
+            HTML;
+            
+            foreach ($funciona['dados'] as $funcionario) {
+                $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
+            }
+            $html.= <<<HTML
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
+                                    <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>    
             </div>
-            <div class="box2">
-            <h1>Todos os Itens em manutenção</h1>
-                    <table>
+            HTML;
+
+
+            break;
+            case 'ativas':
+
+                if ($filtro && $valor) {
+
+                    $moviments_filtrados = Moviment::getMoviment(null, $filtro, $valor);
+            
+                    $moviment = $moviments_filtrados['dados'];
+                }
+
+
+
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Manutenções Ativas</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="funcionario">Funcionário</option>
+                                <option value="data">Data</option>
+                            </select>
+        
+                            <!-- Div para Data -->
+                            <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
+                                    <span class="input-group-text">até</span>
+                                    <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
+                                </div>
+                            </div>
+
+                            <!-- Div para Funcionário -->
+                            <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                                <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_responsavel') {
+                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
+                            return $f['id_usuario'] == $valor;
+                        });
+                        $funcionaNome = reset($funcionaNome);
+                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Movimentações -->
+                    <table class="table table-striped">
                         <thead>
                             <tr>
-                              <th>Cod. manutencao</th>
-                              <th>Cod</th>
-                              <th>Detalhes</th>
-                              <th>Responsável</th>
-                              <th>Data manutenção</th>
-                              <th></th>
+                                <th>ID</th>
+                                <th>ADM</th>
+                                <th>Data</th>
+                                <th>Observações</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
-                       
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($manutenc as $manutencao):
+          $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+          $html .="<td>".$manutencao['id_manutencao']."</td>";
+          $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
+          $html .="<td>".$manutencao['obs_in']."</td>";
+          //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
+          $html .="<td><a href='moviment.php?id=".$manutencao['id_manutencao']."' class='btn btn-warning btn-sm btn-sm' >Encerrar</a></td>";
+          $html .="</tr>";
+      endforeach;
+                 
+      $html.= <<<HTML
+
+                        </tbody>
                     </table>
-            </div>            
-            <br>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Atualização >
+        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+
+
+      HTML;
+              
+                break;
+            case 'encerradas':
+              
+                if ($filtro && $valor) {
+
+                    $moviments_filtrados = Moviment::getMovimentEncerrado( $filtro, $valor);
+            
+                    $moviment_encerrado = $moviments_filtrados['dados'];
+                }
+
+
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                      <!-- Header com filtro -->
+                      <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Manutenções Encerradas</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="funcionario">Funcionário</option>
+                                 <option value="data">Data</option>
+                            </select>
+        
+                            <!-- Div para Data -->
+                            <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input type="text" class="input-sm form-control datepicker" id="data_inicio" name="start" placeholder="Data de Início" readonly />
+                                    <span class="input-group-text">até</span>
+                                    <input type="text" class="input-sm form-control datepicker" id="data_fim" name="end" placeholder="Data de Fim" readonly />
+                                </div>
+                            </div>
+
+                            <!-- Div para Funcionário -->
+                            <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                                <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_responsavel') {
+                        $funcionaNome = array_filter($funciona['dados'], function($f) use ($valor) {
+                            return $f['id_usuario'] == $valor;
+                        });
+                        $funcionaNome = reset($funcionaNome);
+                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Movimentações -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Funcionário</th>
+                                <th>ADM</th>
+                                <th>Retirada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($mantencs_encerradas as $manutencao):
+          $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+          $html .="<td>".$manutencao['id_manutencao']."</td>";
+          $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
+          $html .="<td>".$manutencao['obs_in']."</td>";
+          //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
+          $html .="<td><a href='moviment.php?id=".$manutencao['id_manutencao']."' class='btn btn-warning btn-sm btn-sm' >Encerrar</a></td>";
+          $html .="</tr>";
+      endforeach;
+                 
+                 
+      $html.= <<<HTML
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Atualização >
+        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+
+
+      HTML;
+                
+                break;
+            default:
+                header('Location: ?pagina=nova');
+                break;
+        }
+    }
+      
+      $html.= <<<HTML
+
+       
         </main>
 
-        
+        HTML;
+        if(isset($_SESSION['msg'])){
+        $html.= "<script>alert('".$_SESSION['msg']."');</script>";
+        unset($_SESSION['msg']);
+        }
+      $html.= <<<HTML
+
         </body>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const filtroPrincipal = document.getElementById('filtro_principal');
+                const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
+                const filtroFuncionario = document.getElementById('filtro_funcionario');
+
+                const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
+                const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
+        HTML;
+        $html .= "const funcionarios = " . json_encode($funciona['dados']) . ";";
+        $html.= <<<HTML
+
+                filtroPrincipal.addEventListener('change', function() {
+                    const filtro = filtroPrincipal.value;
+                    filtroDataIntervalo.style.display = 'none';
+                    filtroFuncionario.style.display = 'none';
+
+                    if (filtro === 'data') {
+                        filtroDataIntervalo.style.display = 'inline-block';
+                    } else if (filtro === 'funcionario') {
+                        filtroFuncionario.style.display = 'inline-block';
+                    }
+                });
+
+                $(function(){
+                    $('.datepicker').datepicker({
+                        format: 'yyyy-mm-dd',
+                        language: 'pt-BR',
+                        startDate: '2024-01-01',
+                        endDate: '2026-12-31',
+                        todayHighlight: true,
+                        autoclose: true
+                    });
+
+                    $('#data_inicio').on('changeDate', function() {
+                        const dataInicio = $(this).datepicker('getFormattedDate');
+                        $('#data_fim').datepicker('setStartDate', dataInicio);
+                    });
+
+                    $('#data_fim').on('changeDate', function() {
+                        const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
+                        const dataFim = $(this).datepicker('getFormattedDate');
+                        if (dataInicio && dataFim) {
+                            atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
+                        }
+                    });
+                });
+
+                filtroFuncionarioInput.addEventListener('input', function() {
+                    const query = filtroFuncionarioInput.value.toLowerCase();
+                    filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+
+                    if (query.length > 0) {
+                        const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
+                        filteredFuncionarios.forEach(funcionario => {
+                            const suggestionItem = document.createElement('a');
+                            suggestionItem.href = '#';
+                            suggestionItem.className = 'list-group-item list-group-item-action';
+                            suggestionItem.textContent = funcionario.nm_usuario;
+                            suggestionItem.dataset.id = funcionario.id_usuario;
+
+                            suggestionItem.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                filtroFuncionarioInput.value = funcionario.nm_usuario;
+                                filtroFuncionarioSuggestions.style.display = 'none';
+                                atualizarURL('id_responsavel', funcionario.id_usuario);
+                            });
+
+                            filtroFuncionarioSuggestions.appendChild(suggestionItem);
+                        });
+
+                        filtroFuncionarioSuggestions.style.display = 'block';
+                    } else {
+                        filtroFuncionarioSuggestions.style.display = 'none';
+                    }
+                });
+
+                // Fecha a lista de sugestões se o usuário clicar fora dela
+                document.addEventListener('click', function(e) {
+                    if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
+                        filtroFuncionarioSuggestions.style.display = 'none';
+                    }
+                });
+
+                function atualizarURL(filtro, valor) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('filtro', filtro);
+                    url.searchParams.set('valor', valor);
+                    window.location.href = url.toString();
+                }
+            });
+        </script>
         </html>
-      HTML;   
+      HTML;
 
-
-
-      }
 
 
         return($html);
   }
 
+
+
 }
-?>

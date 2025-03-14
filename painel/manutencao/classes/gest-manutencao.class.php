@@ -1,5 +1,10 @@
 <?php
 // if(Usuarios::verificar($conn, $headers)){  }  
+
+include_once"../itens/classes/gest-item.class.php";
+include_once"../usuarios/classes/gest-user.class.php";
+include_once"../moviment/classes/gest-moviment.class.php";
+
 class Manutencao
 {
 
@@ -73,41 +78,9 @@ class Manutencao
         
     }
 
-    public static function getItens(){
-        
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item ");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
-    
-    }
-
-    public static function getFuncionarios($id)
-    {
-        if($id){
-            
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM usuarios where id_usuario = $id");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
-
-        }else{
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM usuarios ");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
 
 
-        }
-        
-
-    }
-
-
-    public static function getItensManutencao(){
+    public static function getManutencao(){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_fim_manutencao IS NULL order by id_item desc");
@@ -117,6 +90,15 @@ class Manutencao
 
     }
 
+    public static function getManutencaoEncerrada(){
+        
+        $db = DB::connect();
+        $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_fim_manutencao IS NOT NULL order by id_item desc");
+        $rs->execute();
+        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return ["dados" => $resultado];
+
+    }
 
     public static function validarToken()
     {

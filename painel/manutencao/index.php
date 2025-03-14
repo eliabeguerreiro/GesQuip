@@ -6,9 +6,13 @@ include_once"classes/gest-manutencao.class.php";
 include_once"classes/db.class.php";
 
 
-$mantencs = Manutencao::getItensManutencao();
+$mantencs = Manutencao::getManutencao();
+$mantencs_encerradas = Manutencao::getManutencaoEncerrada();
+
 $itens = Item::getItens();
-$pagina = new ContentPainel;
+$pagina = new ContentPainelManutencao;
+
+
 if(Paineel::validarToken()){
 
 }else{
@@ -25,11 +29,7 @@ if($_POST){
 
     var_dump($_POST);
     if($manutec = Manutencao::manutencaoDireta($_POST)){
-      
-      
         header('Location: ');
-
-
     }
     
 }
@@ -37,11 +37,13 @@ if($_POST){
 
 //var_dump($itens);
 
-
-
 echo $pagina->renderHeader();
-echo $pagina->renderBody($mantencs['dados'], $itens['dados']);
 
+if(isset($_GET['pagina'])){
+    echo $pagina->renderBody($_GET['pagina'], $mantencs['dados'], $mantencs_encerradas['dados']);
+}else{
+    echo $pagina->renderBody(null, $mantencs['dados'], $mantencs_encerradas['dados']);
+}
 
 ?>
 

@@ -86,9 +86,9 @@ class ContentPainelItem
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="Manutencao" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="Manutencao " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO DE USUARIOS-->

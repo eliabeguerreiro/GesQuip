@@ -142,7 +142,7 @@ class ContentPainelManutencao
 
                 if ($filtro && $valor) {
 
-                    $moviments_filtrados = Moviment::getMoviment(null, $filtro, $valor);
+                    $moviments_filtrados = Manutencao::getManutencao(null, $filtro, $valor);
             
                     $moviment = $moviments_filtrados['dados'];
                 }
@@ -151,6 +151,39 @@ class ContentPainelManutencao
 
 
               $html.= <<<HTML
+
+            <!-- Modal de Finalização -->
+            <div id="finalizaModal" class="modal" style="display:none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="finalizaModalLabel">Finalizar Manutenção</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formFinalizaManutencao">
+                                <div class="mb-3">
+                                    <label for="finalizaTexto" class="form-label">Resumo da manutenção</label>
+                                    <textarea class="form-control" id="finalizaTexto" name="finalizaTexto" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="statusSelect" class="form-label">Status</label>
+                                    <select class="form-select" id="statusSelect" name="statusSelect" required>
+                                        <option value="1">Disponível</option>
+                                        <option value="999999999">Quebrado</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="finalizaSubmit">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
         <!-- TABELA -->
         <div class="container mt-4" id="containerFerramentas" style="display: block;">
             <div class="row mt-4">
@@ -214,6 +247,8 @@ HTML;
                             <tr>
                                 <th>ID</th>
                                 <th>ADM</th>
+                                <th>Item</th>
+                                <th>familia</th>
                                 <th>Data</th>
                                 <th>Observações</th>
                                 <th>Ações</th>
@@ -226,13 +261,22 @@ HTML;
 
       
       foreach ($manutenc as $manutencao):
+        $id_item = $manutencao['id_item'];        
+        $item_data = Item::getItens($id_item); 
+        $cod = $item_data['dados'][0]['cod_patrimonio'];
+        $id_familia = $item_data['dados'][0]['id_familia'];
+        $familia = Item::getFamiliaNome($id_familia);
+
+
+
           $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
           $html .="<td>".$manutencao['id_manutencao']."</td>";
           $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$cod."</td>";
+          $html .="<td>".$familia."</td>";
           $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
           $html .="<td>".$manutencao['obs_in']."</td>";
-          //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
-          $html .="<td><a href='moviment.php?id=".$manutencao['id_manutencao']."' class='btn btn-warning btn-sm btn-sm' >Encerrar</a></td>";
+          $html .="<td><button class='btn btn-danger btn-sm finaliza-button' data-bs-toggle='modal' data-bs-target='#finalizaModal' id ='".$manutencao['id_manutencao']."' >Retornar item</button></td>";
           $html .="</tr>";
       endforeach;
                  
@@ -546,6 +590,72 @@ HTML;
                     }
                 });
             });
+
+
+            document.addEventListener('DOMContentLoaded', () => {
+            const finalizaButtons = document.querySelectorAll('.finaliza-button');
+            const modal = document.getElementById('finalizaModal');
+            const closeModal = document.querySelector('#finalizaModal .btn-close'); // Ajuste o seletor para o botão de fechar
+            const finalizaSubmit = document.getElementById('finalizaSubmit');
+            let currentItemId;
+
+            // Ao clicar no botão "Retornar item"
+            finalizaButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    currentItemId = button.id; // Define o ID do item selecionado
+                    modal.style.display = 'block'; // Exibe o modal
+                });
+            });
+
+            // Fecha o modal ao clicar no botão "Cancelar" ou fora do modal
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            // Lógica do botão "Enviar" no modal
+            finalizaSubmit.addEventListener('click', () => {
+                const texto = document.getElementById('finalizaTexto').value.trim();
+                const status = document.getElementById('statusSelect').value;
+
+                // Verifica se os campos estão preenchidos
+                if (!currentItemId || !texto || !status) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                // Envia a requisição AJAX
+                fetch('finaliza_manutencao.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto) + '&status=' + encodeURIComponent(status)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta do servidor.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data); // Exibe a resposta do servidor no console
+                    modal.style.display = 'none'; // Fecha o modal
+                    window.location.reload(); // Recarrega a página
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao processar a solicitação. Por favor, tente novamente.');
+                });
+            });
+        });
+
         </script>
         </html>
       HTML;

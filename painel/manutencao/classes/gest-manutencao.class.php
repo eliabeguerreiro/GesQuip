@@ -51,7 +51,6 @@ class Manutencao
         $dt = date('Y-m-d H:i:s');
         $db = DB::connect();
         
-        
         $rs = $db->prepare("SELECT * FROM manutencao WHERE id_manutencao = $id_manutencao");
         $rs->execute();
         $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
@@ -62,7 +61,6 @@ class Manutencao
         $rs = $db->prepare("UPDATE item SET nr_disponibilidade = $diponibilidade WHERE id_item = $manutencao");
         $rs->execute();
         $rows = $rs->rowCount();
-
         if($rows > 0){ 
                            
         // depois eu atualizo a observação e a data de devolução da manutencao
@@ -70,7 +68,6 @@ class Manutencao
         $rs->execute();
         $rows = $rs->rowCount();
             
-
             if($rows > 0){  
                 return true;
             }
@@ -80,7 +77,7 @@ class Manutencao
 
 
 
-    public static function getManutencao(){
+    public static function getManutencao($id = null, $filtro = null, $valor = null){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_fim_manutencao IS NULL order by id_item desc");

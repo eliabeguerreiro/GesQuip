@@ -385,9 +385,14 @@ HTML;
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Funcionário</th>
                                 <th>ADM</th>
-                                <th>Retirada</th>
+                                <th>Item</th>
+                                <th>familia</th>
+                                <th>Data Inicio</th>
+                                <th>Data Encerramento</th>
+                                <th>Observações</th>
+                            </tr>
+
                             </tr>
                         </thead>
                         <tbody id="itens">
@@ -397,13 +402,22 @@ HTML;
 
       
       foreach ($mantencs_encerradas as $manutencao):
+        $id_item = $manutencao['id_item'];        
+        $item_data = Item::getItens($id_item); 
+        $cod = $item_data['dados'][0]['cod_patrimonio'];
+        $id_familia = $item_data['dados'][0]['id_familia'];
+        $familia = Item::getFamiliaNome($id_familia);
+
+
+
           $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
           $html .="<td>".$manutencao['id_manutencao']."</td>";
           $html .="<td>".$nm_autor."</td>";
+          $html .="<td>".$cod."</td>";
+          $html .="<td>".$familia."</td>";
           $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td>".$manutencao['obs_in']."</td>";
-          //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
-          $html .="<td><a href='moviment.php?id=".$manutencao['id_manutencao']."' class='btn btn-warning btn-sm btn-sm' >Encerrar</a></td>";
+          $html .="<td>".$manutencao['dt_fim_manutencao']."</td>";
+          $html .="<td>".$manutencao['obs_out']."</td>";
           $html .="</tr>";
       endforeach;
                  

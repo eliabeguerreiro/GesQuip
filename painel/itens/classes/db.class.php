@@ -4,10 +4,10 @@ class DB
     public static function connect()
     {
 
-        $host = 'localhost:3333';
-        $user = 'root';
-        $pass = 'hants12';
-        $base = 'projeto_patrimonio';
+        $host = 'gesquip.vpshost11463.mysql.dbaas.com.br:3306';
+        $user = 'gesquip';
+        $pass = 'Passelithis@1';
+        $base = 'gesquip';
 
         return new PDO("mysql:host={$host};dbname={$base};charset=UTF8;", $user, $pass);
     }

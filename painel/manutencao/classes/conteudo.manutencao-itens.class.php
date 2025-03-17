@@ -21,7 +21,7 @@ class ContentPainelManutencao
 
   }
 
-    public function renderBody($pagina, $manutenc, $mantencs_encerradas){
+    public function renderBody($pagina, $manutenc, $mantencs_encerradas, $itens){
       $nome = $_SESSION['data_user']['nm_usuario'];
       $funciona = User::getFuncionarios();
 
@@ -109,44 +109,35 @@ class ContentPainelManutencao
 
 
       if (isset($pagina)) {
-        
         switch ($pagina) {
-           case 'nova':
-
-
-            $html.= <<<HTML
-            <div class="main-content" id="mainContent">
-                <div class="container mt-4" id="novoItem" style="display: block;">
-                    <div class="row">
-                        <div class="col-md-12">                    
-                            <h3><b><p class="text-primary">Nova Manutenção</p></b></h3>
-                            <form method='POST' action='' id="formNovaMov">
-                                <div class="mb-3">
-                                    <label for="id_usuario" class="form-label">Funcionário</label>
-                                    <select id="id_usuario" name="id_responsavel" class="form-select" required>
-                                        <option value="">Escolha um funcionário</option>
-            HTML;
-            
-            foreach ($funciona['dados'] as $funcionario) {
-                $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
-            }
-            $html.= <<<HTML
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
-                                    <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Cadastrar</button>
-                            </form>
+            case 'nova':
+                $html .= <<<HTML
+                <div class="main-content" id="mainContent">
+                    <div class="container mt-4" id="novoItem" style="display: block;">
+                        <div class="row">
+                            <div class="col-md-12">                    
+                                <h3><b><p class="text-primary">Nova Manutenção</p></b></h3>
+                                <form method='POST' action='' id="formNovaMov">
+                                    <div class="mb-3">
+                                        <label for="id_usuario" class="form-label">Itens Disponíveis</label>
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar itens...">
+                                        <div id="searchResults" class="list-group mt-2"></div>
+                                        <div id="selectedItem" class="mt-2"></div>
+                                        <input type="hidden" id="selectedItemId" name="id_item">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
+                                        <input type="text" class="form-control" id="ds_movimentacao" name="obs_in" placeholder="Descriçao" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </div>    
-            </div>
-            HTML;
-
-
-            break;
+                    </div>    
+                </div>
+    HTML;
+                break;
             case 'ativas':
 
                 if ($filtro && $valor) {
@@ -517,6 +508,43 @@ HTML;
                     url.searchParams.set('valor', valor);
                     window.location.href = url.toString();
                 }
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('searchInput');
+                const searchResults = document.getElementById('searchResults');
+                const selectedItem = document.getElementById('selectedItem');
+                const selectedItemId = document.getElementById('selectedItemId');
+
+                searchInput.addEventListener('input', function() {
+                    const query = searchInput.value.toLowerCase();
+                    searchResults.innerHTML = ''; // Limpa os resultados anteriores
+
+                    if (query.length > 0) {
+                        fetch('buscar_itens.php?q=' + encodeURIComponent(query))
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(item => {
+                                    const resultItem = document.createElement('a');
+                                    resultItem.href = '#';
+                                    resultItem.className = 'list-group-item list-group-item-action';
+                                    resultItem.textContent = item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + item.id_familia + ')';
+                                    resultItem.dataset.id = item.id_item;
+
+                                    resultItem.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        // Marcar o item selecionado
+                                        selectedItem.innerHTML = 'Item selecionado: ' + item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + item.id_familia + ')';
+                                        selectedItemId.value = item.id_item; // Atualiza o campo oculto com o id_item
+                                        searchResults.innerHTML = ''; // Limpa os resultados
+                                        searchInput.value = ''; // Limpa o campo de busca
+                                    });
+
+                                    searchResults.appendChild(resultItem);
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                });
             });
         </script>
         </html>

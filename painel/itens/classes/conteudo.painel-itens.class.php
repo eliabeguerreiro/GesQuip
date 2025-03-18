@@ -86,17 +86,17 @@ class ContentPainelItem
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../usuarios/cadastro" id="NovosUsuarios">Cadastro Usuário</a></li>
-                                    <li><a class="dropdown-item" href="../usuarios/usuarios" id="NovosUsuarios">Todos os Usuários</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastro de Funcionários</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -87,7 +87,7 @@ class Manutencao
 
     }
 
-    public static function getManutencaoEncerrada(){
+    public static function getManutencaoEncerrada($id = null, $nm_filtro = null, $filtro = null){
         
         $db = DB::connect();
         $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_fim_manutencao IS NOT NULL order by id_item desc");

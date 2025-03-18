@@ -21,7 +21,7 @@ class ContentPainelManutencao
 
   }
 
-    public function renderBody($pagina, $manutenc, $mantencs_encerradas, $itens){
+    public function renderBody($pagina, $manutenc, $mantencs_encerradas){
       $nome = $_SESSION['data_user']['nm_usuario'];
       $funciona = User::getFuncionarios();
 

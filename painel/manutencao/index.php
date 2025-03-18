@@ -40,9 +40,9 @@ if($_POST){
 echo $pagina->renderHeader();
 
 if(isset($_GET['pagina'])){
-    echo $pagina->renderBody($_GET['pagina'], $mantencs['dados'], $mantencs_encerradas['dados'], $itens);
+    echo $pagina->renderBody($_GET['pagina'], $mantencs['dados'], $mantencs_encerradas['dados']);
 }else{
-    echo $pagina->renderBody(null, $mantencs['dados'], $mantencs_encerradas['dados'], $itens);
+    echo $pagina->renderBody(null, $mantencs['dados'], $mantencs_encerradas['dados']);
 }
 
 ?>

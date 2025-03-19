@@ -67,7 +67,7 @@ class ContentPainelUser
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em uso</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>

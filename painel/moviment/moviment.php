@@ -63,7 +63,7 @@ if ($_SESSION['id_moviment']) {
     <!-- INÍCIO BARRA DE NAVEGAÇÃO -->
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><b>GesQuip</b></a>
+            <a class="navbar-brand" href="../"><b>GesQuip</b></a>
             <div class="navbar-collapse justify-content-center" id="collapsibleNavbar">
                 <ul class="navbar-nav text-center">
                     <li class="nav-item">

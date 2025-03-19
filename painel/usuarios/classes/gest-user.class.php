@@ -45,32 +45,41 @@ class User
     }
 
 
-    public static function updateUsuario($id, $metadata, $data){
-
-        if($metadata == 'nv_permissao'){
-            $data = intval($data);
-
-            $sql = "UPDATE usuarios SET $metadata = $data WHERE id_usuario = $id";
-
-        }else{
-            
-            $sql = "UPDATE usuarios SET $metadata = '$data' WHERE id_usuario = $id";
+    public static function updateUsuario($id, $metadata, $data)
+    {
+        // Validação inicial
+        if (!in_array($metadata, ['nm_usuario', 'nr_contato', 'nv_permissao'])) {
+            throw new InvalidArgumentException("Campo metadata inválido.");
         }
-
-
-
-
-        //echo($sql);
-
+    
+        // Conexão com o banco de dados
         $db = DB::connect();
-        $rs = $db->prepare($sql);
-        $rs->execute();
-        $rows = $rs->rowCount();
-        if ($rows > 0){
-            $_SESSION['mag'] = 'Item cadastrado com Sucesso!';
-            return true;
-        }   
-
+    
+        try {
+            // Define o tipo de dado para nv_permissao
+            if ($metadata === 'nv_permissao') {
+                $data = intval($data); // Converte para inteiro
+            } else {
+                $data = trim($data); // Remove espaços em branco
+            }
+    
+            // Prepara a consulta SQL
+            $sql = "UPDATE usuarios SET $metadata = :data WHERE id_usuario = :id";
+            $stmt = $db->prepare($sql);
+    
+            // Bind dos parâmetros
+            $stmt->bindParam(':data', $data);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+            // Executa a consulta
+            $result = $stmt->execute();
+    
+            return $result; // Retorna true se a atualização foi bem-sucedida
+        } catch (PDOException $e) {
+            // Registra o erro e relança a exceção
+            error_log("Erro ao executar consulta SQL: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public static function deleteUsuario($id){

@@ -187,7 +187,7 @@ class ContentPainelUser
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Usuários</p></b></h3>
+                        <h3><b><p class="text-primary">Todos os Funcionários</p></b></h3>
                         <!--div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -271,7 +271,20 @@ HTML;
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <label for="novoNome" class="form-label">Nome do Funcionário</label>
                         <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                    </div>
+                    <div class="modal-body">
+                        <label for="novoContato" class="form-label">Contato</label>
+                        <input type="text" id="novoContato" class="form-control" placeholder="digite o novo contato" required>
+                    </div>
+                    <div class="modal-body">
+                        <label for="nv_permissao" class="form-label">Nível de permissão de acesso</label>
+                        <select>
+                            <option value="1">Nível 1</option>
+                            <option value="2">Nível 2</option>
+                            <option value="3">Nível 3</option>
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

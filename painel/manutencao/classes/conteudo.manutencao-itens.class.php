@@ -142,11 +142,10 @@ class ContentPainelManutencao
 
                 if ($filtro && $valor) {
 
-                    $moviments_filtrados = Manutencao::getManutencao(null, $filtro, $valor);
+                    $mantencs_encerradas_filtrados = Manutencao::getManutencao( null,$filtro, $valor);
             
-                    $moviment = $moviments_filtrados['dados'];
+                    $mantencs_encerradas = $mantencs_encerradas_filtrados['dados'];
                 }
-
 
 
 
@@ -196,7 +195,7 @@ class ContentPainelManutencao
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
                                 <option value="funcionario">Funcionário</option>
-                                <option value="data">Data</option>
+                                <option value="data">Data de Inicio</option>
                             </select>
         
                             <!-- Div para Data -->
@@ -225,7 +224,7 @@ HTML;
                     <div id="filtro_alert" class="alert alert-info">
                         <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_responsavel') {
+                    if ($filtro === 'id_autor') {
                         $funcionaNome = array_filter($funciona, function($f) use ($valor) {
                             return $f['id_usuario'] == $valor;
                         });
@@ -315,11 +314,10 @@ HTML;
               
                 if ($filtro && $valor) {
 
-                    $moviments_filtrados = Moviment::getMovimentEncerrado( $filtro, $valor);
+                    $mantencs_encerradas_filtrados = Manutencao::getManutencaoEncerrada( $filtro, $valor);
             
-                    $moviment_encerrado = $moviments_filtrados['dados'];
+                    $mantencs_encerradas = $mantencs_encerradas_filtrados['dados'];
                 }
-
 
 
               $html.= <<<HTML
@@ -335,7 +333,7 @@ HTML;
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
                                 <option value="funcionario">Funcionário</option>
-                                 <option value="data">Data</option>
+                                 <option value="data">Data de Inicio</option>
                             </select>
         
                             <!-- Div para Data -->
@@ -364,7 +362,7 @@ HTML;
                     <div id="filtro_alert" class="alert alert-info">
                         <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_responsavel') {
+                    if ($filtro === 'id_autor') {
                         $funcionaNome = array_filter($funciona['dados'], function($f) use ($valor) {
                             return $f['id_usuario'] == $valor;
                         });
@@ -541,7 +539,7 @@ HTML;
                                 e.preventDefault();
                                 filtroFuncionarioInput.value = funcionario.nm_usuario;
                                 filtroFuncionarioSuggestions.style.display = 'none';
-                                atualizarURL('id_responsavel', funcionario.id_usuario);
+                                atualizarURL('id_autor', funcionario.id_usuario);
                             });
 
                             filtroFuncionarioSuggestions.appendChild(suggestionItem);

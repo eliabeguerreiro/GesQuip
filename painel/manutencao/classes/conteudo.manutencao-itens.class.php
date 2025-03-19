@@ -61,7 +61,7 @@ class ContentPainelManutencao
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Items em uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em uso</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
@@ -118,9 +118,13 @@ class ContentPainelManutencao
                             <div class="col-md-12">                    
                                 <h3><b><p class="text-primary">Nova Manutenção</p></b></h3>
                                 <form method='POST' action='' id="formNovaMov">
+                                    <!-- Formulário de busca de itens -->
                                     <div class="mb-3">
-                                        <label for="id_usuario" class="form-label">Itens Disponíveis</label>
-                                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar itens...">
+                                        <label for="id_usuario" class="form-label">Itens não associados a movimentações</label>
+                                        <div class="input-group">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Buscar itens...">
+                                            <button type="button" id="searchButton" class="btn btn-primary">Buscar</button>
+                                        </div>
                                         <div id="searchResults" class="list-group mt-2"></div>
                                         <div id="selectedItem" class="mt-2"></div>
                                         <input type="hidden" id="selectedItemId" name="id_item">
@@ -470,7 +474,7 @@ HTML;
       $html.= <<<HTML
 
         </body>
-        
+        <script src = "src/script.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
@@ -564,43 +568,6 @@ HTML;
                     url.searchParams.set('valor', valor);
                     window.location.href = url.toString();
                 }
-            });
-            document.addEventListener('DOMContentLoaded', function() {
-                const searchInput = document.getElementById('searchInput');
-                const searchResults = document.getElementById('searchResults');
-                const selectedItem = document.getElementById('selectedItem');
-                const selectedItemId = document.getElementById('selectedItemId');
-
-                searchInput.addEventListener('input', function() {
-                    const query = searchInput.value.toLowerCase();
-                    searchResults.innerHTML = ''; // Limpa os resultados anteriores
-
-                    if (query.length > 0) {
-                        fetch('buscar_itens.php?q=' + encodeURIComponent(query))
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(item => {
-                                    const resultItem = document.createElement('a');
-                                    resultItem.href = '#';
-                                    resultItem.className = 'list-group-item list-group-item-action';
-                                    resultItem.textContent = item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + item.id_familia + ')';
-                                    resultItem.dataset.id = item.id_item;
-
-                                    resultItem.addEventListener('click', function(e) {
-                                        e.preventDefault();
-                                        // Marcar o item selecionado
-                                        selectedItem.innerHTML = 'Item selecionado: ' + item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + item.id_familia + ')';
-                                        selectedItemId.value = item.id_item; // Atualiza o campo oculto com o id_item
-                                        searchResults.innerHTML = ''; // Limpa os resultados
-                                        searchInput.value = ''; // Limpa o campo de busca
-                                    });
-
-                                    searchResults.appendChild(resultItem);
-                                });
-                            })
-                            .catch(error => console.error('Error:', error));
-                    }
-                });
             });
 
 

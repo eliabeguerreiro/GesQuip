@@ -1,45 +1,51 @@
-const finalizaButtons = document.querySelectorAll('.atualiza-button');
-const modal = document.getElementById('atualizaModal');
-const closeModal = document.querySelector('.modal .close');
-const finalizaSubmit = document.getElementById('atualizaSubmit');
-let currentItemId;
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const searchResults = document.getElementById('searchResults');
+    const selectedItem = document.getElementById('selectedItem');
+    const selectedItemId = document.getElementById('selectedItemId');
 
-// Captura o ID do item quando o botão "Editar" é clicado
-finalizaButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Obtém o ID do item do atributo data-id
-        currentItemId = button.getAttribute('data-id');
+    searchButton.addEventListener('click', function() {
+        const query = searchInput.value.toLowerCase();
+        searchResults.innerHTML = ''; // Limpa os resultados anteriores
+
+        if (query.length > 0) {
+            fetch('buscar_itens.php?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    const uniqueItems = new Set(); // Conjunto para armazenar itens únicos
+
+                    data.forEach(item => {
+                        if (!uniqueItems.has(item.id_item)) {
+                            uniqueItems.add(item.id_item); // Adiciona o item ao conjunto
+
+                            // Fetch the family name using the item.id_familia
+                            fetch('get_familia_nome.php?id_familia=' + item.id_familia)
+                                .then(response => response.json())
+                                .then(familiaData => {
+                                    const familiaNome = familiaData.ds_familia;
+                                    const resultItem = document.createElement('a');
+                                    resultItem.href = '#';
+                                    resultItem.className = 'list-group-item list-group-item-action';
+                                    resultItem.textContent = item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + familiaNome + ')';
+                                    resultItem.dataset.id = item.id_item;
+
+                                    resultItem.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        // Marcar o item selecionado
+                                        selectedItem.innerHTML = 'Item selecionado: ' + item.cod_patrimonio + ' - ' + item.ds_item + ' (Família: ' + familiaNome + ')';
+                                        selectedItemId.value = item.id_item; // Atualiza o campo oculto com o id_item
+                                        searchResults.innerHTML = ''; // Limpa os resultados
+                                        searchInput.value = ''; // Limpa o campo de busca
+                                    });
+
+                                    searchResults.appendChild(resultItem);
+                                })
+                                .catch(error => console.error('Error fetching family name:', error));
+                        }
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
     });
-});
-
-// Fecha a modal ao clicar no botão de fechar
-closeModal?.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
-
-// Fecha a modal ao clicar fora dela
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-};
-
-// Envia os dados via AJAX ao clicar no botão "Salvar"
-finalizaSubmit.addEventListener('click', () => {
-    const texto = document.getElementById('novoNome').value;
-
-    fetch('atualizar_item.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto)
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data);
-        modal.style.display = 'none';
-        window.location.reload();
-    })
-    .catch(error => console.error('Error:', error));
 });

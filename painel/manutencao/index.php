@@ -1,7 +1,7 @@
 <?php
 session_start();
 ob_start();
-include_once"classes/conteudo.manutencao-itens.class.php";
+include_once"classes/conteudo.painel-manutencao.class.php";
 include_once"classes/gest-manutencao.class.php";
 include_once"classes/db.class.php";
 

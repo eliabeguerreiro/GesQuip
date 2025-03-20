@@ -116,13 +116,15 @@ class User
         $rs->execute();
         $rows = $rs->rowCount();
         if ($rows > 0){
-            $_SESSION['mag'] = 'Item cadastrado com Sucesso!';
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Funcionário criado com sucesso!</div></div>";
             return true;
-        }
-    
+        } else {
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i> Erro ao criar Funcionário.</div></div>";
+        }   
+    }
         
        
-    }
+    
 
   
 }

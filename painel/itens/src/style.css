@@ -1,9 +1,14 @@
-/* Adicione este CSS ao seu arquivo src/style.css */
+
 .msg {
     padding: 10px;
     margin: 10px 0;
     border: 1px solid transparent;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    font-size: 16px;
+    text-align: center; /* Centraliza o texto */
 }
 
 .msg.error {
@@ -17,6 +22,12 @@
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
+
+.msg i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
 
 #filtro_familia_suggestions {
     position: absolute;

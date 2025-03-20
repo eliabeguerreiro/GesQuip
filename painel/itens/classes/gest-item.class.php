@@ -59,7 +59,7 @@ class Item
         $nv_perm_item = ($resultado[0]['nv_permissao']);
 
         if($nv_perm_item > $nv_perm_user){
-            $_SESSION['msg'] = 'AVISO: NÍVEL DO ITEM É MAIOR QUE O DO FUNCIONÁRIO!';
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i>Usuário de Nivel baixo.</div></div>";
         }
 
         $rs = $db->prepare("UPDATE item SET nr_disponibilidade = $mov WHERE id_item = $id");
@@ -303,10 +303,10 @@ class Item
 
     // Execução da query
     if ($stmt->execute()) {
-        $_SESSION['msg'] = 'Item cadastrado com sucesso!';
+        $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Item atualizado com sucesso!</div></div>";
         return true;
     } else {
-        $_SESSION['error'] = 'Erro ao cadastrar o item!';
+        $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i> Erro ao atualizar o Item.</div></div>";
         return false;
     }
 }

@@ -39,7 +39,8 @@ class Manutencao
                 $rows = $rs->rowCount();
                 
                 if ($rows > 0){
-                    return true;
+                    $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Manutenção cadastrada com sucesso!</div></div>";
+                    return true;              
                 }
             }
         
@@ -171,15 +172,5 @@ class Manutencao
 
        
     }
-
-
-    public static function logOut()
-    {
-        $_COOKIE['token'] = null;
-        $_SESSION['msg'] = 'Usuário deslogado.';
-        header('Location: ../');
-
-    }
-
   
 }

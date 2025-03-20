@@ -173,7 +173,7 @@ class Moviment
         $rows = $rs->rowCount();
         if ($rows > 0){
             $lastId = $db->lastInsertId(); 
-            $_SESSION['msg'] = 'Retirada cadastrado com Sucesso!';
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Retirada cadastrada com sucesso!</div></div>";
             return $lastId;
         }
         

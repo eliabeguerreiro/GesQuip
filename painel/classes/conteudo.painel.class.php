@@ -78,9 +78,15 @@ class ContentPainel
                     </div>
                 </div>
             </nav>
-            <!--FIM BARRA DE NAVEAGAÇÃO-->
+            <main>
+                
+      HTML;
 
-
+      if (isset($_SESSION['msg'])) {
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+      } 
+      $html .= <<<HTML
 
             <!-- INÍCIO DO CONTEÚDO CENTRAL -->
             <div class="main-content" id="mainContent">

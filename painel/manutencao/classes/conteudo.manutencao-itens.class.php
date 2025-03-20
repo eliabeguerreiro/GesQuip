@@ -103,7 +103,13 @@ class ContentPainelManutencao
             </nav>
             <!--FIM BARRA DE NAVEAGAÇÃO-->
             <main>
+                
       HTML;
+
+      if (isset($_SESSION['msg'])) {
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+      } 
 
 
 

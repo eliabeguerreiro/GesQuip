@@ -45,41 +45,28 @@ class User
     }
 
 
-    public static function updateUsuario($id, $metadata, $data)
+    public static function updateUsuario($data)
     {
-        // Validação inicial
-        if (!in_array($metadata, ['nm_usuario', 'nr_contato', 'nv_permissao'])) {
-            throw new InvalidArgumentException("Campo metadata inválido.");
-        }
-    
-        // Conexão com o banco de dados
         $db = DB::connect();
-    
-        try {
-            // Define o tipo de dado para nv_permissao
-            if ($metadata === 'nv_permissao') {
-                $data = intval($data); // Converte para inteiro
-            } else {
-                $data = trim($data); // Remove espaços em branco
-            }
-    
-            // Prepara a consulta SQL
-            $sql = "UPDATE usuarios SET $metadata = :data WHERE id_usuario = :id";
-            $stmt = $db->prepare($sql);
-    
-            // Bind dos parâmetros
-            $stmt->bindParam(':data', $data);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    
-            // Executa a consulta
-            $result = $stmt->execute();
-    
-            return $result; // Retorna true se a atualização foi bem-sucedida
-        } catch (PDOException $e) {
-            // Registra o erro e relança a exceção
-            error_log("Erro ao executar consulta SQL: " . $e->getMessage());
-            throw $e;
-        }
+        $id = intval($data['id_usuario']);
+        $nome = $data['nm_usuario'];
+        $contato = $data['nr_contato'];
+        $permissao = $data['nv_permissao'];
+       
+        $rs = $db->prepare("UPDATE usuarios SET nm_usuario = :nm_usuario, nr_contato = :nr_contato, nv_permissao = :permissao WHERE id_usuario = :id_usuario");
+        $rs->bindParam(':id_usuario', $id, PDO::PARAM_INT); 
+        $rs->bindParam(':nm_usuario', $nome, PDO::PARAM_STR);
+        $rs->bindParam(':nr_contato', $contato, PDO::PARAM_STR);
+        $rs->bindParam(':permissao', $permissao, PDO::PARAM_STR);
+        $rs->execute();
+
+        $rows = $rs->rowCount();
+        if ($rows > 0){
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Usuário atualizado com sucesso!</div></div>";
+            return true;
+        } else {
+            $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i> Erro ao atualizar usuário.</div></div>";
+        }   
     }
 
     public static function deleteUsuario($id){

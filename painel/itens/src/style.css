@@ -1,3 +1,23 @@
+/* Adicione este CSS ao seu arquivo src/style.css */
+.msg {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.msg.error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.msg.success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
 #filtro_familia_suggestions {
     position: absolute;
     z-index: 1000; /* Certifique-se de que a lista de sugestões esteja acima de outros elementos */

@@ -113,7 +113,14 @@ class ContentPainelUser
             </nav>
             <!--FIM BARRA DE NAVEAGAÇÃO-->
             <main>
+                
       HTML;
+
+      if (isset($_SESSION['msg'])) {
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+    }
+
     /*
       if ($filtro && $valor) {
 
@@ -308,13 +315,6 @@ HTML;
 
        
         </main>
-
-        HTML;
-        if(isset($_SESSION['msg'])){
-        $html.= "<script>alert('".$_SESSION['msg']."');</script>";
-        unset($_SESSION['msg']);
-        }
-      $html.= <<<HTML
 
         </body>
         <script src="src/script.js"></script>

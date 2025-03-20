@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `id=${encodeURIComponent(currentItemId)}&nome=${encodeURIComponent(novoNome)}&contato=${encodeURIComponent(novoContato)}&nivel=${encodeURIComponent(novoNivel)}`
+            body: `id_usuario=${encodeURIComponent(currentItemId)}&nm_usuario=${encodeURIComponent(novoNome)}&nr_contato=${encodeURIComponent(novoContato)}&nv_permissao=${encodeURIComponent(novoNivel)}`
         })
             .then(response => response.text())
             .then(data => {

@@ -12,7 +12,7 @@ $familia = Item::getFamilia();
 $itens = Item::getItens();
 $itens_disponiveis = Item::getItensDisponiveis();
 $itens_locados = Item::getItensLocados();
-
+$itens_quebrados = Item::getItensQuebrados();
 
 if(Paineel::validarToken()){
 
@@ -44,9 +44,9 @@ $pagina = new ContentPainelItem;
 echo $pagina->renderHeader();
 
 if(isset($_GET['pagina'])){
-    echo $pagina->renderBody($_GET['pagina'], $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados']);
+    echo $pagina->renderBody($_GET['pagina'], $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados'], $itens_quebrados['dados']);
 }else{
-    echo $pagina->renderBody(null, $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados']);
+    echo $pagina->renderBody(null, $familia['dados'], $itens['dados'], $itens_disponiveis['dados'], $itens_locados['dados'], $itens_quebrados['dados']);
 }
 
 ?>

@@ -11,7 +11,7 @@ class ContentPainelItem
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>GesQuip - Equipamentos</title>
+          <title>GesQuip - Itens</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
           <link rel="stylesheet" href="src/style.css">
@@ -22,7 +22,7 @@ class ContentPainelItem
     return($html);
 }
 
-    public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados){
+    public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados, $itens_quebrados){
 
         //var_dump($itens);
         $nome = $_SESSION['data_user']['nm_usuario'];
@@ -218,7 +218,7 @@ class ContentPainelItem
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Equipamentos</p></b></h3>
+                        <h3><b><p class="text-primary">Todos os Itens</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -269,7 +269,7 @@ HTML;
                 }
 
                 $html .= <<<HTML
-                            <!-- Tabela de Equipamentos -->
+                            <!-- Tabela de Itens -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -355,7 +355,7 @@ HTML;
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Equipamentos Disponiveis</p></b></h3>
+                        <h3><b><p class="text-primary">Todos os Itens Disponiveis</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -406,7 +406,7 @@ HTML;
                 }
 
                 $html .= <<<HTML
-                    <!-- Tabela de Equipamentos -->
+                    <!-- Tabela de Itens -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -463,7 +463,7 @@ HTML;
                       <div class="col-md-12">
                           <!-- Header com filtro -->
                           <div class="header-with-filter">
-                              <h3><b><p class="text-primary">Todos os Equipamentos em Uso</p></b></h3>
+                              <h3><b><p class="text-primary">Todos os Itens em Uso</p></b></h3>
                               <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -514,7 +514,7 @@ HTML;
                 }
 
                 $html .= <<<HTML
-                          <!-- Tabela de Equipamentos -->
+                          <!-- Tabela de Itens -->
                           <table class="table table-striped">
                               <thead>
                                   <tr>
@@ -532,6 +532,115 @@ HTML;
       
             
             foreach ($itens_locados as $item):
+                $nm_familia = Item::getFamiliaNome($item['id_familia']);
+                $html .="<td>".$item['cod_patrimonio']."</td>";
+                $html .="<td>".$nm_familia."</td>";
+                $html .="<td>".$item['ds_item']."</td>";
+                $html .="<td>".$item['natureza']."</td>";
+              
+                $html .="</tr>";
+            endforeach;
+                       
+            $html.= <<<HTML
+      
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+            HTML;
+      
+                
+            break;
+            case 'quebrados':
+                
+
+
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItensQuebrados( $filtro, $valor);
+            
+                    $itens_quebrados = $itens_filtrados['dados'];
+                }
+
+
+
+              $html.= <<<HTML
+              <!-- TABELA -->
+              <div class="container mt-4" id="containerFerramentas" style="display: block;">
+                  <div class="row mt-4">
+                      <div class="col-md-12">
+                          <!-- Header com filtro -->
+                          <div class="header-with-filter">
+                              <h3><b><p class="text-primary">Todos os Itens Quebrados</p></b></h3>
+                              <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_familia') {
+                        $familiaNome = array_filter($familia, function($f) use ($valor) {
+                            return $f['id_familia'] == $valor;
+                        });
+                        $familiaNome = reset($familiaNome);
+                        $html .= "Família: " . $familiaNome['ds_familia'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                          <!-- Tabela de Itens -->
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Família</th>
+                                      <th>Modelo</th>
+                                      <th>Natureza</th>
+                                      
+                                  </tr>
+                              </thead>
+                              <tbody id="itens">
+                                  <tr>
+      
+            HTML;
+      
+            
+            foreach ($itens_quebrados as $item):
                 $nm_familia = Item::getFamiliaNome($item['id_familia']);
                 $html .="<td>".$item['cod_patrimonio']."</td>";
                 $html .="<td>".$nm_familia."</td>";

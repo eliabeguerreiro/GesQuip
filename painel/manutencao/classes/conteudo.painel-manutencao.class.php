@@ -267,7 +267,7 @@ HTML;
                             <tr>
 
       HTML;
-
+                
       
       foreach ($manutenc as $manutencao):
         $id_item = $manutencao['id_item'];        
@@ -297,24 +297,7 @@ HTML;
             </div>
         </div>
 
-        <!-- Modal de Atualização >
-        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
-                    </div>
-                </div>
-            </div>
-        </div-->
+       
 
 
       HTML;
@@ -437,25 +420,6 @@ HTML;
                 </div>
             </div>
         </div>
-
-        <!-- Modal de Atualização >
-        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
-                    </div>
-                </div>
-            </div>
-        </div-->
 
 
       HTML;

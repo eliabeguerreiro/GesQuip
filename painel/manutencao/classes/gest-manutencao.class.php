@@ -70,6 +70,7 @@ class Manutencao
         $rows = $rs->rowCount();
             
             if($rows > 0){  
+                $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Manutenção cadastrada com sucesso!</div></div>";
                 return true;
             }
         }
@@ -87,26 +88,32 @@ class Manutencao
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
-        } elseif ($nm_filtro) {
-            if ($nm_filtro == 'dt_movimentacao') {
-                if (strpos($filtro, '...') !== false) {
-                    list($start, $end) = explode('...', $filtro);
-                    $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_inicio_manutencao BETWEEN '$start' AND '$end' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
-                }
-            } else {
-                $rs = $db->prepare("SELECT * FROM manutencao WHERE $nm_filtro = '$filtro' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
-            }
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
         } else {
-            $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
+
+            if ($nm_filtro) {
+                if ($nm_filtro == 'dt_movimentacao') {
+                    if (strpos($filtro, '...') !== false) {
+                        list($start, $end) = explode('...', $filtro);
+                        $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_inicio_manutencao BETWEEN '$start' AND '$end' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
+                    }
+                } else {
+                    $rs = $db->prepare("SELECT * FROM manutencao WHERE $nm_filtro = '$filtro' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
+                }
+                $rs->execute();
+                $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+                return ["dados" => $resultado];
+
+            }else{
+                
+                $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_fim_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
+                $rs->execute();
+                $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
+                return ["dados" => $resultado];
+
+            }
+           
         }
     }
-
 
     public static function getManutencaoEncerrada( $nm_filtro = null, $filtro = null){
         $db = DB::connect();

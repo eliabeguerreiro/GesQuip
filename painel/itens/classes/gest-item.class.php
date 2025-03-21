@@ -276,7 +276,8 @@ class Item
         !isset($data['familia']) || empty($data['familia']) ||
         !isset($data['nome']) || empty($data['nome']) ||
         !isset($data['natureza']) || empty($data['natureza']) ||
-        !isset($data['nv_permissao']) || empty($data['nv_permissao'])
+        !isset($data['nv_permissao']) || empty($data['nv_permissao']) ||
+        !isset($data['tipo']) || empty($data['tipo'])
     ) {
         $_SESSION['error'] = 'Todos os campos são obrigatórios!';
         return false;
@@ -285,13 +286,9 @@ class Item
     // Conexão com o banco de dados
     $db = DB::connect();
 
-    // Geração do código de patrimônio (aleatório e único)
-    $cod_patrimonio = bin2hex(random_bytes(3));
-
-    // Preparação da query SQL
-    $sql = "INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, cod_patrimonio) 
-            VALUES (:familia, :nome, :natureza, :nv_permissao, :cod_patrimonio)";
-
+    // Preparação da query SQL para inserir o item
+    $sql = "INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, tipo) 
+            VALUES (:familia, :nome, :natureza, :nv_permissao, :tipo)";
     $stmt = $db->prepare($sql);
 
     // Associação dos parâmetros para evitar injeção SQL
@@ -299,14 +296,31 @@ class Item
     $stmt->bindParam(':nome', $data['nome'], PDO::PARAM_STR);
     $stmt->bindParam(':natureza', $data['natureza'], PDO::PARAM_STR);
     $stmt->bindParam(':nv_permissao', $data['nv_permissao'], PDO::PARAM_INT);
-    $stmt->bindParam(':cod_patrimonio', $cod_patrimonio, PDO::PARAM_STR);
+    $stmt->bindParam(':tipo', $data['tipo'], PDO::PARAM_STR);
 
     // Execução da query
     if ($stmt->execute()) {
-        $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Item atualizado com sucesso!</div></div>";
-        return true;
+        // Obter o ID do item recém-inserido
+        $id_item = $db->lastInsertId();
+
+        // Gerar o novo código de patrimônio
+        $cod_patrimonio = "I" . $id_item . "F" . $data['familia'] . $data['tipo'];
+
+        // Atualizar o item com o novo código de patrimônio
+        $updateSql = "UPDATE item SET cod_patrimonio = :cod_patrimonio WHERE id_item = :id_item";
+        $updateStmt = $db->prepare($updateSql);
+        $updateStmt->bindParam(':cod_patrimonio', $cod_patrimonio, PDO::PARAM_STR);
+        $updateStmt->bindParam(':id_item', $id_item, PDO::PARAM_INT);
+
+        if ($updateStmt->execute()) {
+            $_SESSION['msg'] = "<div class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Item cadastrado com sucesso!</div></div>";
+            return true;
+        } else {
+            $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro ao atualizar o código de patrimônio.</div></div>";
+            return false;
+        }
     } else {
-        $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i> Erro ao atualizar o Item.</div></div>";
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro ao cadastrar o item.</div></div>";
         return false;
     }
 }

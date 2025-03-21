@@ -162,6 +162,20 @@ class ContentPainelItem
                                     </div>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                    <label class="form-label">Tipo</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="tipo_1" name="tipo" value="F" required>
+                                            <label class="form-check-label" for="natureza_1">Ferramenta</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="tipo_2" name="tipo" value="E" required>
+                                            <label class="form-check-label" for="natureza_2">Equipamento</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nível de permissão</label>

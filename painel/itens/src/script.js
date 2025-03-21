@@ -1,45 +1,48 @@
-const finalizaButtons = document.querySelectorAll('.atualiza-button');
-const modal = document.getElementById('atualizaModal');
-const closeModal = document.querySelector('.modal .close');
-const finalizaSubmit = document.getElementById('atualizaSubmit');
-let currentItemId;
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('atualizaModal');
+    const itemIdInput = document.getElementById('itemId');
+    const novoNomeInput = document.getElementById('novoNome');
+    const novaNaturezaSelect = document.getElementById('novaNatureza');
 
-// Captura o ID do item quando o botão "Editar" é clicado
-finalizaButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Obtém o ID do item do atributo data-id
-        currentItemId = button.getAttribute('data-id');
+    // Preencher o modal quando o botão "Editar" for clicado
+    document.querySelectorAll('.atualiza-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const row = this.closest('tr');
+            const nomeAtual = row.querySelector('td:nth-child(3)').innerText; // Coluna do nome
+            const naturezaAtual = row.querySelector('td:nth-child(4)').innerText; // Coluna da natureza
+
+            itemIdInput.value = id;
+            novoNomeInput.value = nomeAtual;
+            novaNaturezaSelect.value = naturezaAtual.toLowerCase();
+        });
     });
-});
 
-// Fecha a modal ao clicar no botão de fechar
-closeModal?.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
+    // Enviar os dados atualizados para o servidor
+    document.getElementById('atualizaSubmit').addEventListener('click', function () {
+        const id = itemIdInput.value;
+        const novoNome = novoNomeInput.value;
+        const novaNatureza = novaNaturezaSelect.value;
 
-// Fecha a modal ao clicar fora dela
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-};
-
-// Envia os dados via AJAX ao clicar no botão "Salvar"
-finalizaSubmit.addEventListener('click', () => {
-    const texto = document.getElementById('novoNome').value;
-
-    fetch('atualizar_item.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto)
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data);
-        modal.style.display = 'none';
-        window.location.reload();
-    })
-    .catch(error => console.error('Error:', error));
+        fetch('atualizar.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                ds_item: novoNome,
+                natureza: novaNatureza
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Recarregar a página após a atualização
+                } else {
+                    alert('Erro ao atualizar o item.');
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+    });
 });

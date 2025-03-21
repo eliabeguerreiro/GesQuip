@@ -338,18 +338,42 @@ class Item
       
     }
 
-    public static function updateItem($id, $data){
-
-        $db = DB::connect();
-        $rs = $db->prepare("UPDATE item SET ds_item = '$data' WHERE id_item = $id");
-        $rs->execute();
-        $rows = $rs->rowCount();
-        if ($rows > 0){
-            $_SESSION['mag'] = 'Item cadastrado com Sucesso!';
-            return true;
-        }   
-      
+    public static function updateItem($id, $data)
+{
+    if (!$id || empty($data)) {
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro: Dados inválidos para atualização.</div></div>";
+        return false;
     }
+
+    // Conexão com o banco de dados
+    $db = DB::connect();
+
+    // Montagem dinâmica da query UPDATE
+    $campos = [];
+    $valores = [];
+    foreach ($data as $campo => $valor) {
+        $campos[] = "$campo = :$campo";
+        $valores[":$campo"] = $valor;
+    }
+
+    $query = "UPDATE item SET " . implode(", ", $campos) . " WHERE id_item = :id_item";
+    $stmt = $db->prepare($query);
+
+    // Bind dos parâmetros
+    $valores[':id_item'] = $id;
+    foreach ($valores as $param => $valor) {
+        $stmt->bindValue($param, $valor);
+    }
+
+    // Execução da query
+    if ($stmt->execute()) {
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Item atualizado com sucesso!</div></div>";
+        return true;
+    } else {
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro ao atualizar o item.</div></div>";
+        return false;
+    }
+}
     public static function getFamilia($id = null)
     {
 

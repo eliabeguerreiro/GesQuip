@@ -310,11 +310,22 @@ HTML;
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
+                        <h5 class="modal-title" id="atualizaModalLabel">Editar Item</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
+                        <input type="hidden" id="itemId" />
+                        <div class="mb-3">
+                            <label for="novoNome" class="form-label">Novo Nome</label>
+                            <input type="text" id="novoNome" class="form-control" placeholder="Digite o novo nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="novaNatureza" class="form-label">Nova Natureza</label>
+                            <select id="novaNatureza" class="form-select" required>
+                                <option value="proprio">Próprio</option>
+                                <option value="locado">Locado</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

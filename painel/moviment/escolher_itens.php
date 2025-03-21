@@ -211,7 +211,7 @@ HTML;
             .then(data => {
                 console.log(data);
                 if (data.status === 'success') {
-                    window.location.href = 'index.php?pagina=ativas';
+                    window.location.href = 'index.php?pagina=nova';
                 } else {
                     alert(data.message);
                 }

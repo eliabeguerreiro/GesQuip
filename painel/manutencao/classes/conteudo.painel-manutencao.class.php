@@ -111,9 +111,6 @@ class ContentPainelManutencao
         unset($_SESSION['msg']);
       } 
 
-
-
-
       if (isset($pagina)) {
         switch ($pagina) {
             case 'nova':
@@ -152,9 +149,9 @@ class ContentPainelManutencao
 
                 if ($filtro && $valor) {
 
-                    $mantencs_encerradas_filtrados = Manutencao::getManutencao( null,$filtro, $valor);
+                    $mantencs_ativas_filtrados = Manutencao::getManutencao( null,$filtro, $valor);
             
-                    $mantencs_encerradas = $mantencs_encerradas_filtrados['dados'];
+                    $manutenc = $mantencs_ativas_filtrados['dados'];
                 }
 
 
@@ -235,7 +232,7 @@ HTML;
                         <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
                     if ($filtro === 'id_autor') {
-                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
+                        $funcionaNome = array_filter($funciona['dados'], function($f) use ($valor) {
                             return $f['id_usuario'] == $valor;
                         });
                         $funcionaNome = reset($funcionaNome);

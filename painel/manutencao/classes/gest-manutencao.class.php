@@ -39,7 +39,6 @@ class Manutencao
                 $rows = $rs->rowCount();
                 
                 if ($rows > 0){
-                    $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Manutenção cadastrada com sucesso!</div></div>";
                     return true;              
                 }
             }
@@ -70,7 +69,6 @@ class Manutencao
         $rows = $rs->rowCount();
             
             if($rows > 0){  
-                $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Manutenção cadastrada com sucesso!</div></div>";
                 return true;
             }
         }
@@ -94,10 +92,10 @@ class Manutencao
                 if ($nm_filtro == 'dt_movimentacao') {
                     if (strpos($filtro, '...') !== false) {
                         list($start, $end) = explode('...', $filtro);
-                        $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_inicio_manutencao BETWEEN '$start' AND '$end' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
+                        $rs = $db->prepare("SELECT * FROM manutencao WHERE dt_inicio_manutencao BETWEEN '$start' AND '$end' AND dt_fim_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
                     }
                 } else {
-                    $rs = $db->prepare("SELECT * FROM manutencao WHERE $nm_filtro = '$filtro' AND dt_inicio_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
+                    $rs = $db->prepare("SELECT * FROM manutencao WHERE $nm_filtro = '$filtro' AND dt_fim_manutencao IS NULL ORDER BY dt_inicio_manutencao DESC");
                 }
                 $rs->execute();
                 $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
@@ -137,47 +135,6 @@ class Manutencao
             return ["dados" => $resultado];
         }
 
-    }
-
-
-
-
-
-
-
-    public static function validarToken()
-    {
-        $chave = 'TESTEDEUMASENHA123';
-        $token = $_COOKIE['token'];
-        $token_array = explode('.', $token);
-        $header = $token_array[0];
-        $payload = $token_array[1];
-        $signature = $token_array[2];
-
-        $validar_assinatura = hash_hmac('sha256', "$header.$payload", $chave, true);
-        $validar_assinatura = base64_encode($validar_assinatura);
-
-        if($signature == $validar_assinatura){
-
-            $dados_token = base64_decode($payload);
-            $dados_token = json_decode($dados_token);
-
-
-            if($dados_token->exp > time()){
-                
-                return true;
-
-            }else{
-                return false;
-            }
-
-        }else{
-
-            return false;
-
-        }
-
-       
     }
   
 }

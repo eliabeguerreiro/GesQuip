@@ -293,7 +293,7 @@ HTML;
           $html .="<td>".$item['ds_item']."</td>";
           $html .="<td>".$item['natureza']."</td>";
           $html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
-          $html .="<a href='apagar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Apagar</a></td>";
+          $html .="<a href='desativar.php?id=".$item['id_item']."' class='btn btn-danger btn-sm' >Desativar</a></td>";
           $html .="</tr>";
       endforeach;
                  

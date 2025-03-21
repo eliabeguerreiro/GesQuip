@@ -10,7 +10,7 @@ class Item
     if ($id_item) {
         $id_item = (int)$id_item;
         $db = DB::connect();
-        $rs = $db->prepare("SELECT ds_item FROM item WHERE id_item = :id_item");
+        $rs = $db->prepare("SELECT ds_item FROM item WHERE id_item = :id_item ");
         $rs->bindParam(':id_item', $id_item, PDO::PARAM_INT);
         $rs->execute();
         $resultado = $rs->fetch(PDO::FETCH_ASSOC);
@@ -116,7 +116,7 @@ class Item
 
     public static function getItensReservados($id_moviment) {
         $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = :id_moviment ORDER BY id_item DESC");
+        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = :id_moviment and desativado is NULL ORDER BY id_item DESC");
         $rs->bindParam(':id_moviment', $id_moviment, PDO::PARAM_INT);
         $rs->execute();
         return $rs->fetchAll(PDO::FETCH_ASSOC);
@@ -181,7 +181,7 @@ class Item
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -189,7 +189,7 @@ class Item
         }elseif($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro' order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -199,7 +199,7 @@ class Item
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -211,14 +211,14 @@ class Item
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and $nm_filtro = '$filtro' order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -231,14 +231,14 @@ class Item
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and $nm_filtro = '$filtro' order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -253,14 +253,14 @@ class Item
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and $nm_filtro = '$filtro' order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and desativado is NULL order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -325,18 +325,35 @@ class Item
     }
 }
 
-    public static function deleteItem($id){
+public static function desativarItem($id)
+{
+    // Check if the item is available for deactivation
+    $db = DB::connect();
+    $rs = $db->prepare("SELECT nr_disponibilidade FROM item WHERE id_item = :id");
+    $rs->bindParam(':id', $id, PDO::PARAM_INT);
+    $rs->execute();
+    $result = $rs->fetch(PDO::FETCH_ASSOC);
 
-        $db = DB::connect();
-        $rs = $db->prepare("DELETE FROM item WHERE id_item = $id");
-        $rs->execute();
-        $rows = $rs->rowCount();
-        if ($rows > 0){
-            $_SESSION['mag'] = 'Item cadastrado com Sucesso!';
-            return true;
-        }   
-      
+    if ($result['nr_disponibilidade'] != 1) {
+        // Item is not available, redirect with error message
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro: O item não pode ser desativado pois está em movimentação.</div></div>";
+        header('Location: index.php');
+        exit;
     }
+
+    // Deactivate the item
+    $updateStmt = $db->prepare("UPDATE item SET desativado = 1 WHERE id_item = :id");
+    $updateStmt->bindParam(':id', $id, PDO::PARAM_INT);
+    if ($updateStmt->execute()) {
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Item desativado com sucesso!</div></div>";
+        header('Location: index.php?pagina=itens');
+        exit;
+    } else {
+        $_SESSION['msg'] = "<div class='container mt-4'><div class='msg error'><i class='fas fa-exclamation-circle'></i>Erro ao desativar o item.</div></div>";
+        header('Location: index.php?pagina=itens');
+        exit;
+    }
+}
 
     public static function updateItem($id, $data)
 {

@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Prepare the base query
         if ($chave == 'ds_item') {
-            $stmt = $db->prepare("SELECT * FROM item WHERE $chave LIKE :busca");
+            $stmt = $db->prepare("SELECT * FROM item WHERE $chave LIKE :busca and desativado is NULL");
         } elseif ($chave == 'cod_patrimonio') {
-            $stmt = $db->prepare("SELECT * FROM item WHERE $chave = :busca");
+            $stmt = $db->prepare("SELECT * FROM item WHERE $chave = :busca and desativado is NULL");
         } else {
             echo json_encode([]); // Invalid chave, return empty results
             exit;

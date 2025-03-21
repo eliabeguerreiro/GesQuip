@@ -81,7 +81,7 @@ if ($_SESSION['id_moviment']) {
     HTML;
     if ($reservado = Item::getItensReservados($id)) {
         $html .= <<<HTML
-                            <h3 class="mt-4">Itens Reservados</h3>
+                            <h3 class="text-primary">Itens Reservados</h3>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>

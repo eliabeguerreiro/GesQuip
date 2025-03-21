@@ -131,23 +131,20 @@ class ContentPainelMoviment
                         <div class="col-md-12">                    
                             <h3><b><p class="text-primary">Nova Movimentação</p></b></h3>
                             <form method='POST' action='' id="formNovaMov">
-                                <div class="mb-3">
-                                    <label for="id_usuario" class="form-label">Funcionário</label>
-                                    <select id="id_usuario" name="id_responsavel" class="form-select" required>
-                                        <option value="">Escolha um funcionário</option>
-            HTML;
-            foreach ($funciona as $funcionario) {
-                $html.= "<option value='" . $funcionario['id_usuario'] . "'>" . $funcionario['nm_usuario'] . "</option>";
-            }
-            $html.= <<<HTML
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ds_movimentacao" class="form-label">Descriçao da Retirada</label>
-                                    <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descriçao" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Cadastrar</button>
-                            </form>
+                        <div class="mb-3">
+                            <label for="funcionario_search" class="form-label">Funcionário</label>
+                            <input type="text" class="form-control" id="funcionario_search" placeholder="Digite o nome do Funcionário" required>
+                            <input type="hidden" id="id_responsavel" name="id_responsavel" value="">
+                            <div id="funcionario_suggestions" class="list-group mt-1" style="max-width:100%; max-height: 200px; overflow-y: auto; display: none;">
+                                <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ds_movimentacao" class="form-label">Descrição da Retirada</label>
+                            <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descrição" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </form>
                         </div>
                     </div>
                 </div>    
@@ -526,6 +523,56 @@ HTML;
                     window.location.href = url.toString();
                 }
             });
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+            const funcionarioSearch = document.getElementById('funcionario_search');
+            const funcionarioSuggestions = document.getElementById('funcionario_suggestions');
+            const idResponsavel = document.getElementById('id_responsavel');
+
+            // Populate funcionarios data into JavaScript
+            
+        HTML;
+            $html .= "const funcionarios = " . json_encode($funciona) . ";";
+        $html.= <<<HTML
+            funcionarioSearch.addEventListener('input', function() {
+                const query = funcionarioSearch.value.toLowerCase();
+                funcionarioSuggestions.innerHTML = ''; // Clear previous suggestions
+
+                if (query.length > 0) {
+                    const filteredFuncionarios = funcionarios.filter(funcionario =>
+                        funcionario.nm_usuario.toLowerCase().includes(query)
+                    );
+
+                    filteredFuncionarios.forEach(funcionario => {
+                        const suggestionItem = document.createElement('a');
+                        suggestionItem.href = '#';
+                        suggestionItem.className = 'list-group-item list-group-item-action';
+                        suggestionItem.textContent = funcionario.nm_usuario;
+
+                        suggestionItem.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            funcionarioSearch.value = funcionario.nm_usuario; // Set input value
+                            idResponsavel.value = funcionario.id_usuario; // Set hidden input value
+                            funcionarioSuggestions.style.display = 'none'; // Hide suggestions
+                        });
+
+                        funcionarioSuggestions.appendChild(suggestionItem);
+                    });
+
+                    funcionarioSuggestions.style.display = 'block'; // Show suggestions
+                } else {
+                    funcionarioSuggestions.style.display = 'none'; // Hide suggestions if no query
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!funcionarioSearch.contains(e.target) && !funcionarioSuggestions.contains(e.target)) {
+                    funcionarioSuggestions.style.display = 'none';
+                }
+            });
+        });
         </script>
         </html>
       HTML;

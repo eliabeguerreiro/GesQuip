@@ -24,83 +24,7 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `gesquip` DEFAULT CHARACTER SET latin1 COLLATE latin1_general_ci;
 USE `gesquip`;
 
--- --------------------------------------------------------
 
---
--- Estrutura da tabela `cargo`
---
-
-CREATE TABLE `cargo` (
-  `id_cargo` int(11) NOT NULL,
-  `nm_cargo` varchar(45) NOT NULL,
-  `dt_cadastro` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `categoria`
---
-
-CREATE TABLE `categoria` (
-  `id_categoria` int(11) NOT NULL,
-  `ds_categoria` varchar(30) NOT NULL,
-  `nv_permissao` varchar(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Extraindo dados da tabela `categoria`
---
-
-INSERT INTO `categoria` (`id_categoria`, `ds_categoria`, `nv_permissao`) VALUES
-(1, 'Ferramentas Manuais', '1'),
-(2, 'Ferramentas Elétricas', '0'),
-(3, 'Equipamentos de Construção', '0'),
-(4, 'Equipamentos de Medição', '0'),
-(5, 'Equipamentos de Segurança', '0'),
-(6, 'Equipamentos de Pintura', '0'),
-(7, 'Equipamentos de Jardinagem', '0'),
-(8, 'Ferragens e Fixadores', '1'),
-(9, 'Consumíveis', '0');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `classe`
---
-
-CREATE TABLE `classe` (
-  `id_classe` int(11) NOT NULL,
-  `ds_ds_classe` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Extraindo dados da tabela `classe`
---
-
-INSERT INTO `classe` (`id_classe`, `ds_ds_classe`) VALUES
-(1, 'Ferramentas Manuais'),
-(2, 'Ferramentas Elétricas'),
-(3, 'Equipamentos de Construção'),
-(4, 'Equipamentos de Medição'),
-(5, 'Equipamentos de Segurança'),
-(6, 'Equipamentos de Pintura'),
-(7, 'Equipamentos de Jardinagem'),
-(8, 'Ferragens e Fixadores'),
-(9, 'Consumíveis');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `disponibilidade`
---
-
-CREATE TABLE `disponibilidade` (
-  `id_disponibilidade` int(11) NOT NULL,
-  `nr_disponibilidade` int(11) NOT NULL DEFAULT '0' COMMENT '0 disponivel, 1 indisponivel, 2 manutenção',
-  `id_item_movimentacao` int(11) NOT NULL,
-  `dt_alteracao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -350,33 +274,6 @@ INSERT INTO `usuarios` (`id_usuario`, `login`, `senha`, `nm_usuario`, `nr_contat
 (8, '', '$2y$10$6eOfvp0Yjk9z7wKbKaUfl.Z608W5BpSYxuo5gxAJUA.ewH9MLz3aC', 'teste', '81900000000', '1', 'user', 3, '2025-03-14 17:30:54'),
 (9, '', '$2y$10$TMu86nzEfoj8v1RkS9zH3u7HqGeApt4W/3XeIhtlz7z35iN4E9OZO', 'Marcelo Carlos', '819988909999', '1', 'user', 3, '2025-03-15 09:15:20');
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `cargo`
---
-ALTER TABLE `cargo`
-  ADD PRIMARY KEY (`id_cargo`);
-
---
--- Indexes for table `categoria`
---
-ALTER TABLE `categoria`
-  ADD PRIMARY KEY (`id_categoria`);
-
---
--- Indexes for table `classe`
---
-ALTER TABLE `classe`
-  ADD PRIMARY KEY (`id_classe`);
-
---
--- Indexes for table `disponibilidade`
---
-ALTER TABLE `disponibilidade`
-  ADD PRIMARY KEY (`id_disponibilidade`);
 
 --
 -- Indexes for table `empresa`
@@ -427,33 +324,6 @@ ALTER TABLE `movimentacao`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `cargo`
---
-ALTER TABLE `cargo`
-  MODIFY `id_cargo` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `categoria`
---
-ALTER TABLE `categoria`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `classe`
---
-ALTER TABLE `classe`
-  MODIFY `id_classe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `disponibilidade`
---
-ALTER TABLE `disponibilidade`
-  MODIFY `id_disponibilidade` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `empresa`

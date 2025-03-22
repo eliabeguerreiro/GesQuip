@@ -40,56 +40,7 @@ class Moviment
         }
     }
         
-    public static function manutencaoItem($id = null){
-
-        
-        $dt = date('Y-m-d H:i:s');
-        $db = DB::connect();
-        $id_item = $id;
-        $id_mov = $_SESSION['id_moviment'];
-        $user = $_SESSION['data_user'];
-       
-        $rs = $db->prepare("SELECT id_item_movimentacao FROM item_movimentacao WHERE id_item = $id_item and id_movimentacao = $id_mov");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        $id_it_mov = $resultado[0]['id_item_movimentacao'];
-
-     
-        $rs = $db->prepare("UPDATE item SET nr_disponibilidade = 2 WHERE id_item = $id_item");
-        $rs->execute();
-        $rows = $rs->rowCount();
-
-        if($rows > 0){ 
-            echo '<script>';
-            echo 'console.log("Disponibilidade atualizada");';
-            echo '</script>';
-            
-            $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt' WHERE id_item_movimentacao = $id_it_mov");
-            $rs->execute();
-            $rows = $rs->rowCount();
-
-            if($rows > 0){  
-
-                echo '<script>';
-                echo 'console.log("Tabela item-movimento atualizada");';
-                echo '</script>';
-
-                $rs = $db->prepare("INSERT INTO manutencao (id_item, id_item_movimentacao, id_autor, obs_in)
-                VALUES(".$id_item.",".$id_it_mov.",'".$user['id_usuario']."','".$_POST['texto']."')");
-                $rs->execute();
-                $rows = $rs->rowCount();
-                
-                if ($rows > 0){
-
-                    echo '<script>';
-                    echo 'console.log("Manutenção iniciada");';
-                    echo '</script>';
-                    return true;
-                }
-            }
-        }
-            
-    }
+    
 
 
     public static function getItensMoviment($id = null){

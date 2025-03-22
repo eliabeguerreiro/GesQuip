@@ -23,13 +23,13 @@ if ($rows > 0) {
             $rows = $rs->rowCount();
 
             if ($rows > 0) {
-                $_SESSION['msg'] = 'Movimentação Cancelada!';
+                $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error'><i class='fas fa-check-circle'></i>Movimentação Cancelada!</div></div>";
                 $_SESSION['id_moviment'] = null;
                 $response = ['status' => 'success', 'message' => 'Movimentação cancelada com sucesso!'];
             }
         }
     } else {
-        $_SESSION['msg'] = 'Movimentação Cancelada!';
+        $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error'><i class='fas fa-check-circle'></i>Movimentação Cancelada!</div></div>";
         $_SESSION['id_moviment'] = null;
         $response = ['status' => 'success', 'message' => 'Movimentação cancelada com sucesso!'];
     }

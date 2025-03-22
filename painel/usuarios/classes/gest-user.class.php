@@ -84,7 +84,6 @@ class User
 
 
     public static function getUsuarios($id){
-
         if($id){
 
             $db = DB::connect();
@@ -107,12 +106,11 @@ class User
     public static function setUsuario($data)
     {
 
-        $password = password_hash($data['senha'], PASSWORD_DEFAULT);
-        //echo("INSERT INTO usuarios (login , senha, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao)  VALUES('".$data['login']."','".$password."','".$data['nm_usuario']."','".$data['contato']."', 1, 'user', ".$data['nv_permissao'].")");
-        
+        $password = password_hash($data['matricula'], PASSWORD_DEFAULT);
+
         $db = DB::connect();
-        $rs = $db->prepare("INSERT INTO usuarios (login , senha, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao)
-         VALUES('".$data['login']."','".$password."','".$data['nm_usuario']."','".$data['nr_contato']."', 1, 'user', ".$data['nv_permissao'].")");
+        $rs = $db->prepare("INSERT INTO usuarios (login , senha, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao, matricula, cpf)
+         VALUES('".$_SESSION['data_user']['login']."','".$password."','".$data['nm_usuario']."','".$data['nr_contato']."', 1, 'user', ".$data['nv_permissao'].", '".$data['matricula']."', '".$data['cpf']."')");
         $rs->execute();
         $rows = $rs->rowCount();
         if ($rows > 0){

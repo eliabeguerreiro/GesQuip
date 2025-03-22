@@ -149,10 +149,17 @@ class ContentPainelUser
                             <input type="text" class="form-control" id="nome" name="nm_usuario" placeholder="Nome" required>
                         </div>
                         <div class="mb-3">
-                            <label for="nr_contato" class="form-label">Contato</label>
-                            <input type="number" class="form-control" id="nr_contato" name="nr_contato" placeholder="DDD+9+0000-0000" required>
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" required>
                         </div>
-                       
+                        <div class="mb-3">
+                            <label for="nr_contato" class="form-label">Contato</label>
+                            <input type="text" class="form-control" id="nr_contato" name="nr_contato" placeholder="DDD+9+0000-0000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="matricula" class="form-label">Matricula</label>
+                            <input type="number" class="form-control" id="matricula" name="matricula" required>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

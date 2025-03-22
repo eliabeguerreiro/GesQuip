@@ -86,3 +86,72 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error:', error));
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cpfInput = document.getElementById('cpf');
+
+    // Formata o CPF visualmente enquanto o usuário digita
+    cpfInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+        if (value.length > 11) value = value.slice(0, 11); // Limita a 11 dígitos
+
+        // Aplica a máscara
+        if (value.length > 9) {
+            value = `${value.slice(0, 3)}.${value.slice(3, 6)}.${value.slice(6, 9)}-${value.slice(9, 11)}`;
+        } else if (value.length > 6) {
+            value = `${value.slice(0, 3)}.${value.slice(3, 6)}.${value.slice(6, 9)}`;
+        } else if (value.length > 3) {
+            value = `${value.slice(0, 3)}.${value.slice(3, 6)}`;
+        }
+
+        e.target.value = value; // Atualiza o valor do input com a máscara
+    });
+
+    // Remove a máscara ao enviar o formulário
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const rawCpf = cpfInput.value.replace(/\D/g, ''); // Remove pontos e traços
+        cpfInput.value = rawCpf; // Define o valor limpo no input
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const contatoInput = document.getElementById('nr_contato');
+
+    // Function to format the contact number
+    function formatarContato(value) {
+        // Remove all non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Apply the mask: DDD 9 nnnn-nnnn
+        let formatted = '';
+        if (value.length > 0) {
+            formatted += value.slice(0, 2); // DDD
+            if (value.length > 2) {
+                formatted += ' ' + value[2]; // Space and 9
+                if (value.length > 3) {
+                    formatted += value.slice(3, 7); // nnnn
+                    if (value.length > 7) {
+                        formatted += '-' + value.slice(7); // -nnnn
+                    }
+                }
+            }
+        }
+
+        return formatted;
+    }
+
+    // Event listener for input changes
+    contatoInput.addEventListener('input', (e) => {
+        const rawValue = e.target.value; // Original value entered by the user
+        const formattedValue = formatarContato(rawValue); // Apply formatting
+        e.target.value = formattedValue; // Update the input with the formatted value
+    });
+
+    // Remove formatting before submitting the form
+    document.querySelector('form').addEventListener('submit', (e) => {
+        const rawValue = contatoInput.value; // Get the current value
+        const unformattedValue = rawValue.replace(/\D/g, ''); // Remove all non-numeric characters
+        contatoInput.value = unformattedValue; // Set the unformatted value for submission
+    });
+});

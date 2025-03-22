@@ -75,7 +75,7 @@ class ContentPainelItem
                             </li>
                             <!--GESTÃO MOVIMENTACAO-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentações</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
                                     <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
@@ -93,9 +93,9 @@ class ContentPainelItem
                             </li>
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Usuários</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Funcionários</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastro de Funcionários</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionário</a></li>
                                     <li><a class="dropdown-item" href="../usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
                                 </ul>
                             </li>
@@ -355,7 +355,7 @@ HTML;
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Itens Disponiveis</p></b></h3>
+                        <h3><b><p class="text-primary">Itens Disponiveis</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>

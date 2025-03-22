@@ -11,7 +11,7 @@ class ContentPainelUser
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>GesQuip - Usuários</title>
+          <title>GesQuip - Funcionários</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
           <link rel="stylesheet" href="src/style.css">
@@ -74,7 +74,7 @@ class ContentPainelUser
                             </li>
                             <!--GESTÃO MOVIMENTACAO-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentação</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentações</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
                                     <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
@@ -92,12 +92,12 @@ class ContentPainelUser
                             </li>
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="usuario">Usuários</a>
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="usuario">Funcionários</a>
                                 <ul class="dropdown-menu">
 
         HTML;                              
                                     
-                            $html.="<li><a class='dropdown-item' href='" . buildUrlUsers(['pagina' => 'cadastro']) . "'>Cadastro de Funcionários</a></li>";
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlUsers(['pagina' => 'cadastro']) . "'>Cadastrar Funcionários</a></li>";
                             $html.="<li><a class='dropdown-item' href='" . buildUrlUsers(['pagina' => 'usuarios']) . "'>Funcionários Cadastrados</a></li>";
 
         $html.= <<<HTML

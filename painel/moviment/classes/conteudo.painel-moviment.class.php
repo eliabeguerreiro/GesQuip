@@ -133,7 +133,7 @@ class ContentPainelMoviment
                             <form method='POST' action='' id="formNovaMov">
                         <div class="mb-3">
                             <label for="funcionario_search" class="form-label">Funcionário</label>
-                            <input type="text" class="form-control" id="funcionario_search" placeholder="Digite o nome do Funcionário" required>
+                            <input type="text" class="form-control" id="funcionario_search" placeholder="Digite a matricula do Funcionario" required>
                             <input type="hidden" id="id_responsavel" name="id_responsavel" value="">
                             <div id="funcionario_suggestions" class="list-group mt-1" style="max-width:100%; max-height: 200px; overflow-y: auto; display: none;">
                                 <!-- As sugestões serão inseridas aqui pelo JavaScript -->
@@ -192,7 +192,7 @@ class ContentPainelMoviment
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Funcionario">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -321,7 +321,7 @@ HTML;
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Funcionario">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -433,140 +433,123 @@ HTML;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const filtroPrincipal = document.getElementById('filtro_principal');
-                const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
                 const filtroFuncionario = document.getElementById('filtro_funcionario');
-
                 const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
                 const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
-        HTML;
-        $html .= "const funcionarios = " . json_encode($funciona) . ";";
-        $html.= <<<HTML
 
-                filtroPrincipal.addEventListener('change', function() {
+    HTML;
+    $html .= "const funcionarios = " . json_encode($funciona) . ";";
+    $html.= <<<HTML
+
+                filtroPrincipal.addEventListener('change', function () {
                     const filtro = filtroPrincipal.value;
-                    filtroDataIntervalo.style.display = 'none';
-                    filtroFuncionario.style.display = 'none';
-
-                    if (filtro === 'data') {
-                        filtroDataIntervalo.style.display = 'inline-block';
-                    } else if (filtro === 'funcionario') {
-                        filtroFuncionario.style.display = 'inline-block';
+                    filtroFuncionario.style.display = 'none'; // Oculta o campo de filtro de funcionário inicialmente
+                    if (filtro === 'funcionario') {
+                        filtroFuncionario.style.display = 'inline-block'; // Mostra o campo de filtro de funcionário
                     }
                 });
 
-                $(function(){
-                    $('.datepicker').datepicker({
-                        format: 'yyyy-mm-dd',
-                        language: 'pt-BR',
-                        startDate: '2024-01-01',
-                        endDate: '2026-12-31',
-                        todayHighlight: true,
-                        autoclose: true
-                    });
-
-                    $('#data_inicio').on('changeDate', function() {
-                        const dataInicio = $(this).datepicker('getFormattedDate');
-                        $('#data_fim').datepicker('setStartDate', dataInicio);
-                    });
-
-                    $('#data_fim').on('changeDate', function() {
-                        const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
-                        const dataFim = $(this).datepicker('getFormattedDate');
-                        if (dataInicio && dataFim) {
-                            atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
-                        }
-                    });
-                });
-
-                filtroFuncionarioInput.addEventListener('input', function() {
-                    const query = filtroFuncionarioInput.value.toLowerCase();
+                filtroFuncionarioInput.addEventListener('input', function () {
+                    const query = filtroFuncionarioInput.value.toLowerCase(); // Captura o valor digitado
                     filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
 
                     if (query.length > 0) {
-                        const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
+                        // Filtra os funcionários com base na matrícula (matricula)
+                        const filteredFuncionarios = funcionarios.filter(funcionario =>
+                            String(funcionario.matricula).toLowerCase().includes(query) // Converte matrícula para string para comparação
+                        );
+
                         filteredFuncionarios.forEach(funcionario => {
                             const suggestionItem = document.createElement('a');
                             suggestionItem.href = '#';
                             suggestionItem.className = 'list-group-item list-group-item-action';
-                            suggestionItem.textContent = funcionario.nm_usuario;
-                            suggestionItem.dataset.id = funcionario.id_usuario;
 
-                            suggestionItem.addEventListener('click', function(e) {
+                            // Exibe "Matrícula - Nome" na sugestão
+                            suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
+                            suggestionItem.dataset.id = funcionario.matricula;
+
+                            // Ao clicar na sugestão, preenche o campo de busca e atualiza a URL
+                            suggestionItem.addEventListener('click', function (e) {
                                 e.preventDefault();
-                                filtroFuncionarioInput.value = funcionario.nm_usuario;
-                                filtroFuncionarioSuggestions.style.display = 'none';
-                                atualizarURL('id_responsavel', funcionario.id_usuario);
+                                filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
+                                filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
+                                atualizarURL('id_responsavel', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
                             });
 
                             filtroFuncionarioSuggestions.appendChild(suggestionItem);
                         });
 
-                        filtroFuncionarioSuggestions.style.display = 'block';
+                        filtroFuncionarioSuggestions.style.display = 'block'; // Mostra as sugestões
                     } else {
-                        filtroFuncionarioSuggestions.style.display = 'none';
+                        filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
                     }
                 });
 
                 // Fecha a lista de sugestões se o usuário clicar fora dela
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
                         filtroFuncionarioSuggestions.style.display = 'none';
                     }
                 });
-
-                function atualizarURL(filtro, valor) {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('filtro', filtro);
-                    url.searchParams.set('valor', valor);
-                    window.location.href = url.toString();
-                }
             });
 
+            // Função para atualizar a URL com o filtro escolhido
+            function atualizarURL(filtro, valor) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('filtro', filtro);
+                url.searchParams.set('valor', valor);
+                window.location.href = url.toString();
+            }
 
             document.addEventListener('DOMContentLoaded', function() {
             const funcionarioSearch = document.getElementById('funcionario_search');
             const funcionarioSuggestions = document.getElementById('funcionario_suggestions');
             const idResponsavel = document.getElementById('id_responsavel');
 
-            // Populate funcionarios data into JavaScript
-            
-        HTML;
-            $html .= "const funcionarios = " . json_encode($funciona) . ";";
-        $html.= <<<HTML
+           
+HTML;
+$html .= "const funcionarios = " . json_encode($funciona) . ";";
+$html.= <<<HTML
             funcionarioSearch.addEventListener('input', function() {
-                const query = funcionarioSearch.value.toLowerCase();
-                funcionarioSuggestions.innerHTML = ''; // Clear previous suggestions
+                const query = funcionarioSearch.value.toLowerCase(); // Captura o valor digitado
+                funcionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
 
                 if (query.length > 0) {
+                    // Filtra os funcionários com base na matrícula (matricula)
                     const filteredFuncionarios = funcionarios.filter(funcionario =>
-                        funcionario.nm_usuario.toLowerCase().includes(query)
+                        String(funcionario.matricula).toLowerCase().includes(query) // Converte matrícula para string para comparação
                     );
 
                     filteredFuncionarios.forEach(funcionario => {
                         const suggestionItem = document.createElement('a');
                         suggestionItem.href = '#';
                         suggestionItem.className = 'list-group-item list-group-item-action';
-                        suggestionItem.textContent = funcionario.nm_usuario;
 
+                        // Exibe "Matrícula - Nome" na sugestão
+                        // Exibe "Matrícula - Nome" na sugestão
+                        suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
+                        suggestionItem.dataset.id = funcionario.matricula;
+
+                        // Ao clicar na sugestão, preenche o campo de busca e o campo oculto
                         suggestionItem.addEventListener('click', function(e) {
                             e.preventDefault();
-                            funcionarioSearch.value = funcionario.nm_usuario; // Set input value
-                            idResponsavel.value = funcionario.id_usuario; // Set hidden input value
-                            funcionarioSuggestions.style.display = 'none'; // Hide suggestions
+                            funcionarioSearch.value = funcionario.matricula; // Preenche com a matrícula
+                            idResponsavel.value = funcionario.id_usuario; // Define o ID no campo oculto
+                            funcionarioSuggestions.style.display = 'none'; // Esconde as sugestões
                         });
 
                         funcionarioSuggestions.appendChild(suggestionItem);
                     });
 
-                    funcionarioSuggestions.style.display = 'block'; // Show suggestions
+                    funcionarioSuggestions.style.display = 'block'; // Mostra as sugestões
                 } else {
-                    funcionarioSuggestions.style.display = 'none'; // Hide suggestions if no query
+                    funcionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
                 }
             });
 
-            // Hide suggestions when clicking outside
+            // Esconde as sugestões quando o usuário clica fora
             document.addEventListener('click', function(e) {
                 if (!funcionarioSearch.contains(e.target) && !funcionarioSuggestions.contains(e.target)) {
                     funcionarioSuggestions.style.display = 'none';
@@ -577,9 +560,7 @@ HTML;
         </html>
       HTML;
 
-
-
-        return($html);
+    return($html);
   }
 
 }

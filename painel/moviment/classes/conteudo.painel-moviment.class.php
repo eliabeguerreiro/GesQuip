@@ -201,24 +201,27 @@ class ContentPainelMoviment
                     </div>
 HTML;
 
-                if ($filtro && $valor) {
-                    $html .= <<<HTML
-                    <!-- Identificador de Filtro -->
-                    <div id="filtro_alert" class="alert alert-info">
-                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+if ($filtro && $valor) {
+    $html .= <<<HTML
+    <!-- Identificador de Filtro -->
+    <div id="filtro_alert" class="alert alert-info">
+        <div>
+            <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_responsavel') {
-                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
-                            return $f['id_usuario'] == $valor;
-                        });
-                        $funcionaNome = reset($funcionaNome);
-                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
-                    } else {
-                        $html .= ucfirst($filtro) . ": " . $valor;
-                    }
-                    $html .= <<<HTML
-                        </span>
-                    </div>
+    if ($filtro === 'id_responsavel') {
+        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
+            return $f['id_usuario'] == $valor;
+        });
+        $funcionaNome = reset($funcionaNome);
+        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+    } else {
+        $html .= ucfirst($filtro) . ": " . $valor;
+    }
+    $html .= <<<HTML
+            </span>
+        </div>
+        <button type="button" class="btn-close" aria-label="Close" onclick="removerFiltro()">×</button>
+    </div>
 HTML;
                 }
 
@@ -330,24 +333,27 @@ HTML;
                         </div>
 HTML;
 
-                if ($filtro && $valor) {
-                    $html .= <<<HTML
-                    <!-- Identificador de Filtro -->
-                    <div id="filtro_alert" class="alert alert-info">
-                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+if ($filtro && $valor) {
+    $html .= <<<HTML
+    <!-- Identificador de Filtro -->
+    <div id="filtro_alert" class="alert alert-info">
+        <div>
+            <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-                    if ($filtro === 'id_responsavel') {
-                        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
-                            return $f['id_usuario'] == $valor;
-                        });
-                        $funcionaNome = reset($funcionaNome);
-                        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
-                    } else {
-                        $html .= ucfirst($filtro) . ": " . $valor;
-                    }
-                    $html .= <<<HTML
-                        </span>
-                    </div>
+    if ($filtro === 'id_responsavel') {
+        $funcionaNome = array_filter($funciona['dados'], function($f) use ($valor) {
+            return $f['id_usuario'] == $valor;
+        });
+        $funcionaNome = reset($funcionaNome);
+        $html .= "Funcionário: " . $funcionaNome['nm_usuario'];
+    } else {
+        $html .= ucfirst($filtro) . ": " . $valor;
+    }
+    $html .= <<<HTML
+            </span>
+        </div>
+        <button type="button" class="btn-close" aria-label="Close" onclick="removerFiltro()">×</button>
+    </div>
 HTML;
                 }
 
@@ -434,6 +440,13 @@ HTML;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
+
+            function removerFiltro() {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('filtro');
+                url.searchParams.delete('valor');
+                window.location.href = url.toString();
+            }
             document.addEventListener('DOMContentLoaded', function () {
                 const filtroPrincipal = document.getElementById('filtro_principal');
                 const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');

@@ -26,14 +26,14 @@ class User
         if($id){
             
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM usuarios where id_usuario = $id");
+            $rs = $db->prepare("SELECT id_usuario, cpf, matricula, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao, dt_cadastro FROM usuarios where id_usuario = $id");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }else{
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM usuarios ");
+            $rs = $db->prepare("SELECT id_usuario, cpf, matricula, nm_usuario, nr_contato, id_empresa, tp_usuario, nv_permissao, dt_cadastro FROM usuarios ");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];

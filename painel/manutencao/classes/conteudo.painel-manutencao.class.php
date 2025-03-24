@@ -216,7 +216,7 @@ class ContentPainelManutencao
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                            <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Funcionário">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -337,7 +337,7 @@ HTML;
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite o nome do Funcionario">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Funcionario">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
@@ -442,7 +442,10 @@ HTML;
 
         </body>
         <script src = "src/script.js"></script>
+
+        
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
@@ -450,9 +453,9 @@ HTML;
                 const filtroPrincipal = document.getElementById('filtro_principal');
                 const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
                 const filtroFuncionario = document.getElementById('filtro_funcionario');
-
                 const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
                 const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
+
         HTML;
         $html .= "const funcionarios = " . json_encode($funciona['dados']) . ";";
         $html.= <<<HTML
@@ -469,7 +472,8 @@ HTML;
                     }
                 });
 
-                $(function(){
+                $(function () {
+                if ($('#data_inicio').length > 0 && $('#data_fim').length > 0) {
                     $('.datepicker').datepicker({
                         format: 'yyyy-mm-dd',
                         language: 'pt-BR',
@@ -479,46 +483,56 @@ HTML;
                         autoclose: true
                     });
 
-                    $('#data_inicio').on('changeDate', function() {
+                    $('#data_inicio').on('changeDate', function () {
                         const dataInicio = $(this).datepicker('getFormattedDate');
                         $('#data_fim').datepicker('setStartDate', dataInicio);
                     });
 
-                    $('#data_fim').on('changeDate', function() {
+                    $('#data_fim').on('changeDate', function () {
                         const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
                         const dataFim = $(this).datepicker('getFormattedDate');
                         if (dataInicio && dataFim) {
                             atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
                         }
                     });
-                });
+                } else {
+                    console.error('Elementos #data_inicio ou #data_fim não encontrados.');
+                }
+            });
 
-                filtroFuncionarioInput.addEventListener('input', function() {
-                    const query = filtroFuncionarioInput.value.toLowerCase();
+            filtroFuncionarioInput.addEventListener('input', function () {
+                    const query = filtroFuncionarioInput.value.toLowerCase(); // Captura o valor digitado
                     filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
 
                     if (query.length > 0) {
-                        const filteredFuncionarios = funcionarios.filter(funcionarios => funcionarios.nm_usuario.toLowerCase().includes(query));
+                        // Filtra os funcionários com base na MATRÍCULA
+                        const filteredFuncionarios = funcionarios.filter(funcionario =>
+                            String(funcionario.matricula).toLowerCase().includes(query) // Busca apenas por matrícula
+                        );
+
                         filteredFuncionarios.forEach(funcionario => {
                             const suggestionItem = document.createElement('a');
                             suggestionItem.href = '#';
                             suggestionItem.className = 'list-group-item list-group-item-action';
-                            suggestionItem.textContent = funcionario.nm_usuario;
+
+                            // Exibe "Matrícula - Nome" na sugestão
+                            suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
                             suggestionItem.dataset.id = funcionario.id_usuario;
 
-                            suggestionItem.addEventListener('click', function(e) {
+                            // Ao clicar na sugestão, preenche o campo de busca
+                            suggestionItem.addEventListener('click', function (e) {
                                 e.preventDefault();
-                                filtroFuncionarioInput.value = funcionario.nm_usuario;
-                                filtroFuncionarioSuggestions.style.display = 'none';
-                                atualizarURL('id_autor', funcionario.id_usuario);
+                                filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
+                                filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
+                                atualizarURL('id_autor', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
                             });
 
                             filtroFuncionarioSuggestions.appendChild(suggestionItem);
                         });
 
-                        filtroFuncionarioSuggestions.style.display = 'block';
+                        filtroFuncionarioSuggestions.style.display = 'block'; // Mostra as sugestões
                     } else {
-                        filtroFuncionarioSuggestions.style.display = 'none';
+                        filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
                     }
                 });
 

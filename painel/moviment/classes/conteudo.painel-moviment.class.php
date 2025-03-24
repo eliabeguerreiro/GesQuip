@@ -26,7 +26,7 @@ class ContentPainelMoviment
     public function renderBody($pagina, $funciona, $moviment, $moviment_encerrado){
       $nome = $_SESSION['data_user']['nm_usuario'];
       $func = $funciona;
-      
+       
 
 
       // Verifica se os parâmetros GET estão definidos
@@ -172,7 +172,7 @@ class ContentPainelMoviment
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Movimentações Ativas</p></b></h3>
+                        <h3><b><p class="text-primary">Movimentações</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -180,7 +180,7 @@ class ContentPainelMoviment
                                 <option value="funcionario">Funcionário</option>
                                 <option value="data">Data</option>
                             </select>
-        
+
                             <!-- Div para Data -->
                             <div id="filtro_data_intervalo" style="display: none; margin-left: 10px;">
                                 <div class="input-daterange input-group" id="datepicker">
@@ -192,13 +192,13 @@ class ContentPainelMoviment
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Funcionario">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Funcionário">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
 HTML;
 
                 if ($filtro && $valor) {
@@ -430,11 +430,13 @@ HTML;
         </body>
         
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const filtroPrincipal = document.getElementById('filtro_principal');
+                const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
                 const filtroFuncionario = document.getElementById('filtro_funcionario');
                 const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
                 const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
@@ -445,63 +447,95 @@ HTML;
 
                 filtroPrincipal.addEventListener('change', function () {
                     const filtro = filtroPrincipal.value;
-                    filtroFuncionario.style.display = 'none'; // Oculta o campo de filtro de funcionário inicialmente
-                    if (filtro === 'funcionario') {
-                        filtroFuncionario.style.display = 'inline-block'; // Mostra o campo de filtro de funcionário
+                    filtroDataIntervalo.style.display = 'none';
+                    filtroFuncionario.style.display = 'none';
+
+                    if (filtro === 'data') {
+                        filtroDataIntervalo.style.display = 'inline-block';
+                    } else if (filtro === 'funcionario') {
+                        filtroFuncionario.style.display = 'inline-block';
                     }
                 });
 
-                filtroFuncionarioInput.addEventListener('input', function () {
-                    const query = filtroFuncionarioInput.value.toLowerCase(); // Captura o valor digitado
-                    filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+                $(function () {
+                if ($('#data_inicio').length > 0 && $('#data_fim').length > 0) {
+                    $('.datepicker').datepicker({
+                        format: 'yyyy-mm-dd',
+                        language: 'pt-BR',
+                        startDate: '2024-01-01',
+                        endDate: '2026-12-31',
+                        todayHighlight: true,
+                        autoclose: true
+                    });
 
-                    if (query.length > 0) {
-                        // Filtra os funcionários com base na matrícula (matricula)
-                        const filteredFuncionarios = funcionarios.filter(funcionario =>
-                            String(funcionario.matricula).toLowerCase().includes(query) // Converte matrícula para string para comparação
-                        );
+                    $('#data_inicio').on('changeDate', function () {
+                        const dataInicio = $(this).datepicker('getFormattedDate');
+                        $('#data_fim').datepicker('setStartDate', dataInicio);
+                    });
 
-                        filteredFuncionarios.forEach(funcionario => {
-                            const suggestionItem = document.createElement('a');
-                            suggestionItem.href = '#';
-                            suggestionItem.className = 'list-group-item list-group-item-action';
-
-                            // Exibe "Matrícula - Nome" na sugestão
-                            suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
-                            suggestionItem.dataset.id = funcionario.matricula;
-
-                            // Ao clicar na sugestão, preenche o campo de busca e atualiza a URL
-                            suggestionItem.addEventListener('click', function (e) {
-                                e.preventDefault();
-                                filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
-                                filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
-                                atualizarURL('id_responsavel', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
-                            });
-
-                            filtroFuncionarioSuggestions.appendChild(suggestionItem);
-                        });
-
-                        filtroFuncionarioSuggestions.style.display = 'block'; // Mostra as sugestões
-                    } else {
-                        filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
-                    }
-                });
-
-                // Fecha a lista de sugestões se o usuário clicar fora dela
-                document.addEventListener('click', function (e) {
-                    if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
-                        filtroFuncionarioSuggestions.style.display = 'none';
-                    }
-                });
+                    $('#data_fim').on('changeDate', function () {
+                        const dataInicio = $('#data_inicio').datepicker('getFormattedDate');
+                        const dataFim = $(this).datepicker('getFormattedDate');
+                        if (dataInicio && dataFim) {
+                            atualizarURL('dt_movimentacao', dataInicio + '...' + dataFim);
+                        }
+                    });
+                } else {
+                    console.error('Elementos #data_inicio ou #data_fim não encontrados.');
+                }
             });
 
-            // Função para atualizar a URL com o filtro escolhido
-            function atualizarURL(filtro, valor) {
-                const url = new URL(window.location.href);
-                url.searchParams.set('filtro', filtro);
-                url.searchParams.set('valor', valor);
-                window.location.href = url.toString();
+            filtroFuncionarioInput.addEventListener('input', function () {
+            const query = filtroFuncionarioInput.value.toLowerCase();
+            filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+
+            if (query.length > 0) {
+                // Filtra os funcionários com base na MATRÍCULA
+                const filteredFuncionarios = funcionarios.filter(funcionario =>
+                    String(funcionario.matricula).toLowerCase().includes(query)
+                );
+
+                filteredFuncionarios.forEach(funcionario => {
+                    const suggestionItem = document.createElement('a');
+                    suggestionItem.href = '#';
+                    suggestionItem.className = 'list-group-item list-group-item-action';
+
+                    // Exibe "Matrícula - Nome" na sugestão
+                    suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
+                    suggestionItem.dataset.id = funcionario.id_usuario;
+
+                    // Ao clicar na sugestão, preenche o campo de busca
+                    suggestionItem.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
+                        filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
+                        atualizarURL('id_responsavel', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
+                    });
+
+                    filtroFuncionarioSuggestions.appendChild(suggestionItem);
+                });
+
+                filtroFuncionarioSuggestions.style.display = 'block'; // Mostra as sugestões
+            } else {
+                filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
             }
+        });
+
+        // Fecha a lista de sugestões se o usuário clicar fora
+        document.addEventListener('click', function (e) {
+            if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
+                filtroFuncionarioSuggestions.style.display = 'none';
+            }
+        });
+
+        // Função para atualizar a URL com o filtro escolhido
+        function atualizarURL(filtro, valor) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('filtro', filtro);
+            url.searchParams.set('valor', valor);
+            window.location.href = url.toString();
+        }
+    });
 
             document.addEventListener('DOMContentLoaded', function() {
             const funcionarioSearch = document.getElementById('funcionario_search');

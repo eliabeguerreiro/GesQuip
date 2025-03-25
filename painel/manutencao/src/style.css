@@ -121,6 +121,30 @@
         border-radius: 4px; /* Adiciona bordas arredondadas à lista de sugestões */
     }
 
+    #filtro_alert {
+        display: flex;
+        justify-content: space-between; /* Distribui o conteúdo nas extremidades */
+        align-items: center;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center; /* Centraliza o texto */
+        background-color: #d9edf7; /* Cor de fundo para alerta de informação */
+        color: #31708f; /* Cor do texto para alerta de informação */
+        border-color: #bce8f1; /* Cor da borda para alerta de informação */
+    }
+
+    #filtro_alert .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #31708f; /* Cor do texto para alerta de informação */
+        cursor: pointer;
+        margin-left: 10px; /* Espaçamento à esquerda do botão */
+    }
+
     .input-daterange .input-group-text {
         background-color: #f8f9fa;
         border: 1px solid #ced4da;

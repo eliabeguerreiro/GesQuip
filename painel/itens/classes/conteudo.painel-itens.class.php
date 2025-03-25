@@ -68,6 +68,7 @@ class ContentPainelItem
                           $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
                           $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
                           $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'quebrados']) . "'>Itens Quebrados</a></li>";
                           $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'novo']) . "'>Novo Item</a></li>";
 
       $html.= <<<HTML

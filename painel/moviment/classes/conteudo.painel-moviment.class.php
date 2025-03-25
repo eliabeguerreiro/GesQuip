@@ -141,7 +141,7 @@ class ContentPainelMoviment
                         </div>
                         <div class="mb-3">
                             <label for="ds_movimentacao" class="form-label">Descrição da Retirada</label>
-                            <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descrição" required>
+                            <input type="text" class="form-control" id="ds_movimentacao" name="ds_movimentacao" placeholder="Descrição">
                         </div>
                         <button type="submit" class="btn btn-primary">Cadastrar</button>
                     </form>

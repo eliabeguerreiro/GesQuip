@@ -173,7 +173,7 @@ class Manutencao
                 echo '</script>';
 
                 $rs = $db->prepare("INSERT INTO manutencao (id_item, id_item_movimentacao, id_autor, obs_in)
-                VALUES(".$id_item.",".$id_it_mov.",'".$user['id_usuario']."','".$_POST['texto']."')");
+                VALUES(".$id_item.",".$id_it_mov.",'".$user['id_usuario']."','".$_POST['descricao']."')");
                 $rs->execute();
                 $rows = $rs->rowCount();
                 

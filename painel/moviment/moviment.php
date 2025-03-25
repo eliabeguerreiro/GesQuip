@@ -58,6 +58,94 @@ if ($_SESSION['id_moviment']) {
     <link rel="stylesheet" href="src/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+    /* Estilo geral da modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
+        overflow: auto; /* Permite rolagem se necessário */
+    }
+
+    /* Conteúdo da modal */
+    .modal-content {
+        background-color: #ffffff;
+        margin: 10% auto; /* Centraliza verticalmente */
+        padding: 30px;
+        border-radius: 10px; /* Bordas arredondadas */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+        width: 50%; /* Largura ajustável */
+        max-width: 600px; /* Largura máxima */
+        position: relative; /* Para posicionar o botão de fechar */
+    }
+
+    /* Botão de fechar (X) */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+    }
+
+    /* Título da modal */
+    .modal-content h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Campo de descrição */
+    #manutencaoDescricao {
+        width: 100%;
+        padding: 12px;
+        margin: 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: vertical; /* Permite redimensionamento vertical */
+        font-size: 16px;
+        box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
+    }
+
+    /* Botão "Enviar" */
+    #enviarManutencao {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff; /* Azul padrão do Bootstrap */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* Efeito de transição suave */
+    }
+
+    #enviarManutencao:hover {
+        background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+    }
+
+    /* Placeholder do textarea */
+    #manutencaoDescricao::placeholder {
+        color: #aaa;
+        font-style: italic;
+    }
+</style>
 </head>
 <body>
     <!-- INÍCIO BARRA DE NAVEGAÇÃO -->
@@ -158,31 +246,87 @@ HTML;
             </div>
         </div>
     </main>
+    
+       <!-- Modal HTML -->
+    <div id="manutencaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Iniciar Manutenção</h2>
+            <input type="hidden" id="itemIdInput">
+            <textarea id="manutencaoDescricao" placeholder="Descreva o caso para a manutenção" required></textarea>
+            <button id="enviarManutencao">Enviar</button>
+        </div>
+    </div>
+
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const manutencaoButtons = document.querySelectorAll('.manutencao-button');
-            const devolverButtons = document.querySelectorAll('.devolver-button');
 
+document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('manutencaoModal');
+            const closeModal = document.querySelector('.close');
+            const manutencaoButtons = document.querySelectorAll('.manutencao-button');
+            const itemIdInput = document.getElementById('itemIdInput');
+            const manutencaoDescricao = document.getElementById('manutencaoDescricao');
+            const enviarManutencao = document.getElementById('enviarManutencao');
+
+            // Abrir modal ao clicar no botão "Manutenção"
             manutencaoButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const itemId = button.id;
-                    fetch('inicia_manutencao.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'id=' + encodeURIComponent(itemId)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                        window.location.reload();
-                    })
-                    .catch(error => console.error('Error:', error));
+                    itemIdInput.value = itemId; // Passa o ID do item para o campo oculto
+                    modal.style.display = 'block'; // Exibe a modal
                 });
             });
 
+            // Fechar modal ao clicar no botão "X"
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Fechar modal ao clicar fora dela
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Enviar dados para inicia_manutencao.php
+            enviarManutencao.addEventListener('click', () => {
+                const itemId = itemIdInput.value;
+                const descricao = manutencaoDescricao.value;
+
+                if (!descricao.trim()) {
+                    alert('Por favor, insira uma descrição para a manutenção.');
+                    return;
+                }
+
+                fetch('inicia_manutencao.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id='+ encodeURIComponent(itemId) + '&descricao=' + encodeURIComponent(descricao)
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    modal.style.display = 'none'; // Fecha a modal após o envio
+                    window.location.reload(); // Recarrega a página para atualizar os dados
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+
+    });
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const devolverButtons = document.querySelectorAll('.devolver-button');
+
+    
             devolverButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const itemId = button.id;

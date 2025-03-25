@@ -2,7 +2,7 @@
 include_once"../../classes/painel.class.php";
 include_once"../itens/classes/gest-item.class.php";
 include_once"../usuarios/classes/gest-user.class.php";
-
+include_once"../manutencao/classes/gest-manutencao.class.php";
 class Moviment
 {
  

@@ -48,24 +48,23 @@ class Manutencao
     }
 
 
-    public static function encerraManutencao($id_manutencao, $obs, $diponibilidade){
+    public static function encerraManutencao($id_manutencao, $obs, $diponibilidade, $custo){
         $dt = date('Y-m-d H:i:s');
         $db = DB::connect();
         
-        $rs = $db->prepare("SELECT * FROM manutencao WHERE id_manutencao = $id_manutencao");
+        $rs = $db->prepare("SELECT id_item FROM manutencao WHERE id_manutencao = $id_manutencao");
         $rs->execute();
         $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        $manutencao = $resultado[0]['id_item'];
+        $id_item = $resultado[0]['id_item'];
       
         // primeiro eu atualizo a disponibilidade do item
-        
-        $rs = $db->prepare("UPDATE item SET nr_disponibilidade = $diponibilidade WHERE id_item = $manutencao");
+        $rs = $db->prepare("UPDATE item SET nr_disponibilidade = $diponibilidade WHERE id_item = $id_item");
         $rs->execute();
         $rows = $rs->rowCount();
         if($rows > 0){ 
                            
         // depois eu atualizo a observação e a data de devolução da manutencao
-        $rs = $db->prepare("UPDATE manutencao SET dt_fim_manutencao = '$dt', obs_out = '$obs' WHERE id_manutencao = $id_manutencao");
+        $rs = $db->prepare("UPDATE manutencao SET dt_fim_manutencao = '$dt', obs_out = '$obs', custo_manutencao = $custo WHERE id_manutencao = $id_manutencao");
         $rs->execute();
         $rows = $rs->rowCount();
             

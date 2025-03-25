@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     finalizaSubmit.addEventListener('click', () => {
         const texto = document.getElementById('finalizaTexto').value.trim();
         const status = document.getElementById('statusSelect').value;
+        const custo = document.getElementById('custo_manutencao').value;
 
         // Verifica se os campos estão preenchidos
         if (!currentItemId || !texto || !status) {
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto) + '&status=' + encodeURIComponent(status)
+            body: 'id=' + encodeURIComponent(currentItemId) + '&texto=' + encodeURIComponent(texto) + '&status=' + encodeURIComponent(status) + '&custo=' + encodeURIComponent(custo)
         })
         .then(response => {
             if (!response.ok) {

@@ -173,6 +173,10 @@ class ContentPainelManutencao
                                     <textarea class="form-control" id="finalizaTexto" name="finalizaTexto" rows="3" required></textarea>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="custo_manutencao" class="form-label">Custo da Manutenção</label>
+                                    <input type="number" step="0.01" class="form-control" id="custo_manutencao" name="custo_manutencao" placeholder="R$ 0.00" required>
+                                </div>
+                                <div class="mb-3">
                                     <label for="statusSelect" class="form-label">Status</label>
                                     <select class="form-select" id="statusSelect" name="statusSelect" required>
                                         <option value="1">Disponível</option>
@@ -386,6 +390,7 @@ HTML;
                                 <th>familia</th>
                                 <th>Data Inicio</th>
                                 <th>Data Encerramento</th>
+                                <th>Custo da Manutenção</th>
                                 <th>Observações</th>
                             </tr>
 
@@ -403,9 +408,8 @@ HTML;
         $cod = $item_data['dados'][0]['cod_patrimonio'];
         $id_familia = $item_data['dados'][0]['id_familia'];
         $familia = Item::getFamiliaNome($id_familia);
-
-
-
+        $custoManutencao = $manutencao['custo_manutencao'];
+        $custo = ($custoManutencao === null) ? 'Não informado' : number_format($custoManutencao, 2, ',', '.');
           $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
           $html .="<td>".$manutencao['id_manutencao']."</td>";
           $html .="<td>".$nm_autor."</td>";
@@ -413,6 +417,7 @@ HTML;
           $html .="<td>".$familia."</td>";
           $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
           $html .="<td>".$manutencao['dt_fim_manutencao']."</td>";
+          $html .="<td>".$custo."</td>";
           $html .="<td>".$manutencao['obs_out']."</td>";
           $html .="</tr>";
       endforeach;

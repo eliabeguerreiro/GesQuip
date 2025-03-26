@@ -153,11 +153,11 @@ class ContentPainelItem
                                     <label class="form-label">Natureza de posse</label>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="natureza_1" name="natureza" value="propio" required>
+                                            <input class="form-check-input" type="radio" id="natureza_1" name="natureza" value="PRÓPIO" required>
                                             <label class="form-check-label" for="natureza_1">Próprio</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="natureza_2" name="natureza" value="locado" required>
+                                            <input class="form-check-input" type="radio" id="natureza_2" name="natureza" value="LOCADO" required>
                                             <label class="form-check-label" for="natureza_2">Locado</label>
                                         </div>
                                     </div>
@@ -323,8 +323,8 @@ HTML;
                         <div class="mb-3">
                             <label for="novaNatureza" class="form-label">Nova Natureza</label>
                             <select id="novaNatureza" class="form-select" required>
-                                <option value="proprio">Próprio</option>
-                                <option value="locado">Locado</option>
+                                <option value="PRÓPIO">Próprio</option>
+                                <option value="LOCADO">Locado</option>
                             </select>
                         </div>
                     </div>

@@ -142,7 +142,7 @@ class ContentPainelMoviment
                         <div class="mb-3">
                             <label for="funcionario_search" class="form-label">Funcionário</label>
                             <input type="text" class="form-control" id="funcionario_search" placeholder="Digite a matricula do Funcionario" required>
-                            <input type="hidden" id="id_responsavel" name="id_responsavel" value="">
+                            <input type="hidden" id="id_autor" name="id_autor" value="">
                             <div id="funcionario_suggestions" class="list-group mt-1" style="max-width:100%; max-height: 200px; overflow-y: auto; display: none;">
                                 <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                             </div>
@@ -216,7 +216,7 @@ if ($filtro && $valor) {
         <div>
             <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-    if ($filtro === 'id_responsavel') {
+    if ($filtro === 'id_autor') {
         $funcionaNome = array_filter($funciona, function($f) use ($valor) {
             return $f['id_usuario'] == $valor;
         });
@@ -328,8 +328,8 @@ if ($filtro && $valor) {
         <div>
             <strong>Filtro aplicado:</strong> <span id="filtro_texto">
 HTML;
-    if ($filtro === 'id_responsavel') {
-        $funcionaNome = array_filter($funciona['dados'], function($f) use ($valor) {
+    if ($filtro === 'id_autor') {
+        $funcionaNome = array_filter($funciona, function($f) use ($valor) {
             return $f['id_usuario'] == $valor;
         });
         $funcionaNome = reset($funcionaNome);
@@ -490,7 +490,7 @@ HTML;
                         e.preventDefault();
                         filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
                         filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
-                        atualizarURL('id_responsavel', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
+                        atualizarURL('id_autor', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
                     });
 
                     filtroFuncionarioSuggestions.appendChild(suggestionItem);
@@ -521,7 +521,7 @@ HTML;
             document.addEventListener('DOMContentLoaded', function() {
             const funcionarioSearch = document.getElementById('funcionario_search');
             const funcionarioSuggestions = document.getElementById('funcionario_suggestions');
-            const idResponsavel = document.getElementById('id_responsavel');
+            const idResponsavel = document.getElementById('id_autor');
 
            
 HTML;

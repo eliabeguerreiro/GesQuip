@@ -158,7 +158,7 @@ class ContentPainelItem
                                     <label class="form-label">Natureza de posse</label>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="natureza_1" name="natureza" value="PRÓPIO" required>
+                                            <input class="form-check-input" type="radio" id="natureza_1" name="natureza" value="PRÓPRIO" required>
                                             <label class="form-check-label" for="natureza_1">Próprio</label>
                                         </div>
                                         <div class="form-check">
@@ -237,7 +237,7 @@ class ContentPainelItem
                             <div id="filtro_natureza" style="display: none; margin-left: 10px;">
                                 <select id="filtro_natureza_select" class="form-select form-select-sm">
                                     <option value="">Escolha</option>
-                                    <option value="proprio">Próprio</option>
+                                    <option value="próprio">Próprio</option>
                                     <option value="locado">Locado</option>
                                 </select>
                             </div>
@@ -326,7 +326,7 @@ HTML;
                         <div class="mb-3">
                             <label for="novaNatureza" class="form-label">Nova Natureza</label>
                             <select id="novaNatureza" class="form-select" required>
-                                <option value="PRÓPIO">Próprio</option>
+                                <option value="PRÓPRIO">Próprio</option>
                                 <option value="LOCADO">Locado</option>
                             </select>
                         </div>
@@ -374,7 +374,7 @@ HTML;
                             <div id="filtro_natureza" style="display: none; margin-left: 10px;">
                                 <select id="filtro_natureza_select" class="form-select form-select-sm">
                                     <option value="">Escolha</option>
-                                    <option value="proprio">Próprio</option>
+                                    <option value="próprio">Próprio</option>
                                     <option value="locado">Locado</option>
                                 </select>
                             </div>
@@ -465,7 +465,7 @@ HTML;
                         <div class="mb-3">
                             <label for="novaNatureza" class="form-label">Nova Natureza</label>
                             <select id="novaNatureza" class="form-select" required>
-                                <option value="PRÓPIO">Próprio</option>
+                                <option value="PRÓPRIO">Próprio</option>
                                 <option value="LOCADO">Locado</option>
                             </select>
                         </div>

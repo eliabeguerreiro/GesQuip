@@ -101,7 +101,7 @@ class Moviment
                     $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
                 }
             } else {
-                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
+                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = $filtro AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
             }
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);

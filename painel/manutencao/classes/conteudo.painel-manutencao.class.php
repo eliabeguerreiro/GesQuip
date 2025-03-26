@@ -59,10 +59,7 @@ class ContentPainelManutencao
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em uso</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=gestao_itens" id="CadastroItemLink">Gestão de Itens</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
                             </li>
@@ -72,7 +69,6 @@ class ContentPainelManutencao
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
                                     <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href="../moviment?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MANUTENÇÃO-->
@@ -82,7 +78,6 @@ class ContentPainelManutencao
         HTML;
                                     $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'nova']) . "'>Nova Manutenção</a></li>";      
                                     $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'ativas']) . "'>Manutenções Ativas</a></li>";
-                                    $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Manutenções Encerradas</a></li>";
         $html.= <<<HTML
                                 </ul>
                             </li>
@@ -92,6 +87,19 @@ class ContentPainelManutencao
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../usuarios?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionário</a></li>
                                     <li><a class="dropdown-item" href="../usuarios?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
+            HTML;
+                                    $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Manutenções Encerradas</a></li>";
+            $html.= <<<HTML
                                 </ul>
                             </li>
                         </ul>

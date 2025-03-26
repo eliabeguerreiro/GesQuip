@@ -38,10 +38,7 @@ class ContentPainel
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=gestao_itens" id="CadastroItemLink">Gestão de Itens</a></li>
                                     <li><a class="dropdown-item" href="itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
                             </li>
@@ -51,7 +48,6 @@ class ContentPainel
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="moviment/?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
                                     <li><a class="dropdown-item" href="moviment/?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href="moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MANUTENÇÃO-->
@@ -60,7 +56,6 @@ class ContentPainel
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
                                     <li><a class="dropdown-item" href="manutencao/?pagina=ativas" id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO DE USUARIOS-->
@@ -69,6 +64,17 @@ class ContentPainel
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionários</a></li>
                                     <li><a class="dropdown-item" href="usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
+                                    <li><a class="dropdown-item" href="itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -63,10 +63,7 @@ class ContentPainelMoviment
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em uso</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=gestao_itens" id="CadastroItemLink">Gestão de Itens</a></li>
                                     <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
                                 </ul>
                             </li>
@@ -77,7 +74,6 @@ class ContentPainelMoviment
       HTML;                              
                             $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'nova']) . "'>Nova Movimentação</a></li>";      
                             $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'ativas']) . "'>Movimentações Ativas</a></li>";
-                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Movimentações Encerradas</a></li>";
       $html.= <<<HTML
                                 </ul>
                             </li>
@@ -86,8 +82,7 @@ class ContentPainelMoviment
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO DE USUARIOS-->
@@ -96,6 +91,19 @@ class ContentPainelMoviment
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../usuarios?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionário</a></li>
                                     <li><a class="dropdown-item" href="../usuarios?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
+                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
+        HTML;                              
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'encerradas']) . "'>Movimentações Encerradas</a></li>";
+        $html.= <<<HTML
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -263,26 +271,6 @@ HTML;
             </div>
         </div>
 
-        <!-- Modal de Atualização >
-        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
-                    </div>
-                </div>
-            </div>
-        </div-->
-
-
       HTML;
               
                 break;
@@ -391,26 +379,6 @@ HTML;
                 </div>
             </div>
         </div>
-
-        <!-- Modal de Atualização >
-        <div-- class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="atualizaModalLabel">Atualizar Modelo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="novoNome" class="form-control" placeholder="digite o novo nome" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
-                    </div>
-                </div>
-            </div>
-        </div-->
-
 
       HTML;
                 

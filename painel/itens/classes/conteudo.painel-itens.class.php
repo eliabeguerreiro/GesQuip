@@ -62,15 +62,9 @@ class ContentPainelItem
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
                                 <ul class="dropdown-menu">
-
       HTML;                              
-                                    
-                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
-                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'quebrados']) . "'>Itens Quebrados</a></li>";
+                          $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'gestao_itens']) . "'>Gestão de Itens</a></li>";
                           $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'novo']) . "'>Novo Item</a></li>";
-
       $html.= <<<HTML
                                 </ul>
                             </li>
@@ -80,7 +74,6 @@ class ContentPainelItem
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
                                     <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href="../moviment?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO MANUTENÇÃO-->
@@ -88,8 +81,7 @@ class ContentPainelItem
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="../manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativas</a></li>
                                 </ul>
                             </li>
                             <!--GESTÃO DE USUARIOS-->
@@ -100,6 +92,19 @@ class ContentPainelItem
                                     <li><a class="dropdown-item" href="../usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
+                                <ul class="dropdown-menu">
+        HTML;
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'itens']) . "'>Todos os Itens</a></li>";
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'disponiveis']) . "'>Itens Disponíveis</a></li>";
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'emuso']) . "'>Itens em Uso</a></li>";
+                            $html.="<li><a class='dropdown-item' href='" . buildUrlItens(['pagina' => 'quebrados']) . "'>Itens Quebrados</a></li>";
+        $html.=<<<HTML
+                                    <li><a class="dropdown-item" href="../moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
+                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
+                                </ul>
+                            </li>                        
                         </ul>
                     </div>
                     <div class="d-flex ms-auto">
@@ -203,6 +208,143 @@ class ContentPainelItem
 
             break;
             case 'itens':
+                if ($filtro && $valor) {
+
+                    $itens_filtrados = Item::getItens(null, $filtro, $valor);
+            
+                    $itens = $itens_filtrados['dados'];
+                }
+
+
+
+              $html.= <<<HTML
+        <!-- TABELA -->
+        <div class="container mt-4" id="containerFerramentas" style="display: block;">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <!-- Header com filtro -->
+                    <div class="header-with-filter">
+                        <h3><b><p class="text-primary">Todos os Itens</p></b></h3>
+                        <div class="filter-container">
+                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
+                                <option value="">Escolha um filtro</option>
+                                <option value="id_familia">Família</option>
+                                <option value="natureza">Natureza</option>
+                            </select>
+        
+                            <!-- Div para Natureza -->
+                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
+                                <select id="filtro_natureza_select" class="form-select form-select-sm">
+                                    <option value="">Escolha</option>
+                                    <option value="proprio">Próprio</option>
+                                    <option value="locado">Locado</option>
+                                </select>
+                            </div>
+
+                            <!-- Div para Família -->
+                            <div id="filtro_familia" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_familia_input" class="form-control form-control-sm" placeholder="Digite o nome da família">
+                                <div id="filtro_familia_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+HTML;
+
+                if ($filtro && $valor) {
+                    $html .= <<<HTML
+                    <!-- Identificador de Filtro -->
+                    <div id="filtro_alert" class="alert alert-info">
+                        <strong>Filtro aplicado:</strong> <span id="filtro_texto">
+HTML;
+                    if ($filtro === 'id_familia') {
+                        $familiaNome = array_filter($familia, function($f) use ($valor) {
+                            return $f['id_familia'] == $valor;
+                        });
+                        $familiaNome = reset($familiaNome);
+                        $html .= "Família: " . $familiaNome['ds_familia'];
+                    } else {
+                        $html .= ucfirst($filtro) . ": " . $valor;
+                    }
+                    $html .= <<<HTML
+                        </span>
+                    </div>
+HTML;
+                }
+
+                $html .= <<<HTML
+                            <!-- Tabela de Itens -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Família</th>
+                                <th>Modelo</th>
+                                <th>Natureza</th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody id="itens">
+                            <tr>
+
+      HTML;
+
+      
+      foreach ($itens as $item):
+          $nm_familia = Item::getFamiliaNome($item['id_familia']);
+          $html .="<td>".$item['cod_patrimonio']."</td>";
+          $html .="<td>".$nm_familia."</td>";
+          $html .="<td>".$item['ds_item']."</td>";
+          $html .="<td>".$item['natureza']."</td>";
+          $html .="</tr>";
+      endforeach;
+                 
+      $html.= <<<HTML
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Atualização -->
+        <div class="modal fade" id="atualizaModal" tabindex="-1" aria-labelledby="atualizaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atualizaModalLabel">Editar Item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="itemId" />
+                        <div class="mb-3">
+                            <label for="novoNome" class="form-label">Novo Nome</label>
+                            <input type="text" id="novoNome" class="form-control" placeholder="Digite o novo nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="novaNatureza" class="form-label">Nova Natureza</label>
+                            <select id="novaNatureza" class="form-select" required>
+                                <option value="PRÓPIO">Próprio</option>
+                                <option value="LOCADO">Locado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="atualizaSubmit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+      HTML;
+              
+                break;
+                
+            case 'gestao_itens':
                 if ($filtro && $valor) {
 
                     $itens_filtrados = Item::getItens(null, $filtro, $valor);

@@ -142,7 +142,7 @@ class ContentPainelMoviment
                         <div class="mb-3">
                             <label for="funcionario_search" class="form-label">Funcionário</label>
                             <input type="text" class="form-control" id="funcionario_search" placeholder="Digite a matricula do Funcionario" required>
-                            <input type="hidden" id="id_autor" name="id_autor" value="">
+                            <input type="hidden" id="id_responsavel" name="id_responsavel" value="">
                             <div id="funcionario_suggestions" class="list-group mt-1" style="max-width:100%; max-height: 200px; overflow-y: auto; display: none;">
                                 <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                             </div>
@@ -553,7 +553,7 @@ HTML;
             document.addEventListener('DOMContentLoaded', function() {
             const funcionarioSearch = document.getElementById('funcionario_search');
             const funcionarioSuggestions = document.getElementById('funcionario_suggestions');
-            const idResponsavel = document.getElementById('id_autor');
+            const idResponsavel = document.getElementById('id_responsavel');
 
            
 HTML;

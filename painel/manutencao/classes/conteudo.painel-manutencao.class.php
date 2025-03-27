@@ -337,6 +337,7 @@ HTML;
                         <h3><b><p class="text-primary">Manutenções Encerradas</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
+                            <button id="exportButton" class="btn btn-success">Exportar para Excel</button>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
                                 <option value="funcionario">Funcionário</option>
@@ -464,12 +465,41 @@ HTML;
         </body>
         <script src = "src/script.js"></script>
 
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js"></script>
         <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Capturar o clique no botão de exportação
+                document.getElementById('exportButton').addEventListener('click', function () {
+                    // Selecionar a tabela
+                    const table = document.querySelector('.table.table-striped');
+
+                    // Verificar se a tabela existe
+                    if (!table) {
+                        alert('Tabela não encontrada!');
+                        return;
+                    }
+
+                    // Extrair os dados da tabela
+                    const rows = Array.from(table.querySelectorAll('tr'));
+                    const data = rows.map(row => {
+                        const cells = Array.from(row.querySelectorAll('th, td'));
+                        return cells.map(cell => cell.innerText.trim());
+                    });
+
+                    // Criar uma planilha usando SheetJS
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+
+                    // Gerar o arquivo e fazer o download
+                    XLSX.writeFile(workbook, 'manutencoes_encerradas.xlsx');
+                });
+            });
 
             function removerFiltro() {
                 const url = new URL(window.location.href);

@@ -37,44 +37,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 tableBody.appendChild(row);
             });
-
-            // Adicionar evento aos botões "Devolver Item"
-            document.querySelectorAll('.btn btn-success btn-sm atualiza-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const itemId = button.getAttribute('data-id'); // Pegar o ID do item
-                    fetch('devolver.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'id=' + encodeURIComponent(itemId)
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json(); // Supondo que devolver.php retorna JSON
-                        } else {
-                            throw new Error('Erro ao processar a requisição.');
-                        }
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert('Item devolvido com sucesso!');
-                            const buttonCell = button.closest('td'); // Encontra a célula do botão
-                            buttonCell.textContent = 'Disponivel';   // Altera o conteúdo da célula
-                        } else {
-                            alert('Falha ao devolver o item: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Ocorreu um erro ao devolver o item.');
-                    });
-                });
-            });
-
-           
-            
         })
         .catch(error => console.error('Error:', error));
+    });
+
+    // Delegação de eventos para os botões "Devolver Item"
+    document.addEventListener('click', (event) => {
+        const button = event.target.closest('.btn.btn-success.btn-sm.atualiza-button');
+        if (button) {
+            const itemId = button.getAttribute('data-id'); // Pegar o ID do item
+            fetch('devolver.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + encodeURIComponent(itemId)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Supondo que devolver.php retorna JSON
+                } else {
+                    throw new Error('Erro ao processar a requisição.');
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Item devolvido com sucesso!');
+                    const buttonCell = button.closest('td'); // Encontra a célula do botão
+                    buttonCell.textContent = 'Disponivel';   // Altera o conteúdo da célula
+                } else {
+                    alert('Falha ao devolver o item: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao devolver o item.');
+            });
+        }
     });
 });

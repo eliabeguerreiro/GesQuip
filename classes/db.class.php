@@ -12,3 +12,4 @@ class DB
         return new PDO("mysql:host={$host};dbname={$base};charset=UTF8;", $user, $pass);
     }
 }
+//

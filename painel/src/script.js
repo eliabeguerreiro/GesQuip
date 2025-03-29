@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const finalizaSubmit = document.getElementById('finalizaSubmit');
+    const buscaInput = document.getElementById('busca'); // Campo de busca
+
+    // Evento para o botão "Buscar"
     finalizaSubmit.addEventListener('click', () => {
         const chaveSelect = document.getElementById('chaveSelect').value;
-        const busca = document.getElementById('busca').value;
+        const busca = buscaInput.value;
         fetch('pesquisa_itens.php', {
             method: 'POST',
             headers: {
@@ -39,6 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => console.error('Error:', error));
+    });
+
+    // Evento para capturar o Enter no campo de busca
+    buscaInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Impede o recarregamento da página
+            finalizaSubmit.click(); // Simula o clique no botão "Buscar"
+        }
     });
 
     // Delegação de eventos para os botões "Devolver Item"

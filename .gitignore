@@ -1,0 +1,6 @@
+classes/db.class.php
+painel/classes/db.class.php
+painel/itens/classes/db.class.php
+painel/moviment/classes/db.class.php
+painel/usuarios/classes/db.class.php
+painel/manutencao/classes/db.class.php

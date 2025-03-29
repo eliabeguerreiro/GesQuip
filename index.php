@@ -28,17 +28,22 @@ if (!empty($_POST)) {
 </head>
 <body>
     <div id='login_place'>
+        <!-- Adicione o logo aqui -->
+        <div class="logo-container">
+            <img src="src/img/logo.png" alt="Logo GesQuip" class="logo">
+        </div>
+        
         <?php 
             if (isset($_SESSION['msg'])) {
                 echo '<div class="msg ' . (strpos($_SESSION['msg'], 'logado') ? '' : 'error') . '">' . $_SESSION['msg'] . '</div>';
                 unset($_SESSION['msg']);
             }
         ?>
-        <!-- Teste: O HTML está sendo carregado -->
+        <!-- Formulário de login -->
         <form action="" method="POST">
-            <label for="username" class="center-label">Login:</label>
+            <label for="username" class="center-label">Login</label>
             <input type="text" id="username" name="login" required>
-            <label for="password" class="center-label">Senha:</label>
+            <label for="password" class="center-label">Senha</label>
             <input type="password" id="password" name="senha" required>
             <button type="submit">Logar</button>
         </form>

@@ -8,7 +8,7 @@ include_once "classes/db.class.php";
 if (!empty($_POST)) {
     $dados_login = filter_input_array(INPUT_POST, FILTER_DEFAULT);
     if ($login = Paineel::login($dados_login)) {
-        header('Location: painel/');
+        header('Location: painel/lobby/');
         exit;
     } else {
         $_SESSION['msg'] = "<p id='aviso'>Login ou senha incorreto</p>";

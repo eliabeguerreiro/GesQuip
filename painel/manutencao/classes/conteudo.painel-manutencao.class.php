@@ -406,6 +406,7 @@ HTML;
                                 <th>Familia</th>
                                 <th>Data Inicio</th>
                                 <th>Data Encerramento</th>
+                                <th>Autor do encerramento</th>
                                 <th>Tempo total</th>
                                 <th>Custo da Manutenção</th>
                                 <th>Observações</th>
@@ -428,6 +429,7 @@ HTML;
         $custoManutencao = $manutencao['custo_manutencao'];
         $custo = ($custoManutencao === null) ? 'Não informado' : number_format($custoManutencao, 2, ',', '.');
         $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+        $nm_autor_encerramento = User::getFuncionarioNome($manutencao['id_autor_final']);
 
         $dataBanco = $manutencao['dt_inicio_manutencao'];
         $dataAtual = new DateTime(); // Data e hora atual
@@ -442,6 +444,7 @@ HTML;
           $html .="<td>".$familia."</td>";
           $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
           $html .="<td>".$manutencao['dt_fim_manutencao']."</td>";
+          $html .="<td>".$nm_autor_encerramento."</td>";
           $html .="<td>".$diasDiferenca." Dias</td>";
           $html .="<td>".$custo."</td>";
           $html .="<td>".$manutencao['obs_out']."</td>";

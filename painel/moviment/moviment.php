@@ -224,7 +224,7 @@ HTML;
 HTML;
 
     if ($item_devolv['dados'] == null) {
-        $html .= "<tr><td colspan='4'>Nenhum item devolvido</td></tr>";
+        $html .= "<tr><td colspan='4'>Nenhum item devolvido</td><td></td></td></tr>";
     } else {
         foreach ($item_devolv['dados'] as $item) {
             $nm_item = Item::getItemNome($item['id_item']);

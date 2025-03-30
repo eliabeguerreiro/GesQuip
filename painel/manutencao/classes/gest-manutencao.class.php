@@ -48,7 +48,7 @@ class Manutencao
     }
 
 
-    public static function encerraManutencao($id_manutencao, $obs, $diponibilidade, $custo){
+    public static function encerraManutencao($id_manutencao, $obs, $diponibilidade, $custo, $user){
         $dt = date('Y-m-d H:i:s');
         $db = DB::connect();
         
@@ -64,7 +64,7 @@ class Manutencao
         if($rows > 0){ 
                            
         // depois eu atualizo a observação e a data de devolução da manutencao
-        $rs = $db->prepare("UPDATE manutencao SET dt_fim_manutencao = '$dt', obs_out = '$obs', custo_manutencao = $custo WHERE id_manutencao = $id_manutencao");
+        $rs = $db->prepare("UPDATE manutencao SET dt_fim_manutencao = '$dt', obs_out = '$obs', custo_manutencao = $custo, id_autor_final = $user WHERE id_manutencao = $id_manutencao");
         $rs->execute();
         $rows = $rs->rowCount();
             

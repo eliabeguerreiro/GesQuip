@@ -374,6 +374,8 @@ HTML;
                                 <th>Funcionário</th>
                                 <th>ADM</th>
                                 <th>Retirada</th>
+                                <th>Retorno</th>
+                                <th>Finalizador</th>
                             </tr>
                         </thead>
                         <tbody id="itens">
@@ -385,10 +387,15 @@ HTML;
       foreach ($moviment_encerrado as $mov):
         $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
         $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+        $finalizador = User::getFuncionarioNome($mov['id_autor_final']);
+
+
           $html .="<td>".$mov['id_movimentacao']."</td>";
           $html .="<td>".$nm_responsa."</td>";
           $html .="<td>".$nm_autor."</td>";
           $html .="<td>".$mov['dt_movimentacao']."</td>";
+          $html .="<td>".$mov['dt_finalizacao']."</td>";
+          $html .="<td>".$finalizador."</td>";
           $html .="</tr>";
       endforeach;
                  

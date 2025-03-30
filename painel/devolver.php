@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once "classes/db.class.php";
-
+$autor_final = $_SESSION['data_user']['id_usuario'];
 
     $id_item = $_POST['id'];
 
@@ -20,7 +20,7 @@ include_once "classes/db.class.php";
         
 
         // depois eu atualizo a data de devolução do item_movimentacao
-        $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt' WHERE id_item_movimentacao = $id_item_mov");
+        $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt', id_autor_final = $autor_final  WHERE id_item_movimentacao = $id_item_mov");
         $rs->execute();
         $rows = $rs->rowCount();
 
@@ -41,7 +41,7 @@ include_once "classes/db.class.php";
                 if($rows == 0){ 
 
                     // depois eu atualizo a data de devolução da movimentação
-                    $rs = $db->prepare("UPDATE movimentacao SET dt_finalizacao = '$dt' WHERE id_movimentacao = $id_mov");
+                    $rs = $db->prepare("UPDATE movimentacao SET dt_finalizacao = '$dt', id_autor_final = $autor_final WHERE id_movimentacao = $id_mov");
                     $rs->execute();
                     $rows = $rs->rowCount();
 

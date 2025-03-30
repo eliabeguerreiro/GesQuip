@@ -264,10 +264,13 @@ HTML;
       foreach ($moviment as $mov):
         $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
         $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+        $dataBanco = new DateTime($mov['dt_movimentacao']);
+        $dataFormatada = $dataBanco->format("d/m/Y \à\s H:i");
+
           $html .="<td>".$mov['id_movimentacao']."</td>";
           $html .="<td>".$nm_responsa."</td>";
           $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$mov['dt_movimentacao']."</td>";
+          $html .="<td>".$dataFormatada."</td>";
           //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
           $html .="<td><a href='moviment.php?id=".$mov['id_movimentacao']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
           $html .="</tr>";
@@ -375,6 +378,7 @@ HTML;
                                 <th>ADM</th>
                                 <th>Retirada</th>
                                 <th>Retorno</th>
+                                <th>Tempo total (dias)</th>
                                 <th>Finalizador</th>
                             </tr>
                         </thead>
@@ -390,11 +394,24 @@ HTML;
         $finalizador = User::getFuncionarioNome($mov['id_autor_final']);
 
 
+        $dataBancoInicio  = new DateTime($mov['dt_movimentacao']);
+        $dataBancoFim = new DateTime($mov['dt_finalizacao']); // Data e hora atual
+        $diferenca = $dataBancoInicio->diff($dataBancoFim);
+        
+        $diasDiferenca = $diferenca->days;
+        $dataInicioFormatada = $dataBancoInicio->format("d/m/Y \à\s H:i");
+        $dataFimFormatada = $dataBancoFim->format("d/m/Y \à\s H:i");
+
+
+
+
+
           $html .="<td>".$mov['id_movimentacao']."</td>";
           $html .="<td>".$nm_responsa."</td>";
           $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$mov['dt_movimentacao']."</td>";
-          $html .="<td>".$mov['dt_finalizacao']."</td>";
+          $html .="<td>".$dataInicioFormatada."</td>";
+          $html .="<td>".$dataFimFormatada."</td>";
+          $html .="<td>".$diasDiferenca."</td>";
           $html .="<td>".$finalizador."</td>";
           $html .="</tr>";
       endforeach;

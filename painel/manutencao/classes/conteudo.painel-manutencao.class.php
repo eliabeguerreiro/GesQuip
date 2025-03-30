@@ -264,56 +264,55 @@ HTML;
             }
 
 
-                $html .= <<<HTML
-                            <!-- Tabela de Movimentações -->
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>ADM</th>
-                                <th>Item</th>
-                                <th>Familia</th>
-                                <th>Data</th>
-                                <th>Duração</th>
-                                <th>Observações</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="itens">
-                            <tr>
-
-      HTML;
-                
-      
-      foreach ($manutenc as $manutencao):
-        $id_item = $manutencao['id_item'];        
-        $item_data = Item::getItens($id_item); 
-        $cod = $item_data['dados'][0]['cod_patrimonio'];
-        $id_familia = $item_data['dados'][0]['id_familia'];
-        $familia = Item::getFamiliaNome($id_familia);
-
-        $dataBanco = $manutencao['dt_inicio_manutencao'];
-        $dataAtual = new DateTime(); // Data e hora atual
-        $dataRetornada = new DateTime($dataBanco);
-        $diferenca = $dataAtual->diff($dataRetornada);
-        $diasDiferenca = $diferenca->days;
-
-          $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
-          $html .="<td>".$manutencao['id_manutencao']."</td>";
-          $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$cod."</td>";
-          $html .="<td>".$familia."</td>";
-          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td>".$diasDiferenca." Dias</td>";
-          $html .="<td>".$manutencao['obs_in']."</td>";
-          $html .="<td><button class='btn btn-danger btn-sm finaliza-button' data-bs-toggle='modal' data-bs-target='#finalizaModal' id ='".$manutencao['id_manutencao']."' >Retornar item</button></td>";
-          $html .="</tr>";
-      endforeach;
-                 
-      $html.= <<<HTML
-
-                        </tbody>
-                    </table>
+            $html .= <<<HTML
+            <!-- Tabela de Movimentações -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ADM</th>
+                        <th>Item</th>
+                        <th>Familia</th>
+                        <th>Data</th>
+                        <th>Duração</th>
+                        <th>Observações</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="itens">
+        HTML;
+        
+        foreach ($manutenc as $manutencao):
+            $id_item = $manutencao['id_item'];        
+            $item_data = Item::getItens($id_item); 
+            $cod = $item_data['dados'][0]['cod_patrimonio'];
+            $id_familia = $item_data['dados'][0]['id_familia'];
+            $familia = Item::getFamiliaNome($id_familia);
+        
+            // Ajuste de formatação da data
+            $dataBanco = $manutencao['dt_inicio_manutencao'];
+            $dataAtual = new DateTime(); // Data e hora atual
+            $dataRetornada = new DateTime($dataBanco);
+            $diferenca = $dataAtual->diff($dataRetornada);
+            $diasDiferenca = $diferenca->days;
+            $dataFormatada = $dataRetornada->format("d/m/Y \à\s H:i");
+        
+            $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+            $html .= "<tr>";
+            $html .= "<td>" . $manutencao['id_manutencao'] . "</td>";
+            $html .= "<td>" . $nm_autor . "</td>";
+            $html .= "<td>" . $cod . "</td>";
+            $html .= "<td>" . $familia . "</td>";
+            $html .= "<td>" . $dataFormatada . "</td>"; // Data formatada
+            $html .= "<td>" . $diasDiferenca . " Dias</td>";
+            $html .= "<td>" . $manutencao['obs_in'] . "</td>";
+            $html .= "<td><button class='btn btn-danger btn-sm finaliza-button' data-bs-toggle='modal' data-bs-target='#finalizaModal' id='" . $manutencao['id_manutencao'] . "'>Retornar item</button></td>";
+            $html .= "</tr>";
+        endforeach;
+        
+        $html .= <<<HTML
+                </tbody>
+            </table>
                 </div>
             </div>
         </div>
@@ -407,7 +406,7 @@ HTML;
                                 <th>Data Inicio</th>
                                 <th>Data Encerramento</th>
                                 <th>Autor do encerramento</th>
-                                <th>Tempo total</th>
+                                <th>Tempo total (dias)</th>
                                 <th>Custo da Manutenção</th>
                                 <th>Observações</th>
                             </tr>
@@ -431,21 +430,21 @@ HTML;
         $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
         $nm_autor_encerramento = User::getFuncionarioNome($manutencao['id_autor_final']);
 
-        $dataBanco = $manutencao['dt_inicio_manutencao'];
-        $dataAtual = new DateTime(); // Data e hora atual
-        $dataRetornada = new DateTime($dataBanco);
-        $diferenca = $dataAtual->diff($dataRetornada);
+        $dataBancoInicio  = new DateTime($manutencao['dt_inicio_manutencao']);
+        $dataBancoFim = new DateTime($manutencao['dt_fim_manutencao']); // Data e hora atual
+        $diferenca = $dataBancoInicio->diff($dataBancoFim);
         $diasDiferenca = $diferenca->days;
-
+        $dataInicioFormatada = $dataBancoInicio->format("d/m/Y \à\s H:i");
+        $dataFimFormatada = $dataBancoFim->format("d/m/Y \à\s H:i");
 
           $html .="<td>".$manutencao['id_manutencao']."</td>";
           $html .="<td>".$nm_autor."</td>";
           $html .="<td>".$cod."</td>";
           $html .="<td>".$familia."</td>";
-          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td>".$manutencao['dt_fim_manutencao']."</td>";
+          $html .="<td>".$dataInicioFormatada."</td>";
+          $html .="<td>".$dataFimFormatada."</td>";
           $html .="<td>".$nm_autor_encerramento."</td>";
-          $html .="<td>".$diasDiferenca." Dias</td>";
+          $html .="<td>".$diasDiferenca."</td>";
           $html .="<td>".$custo."</td>";
           $html .="<td>".$manutencao['obs_out']."</td>";
           $html .="</tr>";

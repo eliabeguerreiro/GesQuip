@@ -307,7 +307,15 @@ HTML;
                       <div class="header-with-filter">
                         <h3><b><p class="text-primary">Movimentações Encerradas</p></b></h3>
                         <div class="filter-container">
-                            <button id="exportButton" class="btn btn-success">Exportar para Excel</button>
+                            <div class="filter-container">
+                                <label for="exportFormat" class="form-label visually-hidden">Formato de Exportação</label>
+                                <select id="exportFormat" class="form-select form-select-sm filter-select" required>
+                                    <option value="">Relátorio</option>
+                                    <!--option value="pdf">PDF</option-->
+                                    <option value="xlsx">XLSX</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
@@ -455,12 +463,14 @@ HTML;
         <script>
 
             document.addEventListener('DOMContentLoaded', function () {
-                // Capturar o clique no botão de exportação
-                document.getElementById('exportButton').addEventListener('click', function () {
+                const exportFormat = document.getElementById('exportFormat');
+
+                exportFormat.addEventListener('change', function () {
+                    const format = exportFormat.value;
+                    if (!format) return;
+
                     // Selecionar a tabela
                     const table = document.querySelector('.table.table-striped');
-
-                    // Verificar se a tabela existe
                     if (!table) {
                         alert('Tabela não encontrada!');
                         return;
@@ -473,14 +483,60 @@ HTML;
                         return cells.map(cell => cell.innerText.trim());
                     });
 
+                    // Gerar o arquivo com base no formato selecionado
+                    switch (format) {
+                        case 'pdf':
+                            generatePDF(data);
+                            break;
+                        case 'xlsx':
+                            generateXLSX(data);
+                            break;
+                        case 'csv':
+                            generateCSV(data);
+                            break;
+                    }
+
+                    // Resetar o select após a exportação
+                    exportFormat.value = '';
+                });
+
+                function generatePDF(data) {
+                    // Usar dompdf ou outra biblioteca para gerar o PDF
+                    const element = document.createElement('div');
+                    element.innerHTML = '<table>' + data.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('') + '</table>';
+                    const htmlContent = element.outerHTML;
+
+                    // Exemplo básico com dompdf (PHP)
+                    fetch('generate_pdf.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: htmlContent })
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'movimentacoes_encerradas.pdf';
+                        a.click();
+                    });
+                }
+
+                function generateXLSX(data) {
                     // Criar uma planilha usando SheetJS
                     const worksheet = XLSX.utils.aoa_to_sheet(data);
                     const workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Movimentações Encerradas');
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+                    XLSX.writeFile(workbook, 'movimentacoes_encerradas.xlsx');
+                }
 
-                    // Gerar o arquivo e fazer o download
-                    XLSX.writeFile(workbook, 'movimentacao_encerradas.xlsx');
-                });
+                function generateCSV(data) {
+                    // Criar um CSV usando SheetJS
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+                    XLSX.writeFile(workbook, 'movimentacoes_encerradas.csv');
+                }
             });
 
 

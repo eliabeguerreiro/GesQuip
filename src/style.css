@@ -90,3 +90,15 @@ body {
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
+
+/* Estilo para o contêiner do logo */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px; /* Espaçamento abaixo do logo */
+}
+
+/* Estilo para o logo */
+.logo {
+    max-width: 200px; /* Define a largura máxima */
+    height: auto; /* Mantém a proporção */
+}

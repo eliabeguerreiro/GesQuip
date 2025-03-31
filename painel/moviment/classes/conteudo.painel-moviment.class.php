@@ -11,6 +11,7 @@ class ContentPainelMoviment
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>GesQuip - Equipamentos</title>
+          <link rel="icon" type="image/png" href="src/img/favicon.png">
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
           <link rel="stylesheet" href="src/style.css">
@@ -185,7 +186,8 @@ class ContentPainelMoviment
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="funcionario">Funcionário</option>
+                                <option value="funcionario">Adm</option>
+                                <option value="responsavel">Funcionário Responsável</option>
                                 <option value="data">Data</option>
                             </select>
 
@@ -200,8 +202,16 @@ class ContentPainelMoviment
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Funcionário">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Adm">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Div para Funcionário Responsável -->
+                            <div id="filtro_responsavel" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_responsavel_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Funcionário Responsável">
+                                <div id="filtro_responsavel_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
                             </div>
@@ -254,10 +264,13 @@ HTML;
       foreach ($moviment as $mov):
         $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
         $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+        $dataBanco = new DateTime($mov['dt_movimentacao']);
+        $dataFormatada = $dataBanco->format("d/m/Y \à\s H:i");
+
           $html .="<td>".$mov['id_movimentacao']."</td>";
           $html .="<td>".$nm_responsa."</td>";
           $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$mov['dt_movimentacao']."</td>";
+          $html .="<td>".$dataFormatada."</td>";
           //$html .= "<td><button class='btn btn-success btn-sm atualiza-button' data-bs-toggle='modal' data-bs-target='#atualizaModal' data-id='".$item['id_item']."'>Editar</button>   ";
           $html .="<td><a href='moviment.php?id=".$mov['id_movimentacao']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
           $html .="</tr>";
@@ -294,12 +307,21 @@ HTML;
                       <div class="header-with-filter">
                         <h3><b><p class="text-primary">Movimentações Encerradas</p></b></h3>
                         <div class="filter-container">
-                            <button id="exportButton" class="btn btn-success">Exportar para Excel</button>
+                            <div class="filter-container">
+                                <label for="exportFormat" class="form-label visually-hidden">Formato de Exportação</label>
+                                <select id="exportFormat" class="form-select form-select-sm filter-select" required>
+                                    <option value="">Relátorio</option>
+                                    <!--option value="pdf">PDF</option-->
+                                    <option value="xlsx">XLSX</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
-                                <option value="funcionario">Funcionário</option>
-                                 <option value="data">Data</option>
+                                <option value="funcionario">Adm</option>
+                                <option value="responsavel">Funcionário Responsável</option>
+                                <option value="data">Data</option>
                             </select>
         
                             <!-- Div para Data -->
@@ -313,13 +335,21 @@ HTML;
 
                             <!-- Div para Funcionário -->
                             <div id="filtro_funcionario" style="display: none; margin-left: 10px;">
-                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Funcionario">
+                                <input type="text" id="filtro_funcionario_input" class="form-control form-control-sm" placeholder="Digite a matricula do Adm">
                                 <div id="filtro_funcionario_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
                                     <!-- As sugestões serão inseridas aqui pelo JavaScript -->
                                 </div>
                             </div>
+
+                            <!-- Div para Funcionário Responsável -->
+                            <div id="filtro_responsavel" style="display: none; margin-left: 10px;">
+                                <input type="text" id="filtro_responsavel_input" class="form-control form-control-sm" placeholder="Digite a matrícula do Funcionário Responsável">
+                                <div id="filtro_responsavel_suggestions" class="list-group mt-1" style="max-width:11.5%; max-height: 200px; overflow-y: auto; display: none;">
+                                    <!-- As sugestões serão inseridas aqui pelo JavaScript -->
+                                </div>
+                            </div>
                         </div>
-                        </div>
+                    </div>
 HTML;
 
 if ($filtro && $valor) {
@@ -355,6 +385,9 @@ HTML;
                                 <th>Funcionário</th>
                                 <th>ADM</th>
                                 <th>Retirada</th>
+                                <th>Retorno</th>
+                                <th>Tempo total (dias)</th>
+                                <th>Finalizador</th>
                             </tr>
                         </thead>
                         <tbody id="itens">
@@ -366,10 +399,28 @@ HTML;
       foreach ($moviment_encerrado as $mov):
         $nm_responsa = User::getFuncionarioNome($mov['id_responsavel']);
         $nm_autor = User::getFuncionarioNome($mov['id_autor']);
+        $finalizador = User::getFuncionarioNome($mov['id_autor_final']);
+
+
+        $dataBancoInicio  = new DateTime($mov['dt_movimentacao']);
+        $dataBancoFim = new DateTime($mov['dt_finalizacao']); // Data e hora atual
+        $diferenca = $dataBancoInicio->diff($dataBancoFim);
+        
+        $diasDiferenca = $diferenca->days;
+        $dataInicioFormatada = $dataBancoInicio->format("d/m/Y \à\s H:i");
+        $dataFimFormatada = $dataBancoFim->format("d/m/Y \à\s H:i");
+
+
+
+
+
           $html .="<td>".$mov['id_movimentacao']."</td>";
           $html .="<td>".$nm_responsa."</td>";
           $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$mov['dt_movimentacao']."</td>";
+          $html .="<td>".$dataInicioFormatada."</td>";
+          $html .="<td>".$dataFimFormatada."</td>";
+          $html .="<td>".$diasDiferenca."</td>";
+          $html .="<td>".$finalizador."</td>";
           $html .="</tr>";
       endforeach;
                  
@@ -412,12 +463,14 @@ HTML;
         <script>
 
             document.addEventListener('DOMContentLoaded', function () {
-                // Capturar o clique no botão de exportação
-                document.getElementById('exportButton').addEventListener('click', function () {
+                const exportFormat = document.getElementById('exportFormat');
+
+                exportFormat.addEventListener('change', function () {
+                    const format = exportFormat.value;
+                    if (!format) return;
+
                     // Selecionar a tabela
                     const table = document.querySelector('.table.table-striped');
-
-                    // Verificar se a tabela existe
                     if (!table) {
                         alert('Tabela não encontrada!');
                         return;
@@ -430,14 +483,60 @@ HTML;
                         return cells.map(cell => cell.innerText.trim());
                     });
 
+                    // Gerar o arquivo com base no formato selecionado
+                    switch (format) {
+                        case 'pdf':
+                            generatePDF(data);
+                            break;
+                        case 'xlsx':
+                            generateXLSX(data);
+                            break;
+                        case 'csv':
+                            generateCSV(data);
+                            break;
+                    }
+
+                    // Resetar o select após a exportação
+                    exportFormat.value = '';
+                });
+
+                function generatePDF(data) {
+                    // Usar dompdf ou outra biblioteca para gerar o PDF
+                    const element = document.createElement('div');
+                    element.innerHTML = '<table>' + data.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('') + '</table>';
+                    const htmlContent = element.outerHTML;
+
+                    // Exemplo básico com dompdf (PHP)
+                    fetch('generate_pdf.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: htmlContent })
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'movimentacoes_encerradas.pdf';
+                        a.click();
+                    });
+                }
+
+                function generateXLSX(data) {
                     // Criar uma planilha usando SheetJS
                     const worksheet = XLSX.utils.aoa_to_sheet(data);
                     const workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Movimentações Encerradas');
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+                    XLSX.writeFile(workbook, 'movimentacoes_encerradas.xlsx');
+                }
 
-                    // Gerar o arquivo e fazer o download
-                    XLSX.writeFile(workbook, 'movimentacao_encerradas.xlsx');
-                });
+                function generateCSV(data) {
+                    // Criar um CSV usando SheetJS
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+                    XLSX.writeFile(workbook, 'movimentacoes_encerradas.csv');
+                }
             });
 
 
@@ -447,28 +546,36 @@ HTML;
                 url.searchParams.delete('valor');
                 window.location.href = url.toString();
             }
+
+            // Função para atualizar a URL com o filtro escolhido
             document.addEventListener('DOMContentLoaded', function () {
                 const filtroPrincipal = document.getElementById('filtro_principal');
                 const filtroDataIntervalo = document.getElementById('filtro_data_intervalo');
                 const filtroFuncionario = document.getElementById('filtro_funcionario');
                 const filtroFuncionarioInput = document.getElementById('filtro_funcionario_input');
                 const filtroFuncionarioSuggestions = document.getElementById('filtro_funcionario_suggestions');
+                const filtroResponsavel = document.getElementById('filtro_responsavel');
+                const filtroResponsavelInput = document.getElementById('filtro_responsavel_input');
+                const filtroResponsavelSuggestions = document.getElementById('filtro_responsavel_suggestions');
 
     HTML;
     $html .= "const funcionarios = " . json_encode($funciona) . ";";
     $html.= <<<HTML
 
-                filtroPrincipal.addEventListener('change', function () {
-                    const filtro = filtroPrincipal.value;
-                    filtroDataIntervalo.style.display = 'none';
-                    filtroFuncionario.style.display = 'none';
+            filtroPrincipal.addEventListener('change', function () {
+                const filtro = filtroPrincipal.value;
+                filtroDataIntervalo.style.display = 'none';
+                filtroFuncionario.style.display = 'none';
+                filtroResponsavel.style.display = 'none';
 
-                    if (filtro === 'data') {
-                        filtroDataIntervalo.style.display = 'inline-block';
-                    } else if (filtro === 'funcionario') {
-                        filtroFuncionario.style.display = 'inline-block';
-                    }
-                });
+                if (filtro === 'data') {
+                    filtroDataIntervalo.style.display = 'inline-block';
+                } else if (filtro === 'funcionario') {
+                    filtroFuncionario.style.display = 'inline-block';
+                } else if (filtro === 'responsavel') {
+                    filtroResponsavel.style.display = 'inline-block';
+                }
+            });
 
                 $(function () {
                 if ($('#data_inicio').length > 0 && $('#data_fim').length > 0) {
@@ -498,50 +605,49 @@ HTML;
                 }
             });
 
-            filtroFuncionarioInput.addEventListener('input', function () {
-            const query = filtroFuncionarioInput.value.toLowerCase();
-            filtroFuncionarioSuggestions.innerHTML = ''; // Limpa as sugestões anteriores
+            function handleSuggestions(inputElement, suggestionsElement, filtroKey) {
+            inputElement.addEventListener('input', function () {
+                const query = inputElement.value.toLowerCase();
+                suggestionsElement.innerHTML = '';
 
-            if (query.length > 0) {
-                // Filtra os funcionários com base na MATRÍCULA
-                const filteredFuncionarios = funcionarios.filter(funcionario =>
-                    String(funcionario.matricula).toLowerCase().includes(query)
-                );
+                if (query.length > 0) {
+                    const filteredFuncionarios = funcionarios.filter(funcionario =>
+                        String(funcionario.matricula).toLowerCase().includes(query)
+                    );
 
-                filteredFuncionarios.forEach(funcionario => {
-                    const suggestionItem = document.createElement('a');
-                    suggestionItem.href = '#';
-                    suggestionItem.className = 'list-group-item list-group-item-action';
+                    filteredFuncionarios.forEach(funcionario => {
+                        const suggestionItem = document.createElement('a');
+                        suggestionItem.href = '#';
+                        suggestionItem.className = 'list-group-item list-group-item-action';
+                        suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
+                        suggestionItem.dataset.id = funcionario.id_usuario;
 
-                    // Exibe "Matrícula - Nome" na sugestão
-                    suggestionItem.textContent = funcionario.matricula + ' - ' + funcionario.nm_usuario;
-                    suggestionItem.dataset.id = funcionario.id_usuario;
+                        suggestionItem.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            inputElement.value = funcionario.matricula;
+                            suggestionsElement.style.display = 'none';
+                            atualizarURL(filtroKey, funcionario.id_usuario);
+                        });
 
-                    // Ao clicar na sugestão, preenche o campo de busca
-                    suggestionItem.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        filtroFuncionarioInput.value = funcionario.matricula; // Preenche com a matrícula
-                        filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões
-                        atualizarURL('id_autor', funcionario.id_usuario); // Atualiza a URL com o ID do funcionário
+                        suggestionsElement.appendChild(suggestionItem);
                     });
 
-                    filtroFuncionarioSuggestions.appendChild(suggestionItem);
-                });
+                    suggestionsElement.style.display = 'block';
+                } else {
+                    suggestionsElement.style.display = 'none';
+                }
+            });
 
-                filtroFuncionarioSuggestions.style.display = 'block'; // Mostra as sugestões
-            } else {
-                filtroFuncionarioSuggestions.style.display = 'none'; // Esconde as sugestões se não houver entrada
-            }
-        });
+            document.addEventListener('click', function (e) {
+                if (!inputElement.contains(e.target) && !suggestionsElement.contains(e.target)) {
+                    suggestionsElement.style.display = 'none';
+                }
+            });
+        }
 
-        // Fecha a lista de sugestões se o usuário clicar fora
-        document.addEventListener('click', function (e) {
-            if (!filtroFuncionarioInput.contains(e.target) && !filtroFuncionarioSuggestions.contains(e.target)) {
-                filtroFuncionarioSuggestions.style.display = 'none';
-            }
-        });
+        handleSuggestions(filtroFuncionarioInput, filtroFuncionarioSuggestions, 'id_autor');
+        handleSuggestions(filtroResponsavelInput, filtroResponsavelSuggestions, 'id_responsavel');
 
-        // Função para atualizar a URL com o filtro escolhido
         function atualizarURL(filtro, valor) {
             const url = new URL(window.location.href);
             url.searchParams.set('filtro', filtro);

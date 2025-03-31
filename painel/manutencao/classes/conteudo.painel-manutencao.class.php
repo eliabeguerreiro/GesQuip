@@ -11,6 +11,7 @@ class ContentPainelManutencao
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>GesQuip - Manutenção</title>
+          <link rel="icon" type="image/png" href="src/img/favicon.png">
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
           <link rel="stylesheet" href="src/style.css">
@@ -263,50 +264,55 @@ HTML;
             }
 
 
-                $html .= <<<HTML
-                            <!-- Tabela de Movimentações -->
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>ADM</th>
-                                <th>Item</th>
-                                <th>familia</th>
-                                <th>Data</th>
-                                <th>Observações</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="itens">
-                            <tr>
-
-      HTML;
-                
-      
-      foreach ($manutenc as $manutencao):
-        $id_item = $manutencao['id_item'];        
-        $item_data = Item::getItens($id_item); 
-        $cod = $item_data['dados'][0]['cod_patrimonio'];
-        $id_familia = $item_data['dados'][0]['id_familia'];
-        $familia = Item::getFamiliaNome($id_familia);
-
-
-
-          $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
-          $html .="<td>".$manutencao['id_manutencao']."</td>";
-          $html .="<td>".$nm_autor."</td>";
-          $html .="<td>".$cod."</td>";
-          $html .="<td>".$familia."</td>";
-          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td>".$manutencao['obs_in']."</td>";
-          $html .="<td><button class='btn btn-danger btn-sm finaliza-button' data-bs-toggle='modal' data-bs-target='#finalizaModal' id ='".$manutencao['id_manutencao']."' >Retornar item</button></td>";
-          $html .="</tr>";
-      endforeach;
-                 
-      $html.= <<<HTML
-
-                        </tbody>
-                    </table>
+            $html .= <<<HTML
+            <!-- Tabela de Movimentações -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ADM</th>
+                        <th>Item</th>
+                        <th>Familia</th>
+                        <th>Data</th>
+                        <th>Duração</th>
+                        <th>Observações</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="itens">
+        HTML;
+        
+        foreach ($manutenc as $manutencao):
+            $id_item = $manutencao['id_item'];        
+            $item_data = Item::getItens($id_item); 
+            $cod = $item_data['dados'][0]['cod_patrimonio'];
+            $id_familia = $item_data['dados'][0]['id_familia'];
+            $familia = Item::getFamiliaNome($id_familia);
+        
+            // Ajuste de formatação da data
+            $dataBanco = $manutencao['dt_inicio_manutencao'];
+            $dataAtual = new DateTime(); // Data e hora atual
+            $dataRetornada = new DateTime($dataBanco);
+            $diferenca = $dataAtual->diff($dataRetornada);
+            $diasDiferenca = $diferenca->days;
+            $dataFormatada = $dataRetornada->format("d/m/Y \à\s H:i");
+        
+            $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+            $html .= "<tr>";
+            $html .= "<td>" . $manutencao['id_manutencao'] . "</td>";
+            $html .= "<td>" . $nm_autor . "</td>";
+            $html .= "<td>" . $cod . "</td>";
+            $html .= "<td>" . $familia . "</td>";
+            $html .= "<td>" . $dataFormatada . "</td>"; // Data formatada
+            $html .= "<td>" . $diasDiferenca . " Dias</td>";
+            $html .= "<td>" . $manutencao['obs_in'] . "</td>";
+            $html .= "<td><button class='btn btn-danger btn-sm finaliza-button' data-bs-toggle='modal' data-bs-target='#finalizaModal' id='" . $manutencao['id_manutencao'] . "'>Retornar item</button></td>";
+            $html .= "</tr>";
+        endforeach;
+        
+        $html .= <<<HTML
+                </tbody>
+            </table>
                 </div>
             </div>
         </div>
@@ -335,9 +341,18 @@ HTML;
                       <!-- Header com filtro -->
                       <div class="header-with-filter">
                         <h3><b><p class="text-primary">Manutenções Encerradas</p></b></h3>
+                        <!-- Select para escolher o formato de download -->
                         <div class="filter-container">
-                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
-                            <button id="exportButton" class="btn btn-success">Exportar para Excel</button>
+                            <div class="filter-container">
+                                <label for="exportFormat" class="form-label visually-hidden">Formato de Exportação</label>
+                                <select id="exportFormat" class="form-select form-select-sm filter-select" required>
+                                    <option value="">Relátorio</option>
+                                    <!--option value="pdf">PDF</option-->
+                                    <option value="xlsx">XLSX</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                          <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
                                 <option value="">Escolha um filtro</option>
                                 <option value="funcionario">Funcionário</option>
@@ -396,9 +411,11 @@ HTML;
                                 <th>ID</th>
                                 <th>ADM</th>
                                 <th>Item</th>
-                                <th>familia</th>
+                                <th>Familia</th>
                                 <th>Data Inicio</th>
                                 <th>Data Encerramento</th>
+                                <th>Autor do encerramento</th>
+                                <th>Tempo total (dias)</th>
                                 <th>Custo da Manutenção</th>
                                 <th>Observações</th>
                             </tr>
@@ -419,13 +436,24 @@ HTML;
         $familia = Item::getFamiliaNome($id_familia);
         $custoManutencao = $manutencao['custo_manutencao'];
         $custo = ($custoManutencao === null) ? 'Não informado' : number_format($custoManutencao, 2, ',', '.');
-          $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+        $nm_autor = User::getFuncionarioNome($manutencao['id_autor']);
+        $nm_autor_encerramento = User::getFuncionarioNome($manutencao['id_autor_final']);
+
+        $dataBancoInicio  = new DateTime($manutencao['dt_inicio_manutencao']);
+        $dataBancoFim = new DateTime($manutencao['dt_fim_manutencao']); // Data e hora atual
+        $diferenca = $dataBancoInicio->diff($dataBancoFim);
+        $diasDiferenca = $diferenca->days;
+        $dataInicioFormatada = $dataBancoInicio->format("d/m/Y \à\s H:i");
+        $dataFimFormatada = $dataBancoFim->format("d/m/Y \à\s H:i");
+
           $html .="<td>".$manutencao['id_manutencao']."</td>";
           $html .="<td>".$nm_autor."</td>";
           $html .="<td>".$cod."</td>";
           $html .="<td>".$familia."</td>";
-          $html .="<td>".$manutencao['dt_inicio_manutencao']."</td>";
-          $html .="<td>".$manutencao['dt_fim_manutencao']."</td>";
+          $html .="<td>".$dataInicioFormatada."</td>";
+          $html .="<td>".$dataFimFormatada."</td>";
+          $html .="<td>".$nm_autor_encerramento."</td>";
+          $html .="<td>".$diasDiferenca."</td>";
           $html .="<td>".$custo."</td>";
           $html .="<td>".$manutencao['obs_out']."</td>";
           $html .="</tr>";
@@ -473,12 +501,14 @@ HTML;
         <script>
 
             document.addEventListener('DOMContentLoaded', function () {
-                // Capturar o clique no botão de exportação
-                document.getElementById('exportButton').addEventListener('click', function () {
+                const exportFormat = document.getElementById('exportFormat');
+
+                exportFormat.addEventListener('change', function () {
+                    const format = exportFormat.value;
+                    if (!format) return;
+
                     // Selecionar a tabela
                     const table = document.querySelector('.table.table-striped');
-
-                    // Verificar se a tabela existe
                     if (!table) {
                         alert('Tabela não encontrada!');
                         return;
@@ -491,15 +521,62 @@ HTML;
                         return cells.map(cell => cell.innerText.trim());
                     });
 
+                    // Gerar o arquivo com base no formato selecionado
+                    switch (format) {
+                        case 'pdf':
+                            generatePDF(data);
+                            break;
+                        case 'xlsx':
+                            generateXLSX(data);
+                            break;
+                        case 'csv':
+                            generateCSV(data);
+                            break;
+                    }
+
+                    // Resetar o select após a exportação
+                    exportFormat.value = '';
+                });
+
+                function generatePDF(data) {
+                    // Usar dompdf ou outra biblioteca para gerar o PDF
+                    const element = document.createElement('div');
+                    element.innerHTML = '<table>' + data.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('') + '</table>';
+                    const htmlContent = element.outerHTML;
+
+                    // Exemplo básico com dompdf (PHP)
+                    fetch('generate_pdf.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: htmlContent })
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'manutencoes_encerradas.pdf';
+                        a.click();
+                    });
+                }
+
+                function generateXLSX(data) {
                     // Criar uma planilha usando SheetJS
                     const worksheet = XLSX.utils.aoa_to_sheet(data);
                     const workbook = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
-
-                    // Gerar o arquivo e fazer o download
                     XLSX.writeFile(workbook, 'manutencoes_encerradas.xlsx');
-                });
+                }
+
+                function generateCSV(data) {
+                    // Criar um CSV usando SheetJS
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manutenções Encerradas');
+                    XLSX.writeFile(workbook, 'manutencoes_encerradas.csv');
+                }
             });
+
 
             function removerFiltro() {
                 const url = new URL(window.location.href);

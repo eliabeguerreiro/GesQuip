@@ -108,7 +108,42 @@
         min-width: 150px; /* Define uma largura mínima */
     }
     
-/* Adicione este CSS ao seu arquivo src/style.css */
+    #filtro_responsavel {
+        display: none; /* Inicialmente oculto */
+        margin-left: 10px; /* Espaçamento à esquerda */
+    }
+
+    #filtro_responsavel_input {
+        width: 100%; /* Largura total */
+        max-width: 300px; /* Limita a largura máxima */
+        padding: 5px; /* Espaçamento interno */
+        font-size: 14px; /* Tamanho da fonte */
+        border: 1px solid #ced4da; /* Borda padrão */
+        border-radius: 4px; /* Bordas arredondadas */
+    }
+
+    #filtro_responsavel_suggestions {
+        position: absolute;
+        z-index: 1000; /* Certifique-se de que a lista de sugestões esteja acima de outros elementos */
+        width: 100%; /* Ajusta a largura da lista de sugestões para coincidir com o campo de input */
+        background-color: white; /* Define a cor de fundo para a lista de sugestões */
+        border: 1px solid #ccc; /* Adiciona uma borda à lista de sugestões */
+        border-radius: 4px; /* Adiciona bordas arredondadas à lista de sugestões */
+        max-height: 200px; /* Limita a altura máxima */
+        overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+    }
+
+    #filtro_responsavel_suggestions .list-group-item {
+        padding: 10px; /* Espaçamento interno */
+        font-size: 14px; /* Tamanho da fonte */
+        cursor: pointer; /* Mostra o cursor de clique */
+    }
+
+    #filtro_responsavel_suggestions .list-group-item:hover {
+        background-color: #f8f9fa; /* Cor de fundo ao passar o mouse */
+    }
+    
+
     #filtro_alert {
         display: flex;
         justify-content: space-between; /* Distribui o conteúdo nas extremidades */

@@ -25,13 +25,13 @@ class Moviment
     }
  
  
-    public static function finalizaMoviment($id, $user){
+    public static function finalizaMoviment($id = null){
        
         var_dump($id);
         
         $dt = date('Y-m-d H:i:s');
         $db = DB::connect();
-        $rs = $db->prepare("UPDATE movimentacao SET dt_finalizacao = '$dt', id_autor_final = $user  WHERE id_movimentacao = $id");
+        $rs = $db->prepare("UPDATE movimentacao SET dt_finalizacao = '$dt' WHERE id_movimentacao = $id");
         $rs->execute();
         $rows = $rs->rowCount();
         if($rows > 0){

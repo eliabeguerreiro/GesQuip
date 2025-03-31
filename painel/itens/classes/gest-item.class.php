@@ -74,7 +74,7 @@ class Item
 
 
 
-    public static function devolverItem($id_item, $id_movimentacao, $user){
+    public static function devolverItem($id_item, $id_movimentacao){
         $dt = date('Y-m-d H:i:s');
         $db = DB::connect();
         
@@ -87,7 +87,7 @@ class Item
         
 
         // depois eu atualizo a data de devolução do item_movimentacao
-        $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt', id_autor_final = $user WHERE id_item_movimentacao = $id_item_mov");
+        $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt' WHERE id_item_movimentacao = $id_item_mov");
         $rs->execute();
         $rows = $rs->rowCount();
 

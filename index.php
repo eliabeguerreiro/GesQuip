@@ -8,7 +8,7 @@ include_once "classes/db.class.php";
 if (!empty($_POST)) {
     $dados_login = filter_input_array(INPUT_POST, FILTER_DEFAULT);
     if ($login = Paineel::login($dados_login)) {
-        header('Location: painel/lobby/');
+        header('Location: painel/');
         exit;
     } else {
         $_SESSION['msg'] = "<p id='aviso'>Login ou senha incorreto</p>";
@@ -21,7 +21,6 @@ if (!empty($_POST)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/style.css">
-    <link rel="icon" type="image/png" href="src/img/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
           integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -29,22 +28,17 @@ if (!empty($_POST)) {
 </head>
 <body>
     <div id='login_place'>
-        <!-- Adicione o logo aqui -->
-        <div class="logo-container">
-            <img src="src/img/logo.png" alt="Logo GesQuip" class="logo">
-        </div>
-        
         <?php 
             if (isset($_SESSION['msg'])) {
                 echo '<div class="msg ' . (strpos($_SESSION['msg'], 'logado') ? '' : 'error') . '">' . $_SESSION['msg'] . '</div>';
                 unset($_SESSION['msg']);
             }
         ?>
-        <!-- Formulário de login -->
+        <!-- Teste: O HTML está sendo carregado -->
         <form action="" method="POST">
-            <label for="username" class="center-label">Login</label>
+            <label for="username" class="center-label">Login:</label>
             <input type="text" id="username" name="login" required>
-            <label for="password" class="center-label">Senha</label>
+            <label for="password" class="center-label">Senha:</label>
             <input type="password" id="password" name="senha" required>
             <button type="submit">Logar</button>
         </form>

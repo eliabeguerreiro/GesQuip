@@ -33,7 +33,7 @@ if ($_SESSION['id_moviment']) {
     $item_devolv = Item::getItensDevolvidos($id);
 
     if ($item_mov['dados'] == null) {
-        if (Moviment::finalizaMoviment($id, $_SESSION['data_user']['id_usuario'])) {
+        if (Moviment::finalizaMoviment($id)) {
             header('location:index.php?pagina=ativas');
         }
     }
@@ -216,7 +216,6 @@ HTML;
                                     <th>Código</th>
                                     <th>Família</th>
                                     <th>Nome</th>
-                                    <th>Responsavel por devolução</th>
                                     <th>Data da Devolução</th>
                                 </tr>
                             </thead>
@@ -224,19 +223,16 @@ HTML;
 HTML;
 
     if ($item_devolv['dados'] == null) {
-        $html .= "<tr><td colspan='4'>Nenhum item devolvido</td><td></td></td></tr>";
+        $html .= "<tr><td colspan='4'>Nenhum item devolvido</td></tr>";
     } else {
         foreach ($item_devolv['dados'] as $item) {
             $nm_item = Item::getItemNome($item['id_item']);
             $item_data = Item::getItens($item['id_item'], null, null);
             $nm_familia = Item::getFamiliaNome($item_data['dados'][0]['id_familia']);
-            $nome = User::getFuncionarioNome($item['id_autor_final']);
-
             $html .= "<tr>";
             $html .= "<td>" . $cod . "</td>";
             $html .= "<td>" . $nm_familia . "</td>";
             $html .= "<td>" . $nm_item . "</td>";
-            $html .= "<td>" . $nome . "</td>";
             $html .= "<td>" . $item['dt_devolucao'] . "</td>";
             $html .= "</tr>";
         }

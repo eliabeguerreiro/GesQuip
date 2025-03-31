@@ -3,8 +3,8 @@ session_start();
 ob_start();
 //var_dump($_SESSION);
 
-include_once"../classes/painel.class.php";
-include_once"classes/conteudo.painel.class.php";
+include"../classes/painel.class.php";
+include"classes/conteudo.painel.class.php";
 
 if (Paineel::validarToken()) {
     // O token é válido, permita acesso ao painel

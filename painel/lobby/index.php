@@ -29,9 +29,4 @@ if(isset($_GET['sair'])){Paineel::logOut();}
 
 
 echo $pagina->renderHeader();
-
-if($_POST){
-    echo $pagina->renderBody($_POST['id_empresa']);
-}else{
-    echo $pagina->renderBody();
-}
+echo $pagina->renderBody();

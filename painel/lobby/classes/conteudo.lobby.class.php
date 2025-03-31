@@ -77,7 +77,7 @@ $html .= <<<HTML
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-12">
-                            <h3><b><p class="text-primary">Empresa Cadastrada</p></b></h3>
+                            <h3><b><p class="text-primary">Empresa</p></b></h3>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -142,7 +142,7 @@ HTML;
                             $html .="<td>".$obra['ds_obra']."</td>";
                             $html .="<td>".$obra['id_crea']."</td>";
                             $html .="<td>".$obra['resp_tec']."</td>";
-                            $html .="<td><a href='?id_empresa=".$empresa['id_empresa']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
+                            $html .="<td><a href='obra.php?obra=".$obra['id_obra']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
                             $html .="</tr>";
                         endforeach;
              

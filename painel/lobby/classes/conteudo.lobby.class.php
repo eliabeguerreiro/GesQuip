@@ -77,14 +77,14 @@ $html .= <<<HTML
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-12">
-                            <h3><b><p class="text-primary">Empresas Cadastradas</p></b></h3>
+                            <h3><b><p class="text-primary">Empresa Cadastrada</p></b></h3>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Nome</th>
                                         <th>CNPJ</th>
-                                        <th>Ações</th>
+                                        <th>Limite de obras</th>
                                     </tr>
                                     </thead>
                                 <tbody id="itens">
@@ -97,7 +97,7 @@ $html .= <<<HTML
                                 $html .="<td>".$empresa['id_empresa']."</td>";
                                 $html .="<td>".$empresa['nm_empresa']."</td>";
                                 $html .="<td>".$empresa['nr_cnpj']."</td>";
-                                $html .="<td><a href='?id_empresa=".$empresa['id_empresa']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
+                                $html .="<td>".$empresa['limite_obras']."</td>";
                                 $html .="</tr>";
                             endforeach;
                  
@@ -142,7 +142,7 @@ HTML;
                             $html .="<td>".$obra['ds_obra']."</td>";
                             $html .="<td>".$obra['id_crea']."</td>";
                             $html .="<td>".$obra['resp_tec']."</td>";
-                            $html .="<td>Ação aqui</td>";
+                            $html .="<td><a href='?id_empresa=".$empresa['id_empresa']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
                             $html .="</tr>";
                         endforeach;
              

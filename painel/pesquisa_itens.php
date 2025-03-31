@@ -1,4 +1,9 @@
 <?php
+session_start();
+ob_start();
+$obra = $_SESSION['obra_atual'];
+
+
 include_once "classes/db.class.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Prepare the base query
         if ($chave == 'ds_item') {
-            $stmt = $db->prepare("SELECT * FROM item WHERE $chave LIKE :busca and desativado is NULL");
+            $stmt = $db->prepare("SELECT * FROM item WHERE $chave LIKE :busca and desativado is NULL and id_obra = :obra");
         } elseif ($chave == 'cod_patrimonio') {
-            $stmt = $db->prepare("SELECT * FROM item WHERE $chave = :busca and desativado is NULL");
+            $stmt = $db->prepare("SELECT * FROM item WHERE $chave = :busca and desativado is NULL and id_obra = :obra");
         } else {
             echo json_encode([]); // Invalid chave, return empty results
             exit;
         }
-
+        $stmt->bindValue(':obra', $obra, PDO::PARAM_INT);
         // Bind parameters to prevent SQL injection
         if ($chave == 'ds_item') {
             $stmt->bindValue(':busca', '%' . $busca . '%', PDO::PARAM_STR);

@@ -22,7 +22,6 @@ class ContentPainel
 
     public function renderBody()
     {
-        var_dump($_SESSION);
         $nome = htmlspecialchars($_SESSION['data_user']['nm_usuario']); // Escapa caracteres especiais para evitar XSS
         $matricula = htmlspecialchars($_SESSION['data_user']['matricula']); // Escapa caracteres especiais para evitar XSS
         $obra = htmlspecialchars($_SESSION['obra_atual']); // Escapa caracteres especiais para evitar XSS
@@ -84,8 +83,8 @@ class ContentPainel
                     </div>
                     <div class="d-flex ms-auto align-items-center">
                         <div class="d-flex align-items-center text-white me-3">
-                            <span>Nome: $nome</span>
-                            <span class="mx-2">Matrícula:$matricula</span>
+                            <span>$nome -</span>
+                            <span class="mx-2">$matricula</span>
                             <span>Obra: $obra</span>
                         </div>
                         <div class="d-flex ms-auto">

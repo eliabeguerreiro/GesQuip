@@ -4,31 +4,30 @@ include_once"../../classes/painel.class.php";
 class Lobby
 {
 
-
     public static function getObra($id){
+        $db = DB::connect();
 
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM obra WHERE id_empresa = $id");
-            $rs->execute();
-            $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-            return ["dados" => $resultado];
-
-        
-    }
-
-    public static function getEmpresa($id = null){
         if($id){
-
-            $db = DB::connect();
             $rs = $db->prepare("SELECT * FROM obra WHERE id_empresa = $id");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }else{
+            return false;
+        }
+    }
 
-            $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM obra ");
+    public static function getEmpresa($id = null){
+        $db = DB::connect();
+        if($id){
+
+            if($id == 1){
+                $id = $_SESSION['data_user']['id_empresa'];
+                $rs = $db->prepare("SELECT * FROM empresa ");
+            }else{
+                $rs = $db->prepare("SELECT * FROM empresa WHERE id_empresa = $id");
+            }           
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -50,9 +49,4 @@ class Lobby
             $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg error' ><i class='fas fa-exclamation-circle'></i> Erro ao criar Obra.</div></div>";
         }   
     }
-        
-       
-    
-
-  
 }

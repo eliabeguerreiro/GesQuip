@@ -1,6 +1,6 @@
 <?php
 
-class ContentPainel
+class ContentPainelLobby
 {
     public function renderHeader()
     {
@@ -35,30 +35,7 @@ class ContentPainel
                     <a class="navbar-brand" href="../"><b>GesQuip</b></a>
                     <div class="navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav">
-                            <!--GESTÃO DE ITENS-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="itens/?pagina=gestao_itens" id="CadastroItemLink">Gestão de Itens</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO MOVIMENTACAO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentações</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="moviment/?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
-                                    <li><a class="dropdown-item" href="moviment/?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO MANUTENÇÃO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=ativas" id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                </ul>
-                            </li>
+
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Funcionários</a>
@@ -67,17 +44,7 @@ class ContentPainel
                                     <li><a class="dropdown-item" href="usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
-                                    <li><a class="dropdown-item" href="itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
-                                    <li><a class="dropdown-item" href="manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
-                                </ul>
-                            </li>
+
                         </ul>
                     </div>
                     <div class="d-flex ms-auto">
@@ -93,63 +60,125 @@ class ContentPainel
         echo $_SESSION['msg'];
         unset($_SESSION['msg']);
       } 
-      $html .= <<<HTML
+
+      switch ($_SESSION['data_user']['tp_usuario']) {
+        case 'admin':
+
+            $empresas = Lobby::getEmpresa($_SESSION['data_user']['id_empresa']);
+            $empresas = $empresas['dados'];
+            $obras = Lobby::getObra($_SESSION['data_user']['id_empresa']);
+            $obras = $obras['dados'];
+
+$html .= <<<HTML
 
             <!-- INÍCIO DO CONTEÚDO CENTRAL -->
             <div class="main-content" id="mainContent">
                 <div class="container mt-4" id="novoItem" style="display: block;">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="header-with-filter">
-                                <h3><b><p class="text-primary">Buscar Item</p></b></h3>
-                                <div class="filter-container">
-                                    <label for="chaveSelect" class="form-label visually-hidden">Filtro</label>
-                                    <select id="chaveSelect" name="filtro" class="form-select form-select-sm filter-select" required>
-                                        <option value="ds_item">NOME</option>
-                                        <option value="cod_patrimonio">PATRIMONIO</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <form id="searchForm">
-                                <div class="mb-3">
-                                    <label for="busca" class="form-label">Digite o Valor</label>
-                                    <input type="text" id="busca" name="valor" class="form-control" required>
-                                </div>
-                                <button type="button" id="finalizaSubmit" class="btn btn-primary">Buscar</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="container mt-4" id="containerFerramentas" style="display: block;">
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <h3><b><p class="text-primary">Itens Encontrados</p></b></h3>
+                            <div class="col-md-12">
+                            <h3><b><p class="text-primary">Empresas Cadastradas</p></b></h3>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Cod</th>
+                                        <th>ID</th>
                                         <th>Nome</th>
-                                        <th>Família</th>
-                                        <th>Movimentação</th>
-                                        <th>Usuário</th>
+                                        <th>CNPJ</th>
                                         <th>Ações</th>
                                     </tr>
-                                </thead>
-                                <tbody id="produtos">
-                                    <!-- Os resultados serão inseridos dinamicamente pelo JavaScript -->
+                                    </thead>
+                                <tbody id="itens">
+                                    <tr>
+
+      HTML;
+
+
+                            foreach ($empresas as $empresa):
+                                $html .="<td>".$empresa['id_empresa']."</td>";
+                                $html .="<td>".$empresa['nm_empresa']."</td>";
+                                $html .="<td>".$empresa['nr_cnpj']."</td>";
+                                $html .="<td><a href='?id_empresa=".$empresa['id_empresa']."' class='btn btn-success btn-sm btn-sm' >Acessar</a></td>";
+                                $html .="</tr>";
+                            endforeach;
+                 
+                 
+    $html.= <<<HTML
+
                                 </tbody>
                             </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    HTML;                      
+
+
+
+            $html .= <<<HTML
+            <div class="container mt-4" id="novoItem" style="display: block;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                        <h3><b><p class="text-primary">Obras Cadastradas</p></b></h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>CREA</th>
+                                    <th>Responsável</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                            <tbody id="itens">
+                                <tr>
+
+HTML;
+
+  
+                        foreach ($obras as $obra):
+                            $html .="<td>".$obra['id_obra']."</td>";
+                            $html .="<td>".$obra['ds_obra']."</td>";
+                            $html .="<td>".$obra['id_crea']."</td>";
+                            $html .="<td>".$obra['resp_tec']."</td>";
+                            $html .="<td>Ação aqui</td>";
+                            $html .="</tr>";
+                        endforeach;
+             
+             
+$html.= <<<HTML
+
+                            </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+HTML;
 
+
+
+
+    $html .= <<<HTML
             <script src="src/script.js"></script>
             </body>
             </html>
         HTML;
 
+
+
+            break;
+        case 'operador':
+            $obras = Lobby::getObra($_SESSION['data_user']['id_empresa']);
+            break;
+
+        default:
+            echo("ERRO: ACESSO INDEVIDO!!");
+            break;
+        }
+
         return $html;
     }
 }
-?>

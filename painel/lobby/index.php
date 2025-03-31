@@ -8,6 +8,7 @@ include_once"classes/db.class.php";
 //var_dump($_SESSION);
 
 
+$pagina = new ContentPainelLobby();
 
 if (Paineel::validarToken()) {
     // O token é válido, permita acesso ao painel
@@ -28,6 +29,9 @@ if(isset($_GET['sair'])){Paineel::logOut();}
 
 
 echo $pagina->renderHeader();
-echo $pagina->renderBody($obras);
 
-*/
+if($_POST){
+    echo $pagina->renderBody($_POST['id_empresa']);
+}else{
+    echo $pagina->renderBody();
+}

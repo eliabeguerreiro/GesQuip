@@ -26,7 +26,10 @@ class ContentPainelItem
     public function renderBody($pagina, $familia, $itens, $itens_disponiveis, $itens_locados, $itens_quebrados){
 
         //var_dump($itens);
-        $nome = $_SESSION['data_user']['nm_usuario'];
+        $nome = htmlspecialchars($_SESSION['data_user']['nm_usuario']); // Escapa caracteres especiais para evitar XSS
+        $matricula = htmlspecialchars($_SESSION['data_user']['matricula']); // Escapa caracteres especiais para evitar XSS
+        $obra = htmlspecialchars($_SESSION['obra_atual']); // Escapa caracteres especiais para evitar XSS
+
         
         // Verifica se os parâmetros GET estão definidos
         $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
@@ -85,14 +88,6 @@ class ContentPainelItem
                                     <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativas</a></li>
                                 </ul>
                             </li>
-                            <!--GESTÃO DE USUARIOS-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Funcionários</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionário</a></li>
-                                    <li><a class="dropdown-item" href="../usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
-                                </ul>
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
                                 <ul class="dropdown-menu">
@@ -108,8 +103,15 @@ class ContentPainelItem
                             </li>                        
                         </ul>
                     </div>
-                    <div class="d-flex ms-auto">
-                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    <div class="d-flex ms-auto align-items-center">
+                        <div class="d-flex align-items-center text-white me-3">
+                            <span>$nome -</span>
+                            <span class="mx-2">$matricula</span>
+                            <span>Obra: $obra</span>
+                        </div>
+                        <div class="d-flex ms-auto">
+                            <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -225,7 +227,7 @@ class ContentPainelItem
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Itens</p></b></h3>
+                        <h3><b><p class="text-primary">Todos os Itens da obra: $obra</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
@@ -362,7 +364,7 @@ HTML;
                 <div class="col-md-12">
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
-                        <h3><b><p class="text-primary">Todos os Itens</p></b></h3>
+                        <h3><b><p class="text-primary">Gestão de Itens da obra: $obra</p></b></h3>
                         <div class="filter-container">
                             <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
                             <select id="filtro_principal" class="form-select form-select-sm filter-select" required>

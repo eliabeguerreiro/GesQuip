@@ -60,14 +60,6 @@ class ContentPainel
                                     <li><a class="dropdown-item" href="manutencao/?pagina=ativas" id="ManutencaoAtiva">Manutenções Ativa</a></li>
                                 </ul>
                             </li>
-                            <!--GESTÃO DE USUARIOS-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Funcionários</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionários</a></li>
-                                    <li><a class="dropdown-item" href="usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
-                                </ul>
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
                                 <ul class="dropdown-menu">

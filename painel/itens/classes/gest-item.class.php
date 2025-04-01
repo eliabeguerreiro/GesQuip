@@ -115,8 +115,10 @@ class Item
 
 
     public static function getItensReservados($id_moviment) {
+        $obra = intval($_SESSION['obra_atual']);
+
         $db = DB::connect();
-        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = :id_moviment and desativado is NULL ORDER BY id_item DESC");
+        $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = :id_moviment and desativado is NULL and id_obra = $obra ORDER BY id_item DESC");
         $rs->bindParam(':id_moviment', $id_moviment, PDO::PARAM_INT);
         $rs->execute();
         return $rs->fetchAll(PDO::FETCH_ASSOC);
@@ -140,48 +142,15 @@ class Item
         
     }
 
-
-    public static function devolverItemByPanel($id_item){
-        $dt = date('Y-m-d H:i:s');
-        $db = DB::connect();
-        
-        // primeiro eu indentifico o id_item_movimentacao que está associado ao item e a movimentação
-        
-        $rs = $db->prepare("SELECT id_item_movimentacao FROM item_movimentacao WHERE id_item = $id_item ORDER BY id_item_movimentacao DESC LIMIT 1");
-        $rs->execute();
-        $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
-        $id_item_mov = $resultado[0]['id_item_movimentacao'];
-        
-
-        // depois eu atualizo a data de devolução do item_movimentacao
-        $rs = $db->prepare("UPDATE item_movimentacao SET dt_devolucao = '$dt' WHERE id_item_movimentacao = $id_item_mov");
-        $rs->execute();
-        $rows = $rs->rowCount();
-
-        if($rows > 0){ 
-                       
-            // depois eu atualizo a disponibilidade do item
-
-            $rs = $db->prepare("UPDATE item SET nr_disponibilidade = 1 WHERE id_item = $id_item");
-            $rs->execute();
-            $rows = $rs->rowCount();
-
-            if($rows > 0){  
-
-                return true;
-            }
-        }
-
-    }
-
-
     public static function getItens($id = null, $nm_filtro = null, $filtro = null){
+
+        $obra = intval($_SESSION['obra_atual']);
 
         if($id){
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE id_item = $id and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -189,7 +158,7 @@ class Item
         }elseif($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE $nm_filtro = '$filtro' and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -199,7 +168,7 @@ class Item
 
 
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -207,18 +176,19 @@ class Item
     }
 
     public static function getItensDisponiveis($nm_filtro = null, $filtro = null){
+        $obra = intval($_SESSION['obra_atual']);
         
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and $nm_filtro = '$filtro' and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 1 and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -226,19 +196,19 @@ class Item
 
     }
     public static function getItensQuebrados($nm_filtro = null, $filtro = null){
-
+        $obra = intval($_SESSION['obra_atual']);
 
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and $nm_filtro = '$filtro' and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 999999999 and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -249,18 +219,19 @@ class Item
 
 
     public static function getItensLocados($nm_filtro = null, $filtro = null){
+        $obra = intval($_SESSION['obra_atual']);
         
         if($nm_filtro){
             //echo("SELECT * FROM item WHERE $nm_filtro = '$filtro'");
             $db = DB::connect(); 
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and $nm_filtro = '$filtro' and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and $nm_filtro = '$filtro' and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
 
         }  else{            
             $db = DB::connect();
-            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and desativado is NULL order by id_item desc");
+            $rs = $db->prepare("SELECT * FROM item WHERE nr_disponibilidade = 0 and desativado is NULL and id_obra = $obra order by id_item desc");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -287,8 +258,8 @@ class Item
     $db = DB::connect();
 
     // Preparação da query SQL para inserir o item
-    $sql = "INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, tipo) 
-            VALUES (:familia, :nome, :natureza, :nv_permissao, :tipo)";
+    $sql = "INSERT INTO item (id_familia, ds_item, natureza, nv_permissao, tipo, id_obra) 
+            VALUES (:familia, :nome, :natureza, :nv_permissao, :tipo, :obra)";
     $stmt = $db->prepare($sql);
 
     // Associação dos parâmetros para evitar injeção SQL
@@ -297,6 +268,7 @@ class Item
     $stmt->bindParam(':natureza', $data['natureza'], PDO::PARAM_STR);
     $stmt->bindParam(':nv_permissao', $data['nv_permissao'], PDO::PARAM_INT);
     $stmt->bindParam(':tipo', $data['tipo'], PDO::PARAM_STR);
+    $stmt->bindParam(':obra', $_SESSION['obra_atual'], PDO::PARAM_STR);
 
     // Execução da query
     if ($stmt->execute()) {

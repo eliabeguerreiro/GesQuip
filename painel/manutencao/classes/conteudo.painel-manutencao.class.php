@@ -23,8 +23,10 @@ class ContentPainelManutencao
   }
 
     public function renderBody($pagina, $manutenc, $mantencs_encerradas){
-      $nome = $_SESSION['data_user']['nm_usuario'];
-      $funciona = User::getFuncionarios();
+        $nome = htmlspecialchars($_SESSION['data_user']['nm_usuario']); // Escapa caracteres especiais para evitar XSS
+        $matricula = htmlspecialchars($_SESSION['data_user']['matricula']); // Escapa caracteres especiais para evitar XSS
+        $obra = htmlspecialchars($_SESSION['obra_atual']); // Escapa caracteres especiais para evitar XSS
+        $funciona = User::getFuncionarios();
 
       // Verifica se os parâmetros GET estão definidos
       $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : null;
@@ -105,8 +107,15 @@ class ContentPainelManutencao
                             </li>
                         </ul>
                     </div>
-                    <div class="d-flex ms-auto">
-                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    <div class="d-flex ms-auto align-items-center">
+                        <div class="d-flex align-items-center text-white me-3">
+                            <span>$nome -</span>
+                            <span class="mx-2">$matricula</span>
+                            <span>Obra: $obra</span>
+                        </div>
+                        <div class="d-flex ms-auto">
+                            <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                        </div>
                     </div>
                 </div>
             </nav>

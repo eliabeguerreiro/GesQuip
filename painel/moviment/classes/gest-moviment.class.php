@@ -64,9 +64,10 @@ class Moviment
 
 
     public static function getMoviment($id = null, $nm_filtro = null, $filtro = null) {
+        $obra = $_SESSION['obra_atual'];
         $db = DB::connect();
         if ($id) {
-            $rs = $db->prepare("SELECT * FROM movimentacao WHERE id_movimentacao = $id AND dt_finalizacao IS NULL");
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE id_movimentacao = $id AND dt_finalizacao IS NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -74,16 +75,16 @@ class Moviment
             if ($nm_filtro == 'dt_movimentacao') {
                 if (strpos($filtro, '...') !== false) {
                     list($start, $end) = explode('...', $filtro);
-                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
+                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
                 }
             } else {
-                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' AND dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
+                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = '$filtro' AND dt_finalizacao IS NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
             }
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
         } else {
-            $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NULL ORDER BY id_movimentacao DESC");
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -93,21 +94,22 @@ class Moviment
 
 
     public static function getMovimentEncerrado($nm_filtro = null, $filtro = null) {
+        $obra = $_SESSION['obra_atual'];
         $db = DB::connect();
         if ($nm_filtro) {
             if ($nm_filtro == 'dt_movimentacao') {
                 if (strpos($filtro, '...') !== false) {
                     list($start, $end) = explode('...', $filtro);
-                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
+                    $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_movimentacao BETWEEN '$start' AND '$end' AND dt_finalizacao IS NOT NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
                 }
             } else {
-                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = $filtro AND dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
+                $rs = $db->prepare("SELECT * FROM movimentacao WHERE $nm_filtro = $filtro AND dt_finalizacao IS NOT NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
             }
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
         } else {
-            $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NOT NULL ORDER BY id_movimentacao DESC");
+            $rs = $db->prepare("SELECT * FROM movimentacao WHERE dt_finalizacao IS NOT NULL AND id_obra = $obra ORDER BY id_movimentacao DESC");
             $rs->execute();
             $resultado = $rs->fetchAll(PDO::FETCH_ASSOC);
             return ["dados" => $resultado];
@@ -116,10 +118,11 @@ class Moviment
 
     public static function setMoviment($data){
         $user = $_SESSION['data_user'];
-        
+        $obra = $_SESSION['obra_atual']; // Escapa caracteres especiais para evitar XSS
+
         $db = DB::connect();
-        $rs = $db->prepare("INSERT INTO movimentacao (id_responsavel, id_autor, ds_movimentacao)
-        VALUES(".$data['id_responsavel'].",'".$user['id_usuario']."','".$data['ds_movimentacao']."')");
+        $rs = $db->prepare("INSERT INTO movimentacao (id_responsavel, id_autor, ds_movimentacao, id_obra)
+        VALUES(".$data['id_responsavel'].",'".$user['id_usuario']."','".$data['ds_movimentacao']."',".$obra.")");
         $rs->execute();
         $rows = $rs->rowCount();
         if ($rows > 0){

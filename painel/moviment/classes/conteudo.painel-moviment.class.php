@@ -25,9 +25,10 @@ class ContentPainelMoviment
   
  
     public function renderBody($pagina, $funciona, $moviment, $moviment_encerrado){
-      $nome = $_SESSION['data_user']['nm_usuario'];
-      $func = $funciona;
-       
+
+        $nome = htmlspecialchars($_SESSION['data_user']['nm_usuario']); // Escapa caracteres especiais para evitar XSS
+        $matricula = htmlspecialchars($_SESSION['data_user']['matricula']); // Escapa caracteres especiais para evitar XSS
+        $obra = htmlspecialchars($_SESSION['obra_atual']); // Escapa caracteres especiais para evitar XSS
 
 
       // Verifica se os parâmetros GET estão definidos
@@ -109,8 +110,15 @@ class ContentPainelMoviment
                             </li>
                         </ul>
                     </div>
-                    <div class="d-flex ms-auto">
-                        <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                    <div class="d-flex ms-auto align-items-center">
+                        <div class="d-flex align-items-center text-white me-3">
+                            <span>$nome -</span>
+                            <span class="mx-2">$matricula</span>
+                            <span>Obra: $obra</span>
+                        </div>
+                        <div class="d-flex ms-auto">
+                            <a href="?sair=1" class="btn btn-danger btn-sm">Sair</a>
+                        </div>
                     </div>
                 </div>
             </nav>

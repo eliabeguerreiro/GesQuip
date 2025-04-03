@@ -114,6 +114,15 @@ class User
         $rs->execute();
         $rows = $rs->rowCount();
         if ($rows > 0){
+            $id_usuario = $db->lastInsertId();
+
+            $db = DB::connect();
+            $rs = $db->prepare("INSERT INTO usuario_obra (id_usuario , id_obra, id_empresa)
+             VALUES(".$id_usuario.",".$data['id_obra'].", ".$_SESSION['data_user']['id_empresa'].")");
+            $rs->execute();
+            $rows = $rs->rowCount();
+
+
             $_SESSION['msg'] = "<div  class='container mt-4'><div class='msg success'><i class='fas fa-check-circle'></i>Funcionário criado com sucesso!</div></div>";
             return true;
         } else {

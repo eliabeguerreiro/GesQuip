@@ -64,33 +64,9 @@ class ContentPainelUser
                         <ul class="navbar-nav">
                             <!--GESTÃO DE ITENS-->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Itens</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em uso</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=novo" id="CadastroItemLink">Novo Item</a></li>
-                                </ul>
+                                <a class="nav-link dropdown-toggle"  href="../lobby">Obras</a>
                             </li>
-                            <!--GESTÃO MOVIMENTACAO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="moviment">Movimentações</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../moviment?pagina=nova" id="NovaMoviment">Nova Movimentação</a></li>
-                                    <li><a class="dropdown-item" href="../moviment?pagina=ativas" id="MovimentAtiva">Movimentações Ativas</a></li>
-                                    <li><a class="dropdown-item" href="../moviment?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
-                                </ul>
-                            </li>
-                            <!--GESTÃO MANUTENÇÃO-->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="Manutencao">Manutenções</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=nova" id="NovaManutencao">Nova Manutenção</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=ativas " id="ManutencaoAtiva">Manutenções Ativa</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas " id="ManutencaoAtiva">Manutenções Encerradas</a></li>
-                                </ul>
-                            </li>
+
                             <!--GESTÃO DE USUARIOS-->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="usuario">Funcionários</a>
@@ -105,17 +81,7 @@ class ContentPainelUser
 
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Relatórios</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="../itens/?pagina=itens" id="CadastroItemLink">Todos os Itens</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=disponiveis" id="CadastroItemLink">Itens Disponíveis</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=emuso" id="CadastroItemLink">Itens em Uso</a></li>
-                                    <li><a class="dropdown-item" href="../itens/?pagina=quebrados" id="CadastroItemLink">Itens Quebrados</a></li>
-                                    <li><a class="dropdown-item" href="../moviment/?pagina=encerradas" id="MovimentEncer">Movimentações Encerradas</a></li>
-                                    <li><a class="dropdown-item" href="../manutencao/?pagina=encerradas" id="ManutencaoAtiva">Manutenções Encerradas</a></li>
-                                </ul>
-                            </li>
+                            
                         </ul>
                     </div>
                     <div class="d-flex ms-auto">
@@ -172,7 +138,15 @@ class ContentPainelUser
                             <label for="matricula" class="form-label">Matricula</label>
                             <input type="number" class="form-control" id="matricula" name="matricula" required>
                         </div>
-                        <div class="row">
+                        <div class="mb-3">
+                            <label for="id_obra" class="form-label">Obra</label>
+                            <select class="form-select" id="id_obra" name="id_obra" required>
+                                <option value="">Selecione uma obra</option>
+                                <option value="1">Obra 1</option>
+                                <option value="2">Obra 2</option>
+                            </select>
+                        </div>
+                                                <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nível de permissão de acesso</label>
@@ -214,24 +188,7 @@ class ContentPainelUser
                     <!-- Header com filtro -->
                     <div class="header-with-filter">
                         <h3><b><p class="text-primary">Todos os Funcionários</p></b></h3>
-                        <!--div class="filter-container">
-                            <label for="filtro_principal" class="form-label visually-hidden">Filtro Principal</label>
-                            <select id="filtro_principal" class="form-select form-select-sm filter-select" required>
-                                <option value="">Escolha um filtro</option>
-                                <option value="id_familia">Família</option>
-                                <option value="natureza">Natureza</option>
-                            </select>
-        
-                            
-                            <div id="filtro_natureza" style="display: none; margin-left: 10px;">
-                                <select id="filtro_natureza_select" class="form-select form-select-sm">
-                                    <option value="">Escolha</option>
-                                    <option value="proprio">Próprio</option>
-                                    <option value="locado">Locado</option>
-                                </select>
-                            </div>
 
-                        </div-->
                     </div>
 HTML;
 

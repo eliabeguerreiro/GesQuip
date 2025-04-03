@@ -40,8 +40,8 @@ class ContentPainelLobby
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="usuarios" id="usuario">Funcionários</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionários</a></li>
-                                    <li><a class="dropdown-item" href="usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios/?pagina=cadastro" id="NovosUsuarios">Cadastrar Funcionários</a></li>
+                                    <li><a class="dropdown-item" href="../usuarios/?pagina=usuarios" id="NovosUsuarios">Todos os Funcionários</a></li>
                                 </ul>
                             </li>
 
